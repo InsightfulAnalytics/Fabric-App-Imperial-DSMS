@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/dsms-design-system-197d7752-d74e-487e-87a4-ac40e1404735/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/dsms-design-system-197d7752-d74e-487e-87a4-ac40e1404735/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/dsms-design-system-197d7752-d74e-487e-87a4-ac40e1404735/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/dsms-design-system-197d7752-d74e-487e-87a4-ac40e1404735/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/dsms-design-system-197d7752-d74e-487e-87a4-ac40e1404735/styles.css">
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+  <script src="_ds/dsms-design-system-197d7752-d74e-487e-87a4-ac40e1404735/_ds_bundle.js"></script>
+</helmet>
+<x-import
+  component-from-global-scope="DSMSDesignSystem_197d77.FabricConsole"
+  start-page="{{ startPage }}"
+  collapsed="{{ collapsed }}"
+  hint-size="100%,100%"
+  style="display:block;width:100%;height:100vh">
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;startPage&quot;: {
+    &quot;editor&quot;: &quot;enum&quot;,
+    &quot;options&quot;: [&quot;briefing&quot;, &quot;ops&quot;, &quot;budget&quot;, &quot;supply&quot;, &quot;workforce&quot;, &quot;maint&quot;],
+    &quot;default&quot;: &quot;briefing&quot;,
+    &quot;tsType&quot;: &quot;string&quot;
+  },
+  &quot;collapsed&quot;: {
+    &quot;editor&quot;: &quot;boolean&quot;,
+    &quot;default&quot;: false,
+    &quot;tsType&quot;: &quot;boolean&quot;
+  }
+}">
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      startPage: this.props.startPage ?? "briefing",
+      collapsed: this.props.collapsed ?? false,
+    };
+  }
+}
+</script>
+</body>
+</html>
