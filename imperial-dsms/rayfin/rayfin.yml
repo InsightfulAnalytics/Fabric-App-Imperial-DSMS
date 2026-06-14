@@ -11,7 +11,8 @@ services:
       - https://nice-tide-3130166e08-australiaeast.webapp.fabricapps.net
       - https://terse-creek-a4f02625a1-australiaeast.webapp.fabricapps.net
   data:
-    enabled: false
+    enabled: true
+    dialect: mssql
   storage:
     enabled: false
   staticHosting:

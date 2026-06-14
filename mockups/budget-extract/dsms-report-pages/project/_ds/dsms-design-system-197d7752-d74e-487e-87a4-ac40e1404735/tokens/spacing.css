@@ -1,0 +1,63 @@
+/* ============================================================
+   DSMS — SPACING, RADIUS & LAYOUT TOKENS
+   Dense, technical. 4px base grid. No chamfer wider than 2px on
+   chrome; cards top out at 4px radius. Austere by design.
+   ============================================================ */
+
+:root {
+  /* ---- Spacing scale (4px base grid) ---- */
+  --ds-space-0:  0px;
+  --ds-space-1:  2px;
+  --ds-space-2:  4px;
+  --ds-space-3:  6px;
+  --ds-space-4:  8px;
+  --ds-space-5:  12px;
+  --ds-space-6:  16px;
+  --ds-space-7:  20px;
+  --ds-space-8:  24px;
+  --ds-space-9:  32px;
+  --ds-space-10: 40px;
+  --ds-space-11: 48px;
+  --ds-space-12: 64px;
+
+  /* ---- Corner radius — austere. Nothing rounder than 4px. ---- */
+  --ds-radius-none: 0px;
+  --ds-radius-xs:   2px;  /* chips, pills, inputs, buttons */
+  --ds-radius-sm:   3px;  /* nested elements */
+  --ds-radius-md:   4px;  /* cards / panels — the maximum */
+  --ds-radius-pill: 999px;/* status dots / circular only */
+
+  /* ---- Border widths ---- */
+  --ds-border-hair: 1px;  /* default card & table borders */
+  --ds-border-mark: 2px;  /* active/focus inset, accent stripe */
+
+  /* ---- Elevation. Dark UI: elevation reads via surface step + hairline,
+          NOT drop shadow. Shadows are reserved for true overlays. ---- */
+  --ds-shadow-none:    none;
+  --ds-shadow-overlay: 0 8px 28px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(0, 0, 0, 0.4);
+  --ds-shadow-popover: 0 4px 14px rgba(0, 0, 0, 0.45);
+  --ds-glow-focus:     0 0 0 1px var(--ds-accent-imperial), 0 0 0 4px rgba(200, 16, 46, 0.22);
+
+  /* ---- Layout dimensions ---- */
+  --ds-rail-width:        232px; /* expanded left rail */
+  --ds-rail-width-collapsed: 60px; /* icon-only rail < 1440 */
+  --ds-topbar-height:     56px;
+  --ds-panel-pad:         var(--ds-space-7);
+  --ds-page-pad:          var(--ds-space-8);
+  --ds-grid-gap:          var(--ds-space-6);
+
+  /* ---- Motion. Restrained: hover/focus only. No bounce. ---- */
+  --ds-ease-standard: cubic-bezier(0.2, 0, 0, 1); /* @kind other */
+  --ds-ease-out:      cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --ds-dur-fast:      90ms;  /* @kind other */
+  --ds-dur-normal:    150ms; /* @kind other */
+  --ds-dur-slow:      240ms; /* @kind other */
+
+  /* ---- Semantic aliases ---- */
+  --radius-card:   var(--ds-radius-md);
+  --radius-control:var(--ds-radius-xs);
+  --gap-grid:      var(--ds-grid-gap);
+  --pad-panel:     var(--ds-panel-pad);
+  --pad-page:      var(--ds-page-pad);
+  --transition-control: all var(--ds-dur-fast) var(--ds-ease-standard);
+}

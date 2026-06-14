@@ -417,3 +417,10 @@ body,
     grid-template-columns: 1fr !important;
   }
 }
+
+/* Posting spinner on the Budget Planning commit bar. */
+@keyframes dsms-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

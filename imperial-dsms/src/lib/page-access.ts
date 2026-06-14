@@ -36,3 +36,15 @@ export function allowedPageIds(email: string | null | undefined, allIds: string[
   if (Array.isArray(grant)) return grant.filter((id) => allIds.includes(id));
   return [];
 }
+
+/**
+ * May this user POST budget adjustments? Gated to full-console ("all") users —
+ * the shared, audit-stamped budget should only be moved by full clearance.
+ *
+ * This is the UX boundary; the server requires a valid Fabric session
+ * (`@authenticated` on the BudgetAdjustment entity). See access_and_security.md.
+ */
+export function canPostBudget(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return PAGE_ACCESS[email.trim().toLowerCase()] === "all";
+}

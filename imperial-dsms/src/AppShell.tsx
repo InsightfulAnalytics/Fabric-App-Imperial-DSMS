@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Boxes, GitBranch, LayoutDashboard, LayoutGrid, Users, Wrench } from "lucide-react";
+import { Boxes, GitBranch, LayoutDashboard, LayoutGrid, SlidersHorizontal, Users, Wrench } from "lucide-react";
 import {
   SidebarRail,
   TopBar,
@@ -18,6 +18,7 @@ import { OperationsPage } from "@/pages/OperationsPage";
 import { SupplyPage } from "@/pages/SupplyPage";
 import { WorkforcePage } from "@/pages/WorkforcePage";
 import { MaintenancePage } from "@/pages/MaintenancePage";
+import { BudgetPage } from "@/pages/BudgetPage";
 import {
   BASIC_SLICES,
   DETAILED_SLICES,
@@ -27,13 +28,15 @@ import {
   selectionCount,
 } from "@/lib/filter-config";
 import type { BriefingFilters } from "@/lib/dax";
-import { allowedPageIds } from "@/lib/page-access";
+import { allowedPageIds, canPostBudget } from "@/lib/page-access";
 import { useAuth } from "@/hooks/auth.context";
 
 interface PageContext {
   year: number;
   /** Basic-slice filters from the slicer pane ("All …" entries are null). */
   filters: BriefingFilters;
+  /** Whether the signed-in user may post budget adjustments. */
+  canPost: boolean;
 }
 
 interface PageDef {
@@ -45,6 +48,8 @@ interface PageDef {
   eyebrow: string;
   /** Show "Fiscal Year · YYYY" beside the title in the top bar. */
   showYearInTitle?: boolean;
+  /** Hide the Detailed-Filters button + slicer pane (page doesn't use detailed filters). */
+  hideDetailedFilters?: boolean;
   /** Report-library card shown on the Overview landing. Omit for the Overview page itself. */
   card?: Omit<OverviewReport, "id" | "Icon" | "domain" | "title">;
   /** Page body. Omitted for the Overview landing, which AppShell renders directly. */
@@ -144,6 +149,24 @@ const PAGES: PageDef[] = [
     },
     render: ({ year, filters }) => <MaintenancePage year={year} filters={filters} />,
   },
+  {
+    id: "budget",
+    label: "Budget Planning",
+    Icon: SlidersHorizontal,
+    title: "Budget Planning",
+    crumb: [],
+    eyebrow: "Finance · Budget",
+    showYearInTitle: true,
+    // The worksheet shows all departments for the selected year — detailed slicers don't apply.
+    hideDetailedFilters: true,
+    card: {
+      blurb:
+        "Interactive budget worksheet. Adjust each department's income and expense allocation by a percentage, watch the totals recompute, and post the change to the shared budget of record.",
+      inside: ["Department Adjustment Worksheet", "Income & Expense Δ%", "Subsidy Coverage", "Post & Audit"],
+      metric: { label: "Subsidy Coverage", value: "94%", tone: "positive" },
+    },
+    render: ({ year, canPost }) => <BudgetPage year={year} canPost={canPost} />,
+  },
 ];
 
 export function AppShell() {
@@ -176,10 +199,13 @@ export function AppShell() {
 
   const page = visiblePages.find((p) => p.id === active) ?? visiblePages[0];
   const isOverview = page.id === "overview";
+  // Year slicer shows on every data page; detailed filters are suppressed where they don't apply.
+  const showDetailedFilters = !isOverview && !page.hideDetailedFilters;
   const railItems: RailItem[] = visiblePages.map((p) => ({ id: p.id, label: p.label, Icon: p.Icon }));
   const detCount = selectionCount(selection);
 
   const basicFilters = deriveBasicFilters(basicSel);
+  const canPost = canPostBudget(email);
 
   // Report-library cards — only pages the user can actually open (excludes the Overview index).
   const overviewReports: OverviewReport[] = visiblePages
@@ -224,28 +250,30 @@ export function AppShell() {
           {/* The Overview index has no data of its own — hide the year + filter controls. */}
           {!isOverview && (
             <>
-              <Button
-                variant="secondary"
-                size="sm"
-                icon="list-filter"
-                onClick={() => setTakeover(true)}
-                style={{
-                  // Match the year Slicer (size="sm"): 28px track, 11.5px segment text.
-                  height: 28,
-                  fontSize: 11.5,
-                  letterSpacing: "0.08em",
-                  ...(detCount
-                    ? {
-                        background: "var(--ds-signal-info-dim)",
-                        borderColor: "transparent",
-                        color: "var(--ds-text-primary)",
-                        boxShadow: "inset 0 -2px 0 var(--ds-signal-info)",
-                      }
-                    : {}),
-                }}
-              >
-                {detCount > 0 ? `Detailed Filters · ${detCount}` : "Detailed Filters"}
-              </Button>
+              {showDetailedFilters && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  icon="list-filter"
+                  onClick={() => setTakeover(true)}
+                  style={{
+                    // Match the year Slicer (size="sm"): 28px track, 11.5px segment text.
+                    height: 28,
+                    fontSize: 11.5,
+                    letterSpacing: "0.08em",
+                    ...(detCount
+                      ? {
+                          background: "var(--ds-signal-info-dim)",
+                          borderColor: "transparent",
+                          color: "var(--ds-text-primary)",
+                          boxShadow: "inset 0 -2px 0 var(--ds-signal-info)",
+                        }
+                      : {}),
+                  }}
+                >
+                  {detCount > 0 ? `Detailed Filters · ${detCount}` : "Detailed Filters"}
+                </Button>
+              )}
               <Slicer
                 size="sm"
                 value={String(year)}
@@ -269,14 +297,14 @@ export function AppShell() {
             {isOverview ? (
               <OverviewPage reports={overviewReports} onNavigate={setActive} />
             ) : (
-              page.render?.({ year, filters: basicFilters })
+              page.render?.({ year, filters: basicFilters, canPost })
             )}
           </div>
         </main>
       </div>
 
-      {/* Filter pane is unavailable on the Overview index — it has no underlying query. */}
-      {!isOverview && (
+      {/* Filter pane is hidden where detailed filters don't apply (Overview, Budget Planning). */}
+      {showDetailedFilters && (
         <SlicerPane
           basics={BASIC_SLICES}
           basicValues={basicSel}
@@ -290,7 +318,7 @@ export function AppShell() {
         />
       )}
 
-      {takeover && !isOverview && (
+      {takeover && showDetailedFilters && (
         <FiltersTakeover
           categories={DETAILED_SLICES}
           selection={selection}
