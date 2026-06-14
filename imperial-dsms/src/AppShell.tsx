@@ -7,6 +7,8 @@ import {
   Slicer,
   SlicerPane,
   FiltersTakeover,
+  ReportInfoPreview,
+  ReportInfoTakeover,
   type RailItem,
   type SlicerSelection,
 } from "@/components/ds";
@@ -113,6 +115,9 @@ export function AppShell() {
   const [collapsed, setCollapsed] = useState(true);
   const [paneCollapsed, setPaneCollapsed] = useState(true);
   const [takeover, setTakeover] = useState(false);
+  // Report-information popout: hover shows it temporarily, click pins it (with scrim).
+  const [infoHover, setInfoHover] = useState(false);
+  const [infoPinned, setInfoPinned] = useState(false);
   const [selection, setSelection] = useState<SlicerSelection>(initialSelection);
   const [basicSel, setBasicSel] = useState<Record<string, string>>(defaultBasicSelection);
   const [year, setYear] = useState<number>(DEFAULT_YEAR);
@@ -144,9 +149,9 @@ export function AppShell() {
         active={active}
         onSelect={setActive}
         collapsed={collapsed}
-        statusLabel="Subsidy Coverage"
-        statusValue="—"
-        statusTone="positive"
+        infoLabel="Report Information"
+        onInfoClick={() => setInfoPinned(true)}
+        onInfoHoverChange={setInfoHover}
       />
 
       <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
@@ -220,6 +225,23 @@ export function AppShell() {
           onSelectionChange={setSelection}
           onClose={() => setTakeover(false)}
           subtitle="Refine Products, Staff Type & Death Star Areas across the report"
+        />
+      )}
+
+      {/* Report information — temporary on hover, pinned on click (dims the report). */}
+      {infoHover && !infoPinned && (
+        <ReportInfoPreview
+          left={(collapsed ? 60 : 232) + 10}
+          pageEyebrow={page.eyebrow}
+          pageTitle={page.title}
+          onHoverChange={setInfoHover}
+        />
+      )}
+      {infoPinned && (
+        <ReportInfoTakeover
+          pageEyebrow={page.eyebrow}
+          pageTitle={page.title}
+          onClose={() => setInfoPinned(false)}
         />
       )}
     </div>

@@ -61,6 +61,8 @@ export type {
 } from "./SlicerPane";
 export { DetailedFiltersTakeover } from "./DetailedFiltersTakeover";
 export type { DetailedFiltersTakeoverProps } from "./DetailedFiltersTakeover";
+export { ReportInfoPreview, ReportInfoTakeover } from "./ReportInfo";
+export type { ReportInfoPreviewProps, ReportInfoTakeoverProps } from "./ReportInfo";
 // Back-compat alias — superseded by DetailedFiltersTakeover in the v5 design system.
 export { DetailedFiltersTakeover as FiltersTakeover } from "./DetailedFiltersTakeover";
 export type { DetailedFiltersTakeoverProps as FiltersTakeoverProps } from "./DetailedFiltersTakeover";

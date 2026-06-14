@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Info } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export interface RailItem {
@@ -12,28 +13,24 @@ interface SidebarRailProps {
   active: string;
   onSelect: (id: string) => void;
   collapsed?: boolean;
-  statusLabel?: string;
-  statusValue?: string;
-  statusTone?: "positive" | "warning" | "negative";
+  /** Label on the information pill at the foot of the rail. */
+  infoLabel?: string;
+  /** Pin the report-information takeover (click). */
+  onInfoClick?: () => void;
+  /** Show / hide the temporary information preview (hover). */
+  onInfoHoverChange?: (hovering: boolean) => void;
 }
-
-const TONE: Record<NonNullable<SidebarRailProps["statusTone"]>, string> = {
-  positive: "var(--ds-signal-positive)",
-  warning: "var(--ds-signal-warning)",
-  negative: "var(--ds-signal-negative)",
-};
 
 export function SidebarRail({
   items,
   active,
   onSelect,
   collapsed = false,
-  statusLabel = "Subsidy Coverage",
-  statusValue = "—",
-  statusTone = "positive",
+  infoLabel = "Report Information",
+  onInfoClick,
+  onInfoHoverChange,
 }: SidebarRailProps) {
   const width = collapsed ? 60 : 232;
-  const toneColor = TONE[statusTone];
 
   return (
     <nav
@@ -103,69 +100,94 @@ export function SidebarRail({
         ))}
       </div>
 
-      {/* Status pill */}
+      {/* Information pill */}
       <div
         style={{
           padding: collapsed ? 8 : 12,
           borderTop: "1px solid var(--ds-line-conduit)",
         }}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: 8,
-            justifyContent: collapsed ? "center" : "flex-start",
-            padding: collapsed ? "8px 0" : "8px 10px",
-            background: "var(--ds-bg-deck)",
-            border: "1px solid var(--ds-line-conduit)",
-            borderRadius: "var(--ds-radius-xs)",
-          }}
-          title={`${statusLabel} ${statusValue}`}
-        >
-          <span
-            style={{
-              width: 7,
-              height: 7,
-              borderRadius: 999,
-              background: toneColor,
-              flex: "0 0 auto",
-              boxShadow: `0 0 8px ${toneColor}`,
-            }}
-          />
-          {!collapsed && (
-            <div style={{ minWidth: 0, display: "flex", flexDirection: "column", gap: 2 }}>
-              <div
-                style={{
-                  fontFamily: "var(--ds-font-display)",
-                  fontSize: 9,
-                  fontWeight: 600,
-                  letterSpacing: "0.14em",
-                  textTransform: "uppercase",
-                  color: "var(--ds-text-muted)",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {statusLabel}
-              </div>
-              <div
-                className="ds-num"
-                style={{
-                  fontSize: 14,
-                  fontWeight: 600,
-                  color: toneColor,
-                  lineHeight: 1.2,
-                }}
-              >
-                {statusValue}
-              </div>
-            </div>
-          )}
-        </div>
+        <InfoPill
+          label={infoLabel}
+          collapsed={collapsed}
+          onClick={onInfoClick}
+          onHoverChange={onInfoHoverChange}
+        />
       </div>
     </nav>
+  );
+}
+
+function InfoPill({
+  label,
+  collapsed,
+  onClick,
+  onHoverChange,
+}: {
+  label: string;
+  collapsed: boolean;
+  onClick?: () => void;
+  onHoverChange?: (hovering: boolean) => void;
+}) {
+  const [hover, setHover] = useState(false);
+  const green = "var(--ds-signal-positive)";
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => {
+        setHover(true);
+        onHoverChange?.(true);
+      }}
+      onMouseLeave={() => {
+        setHover(false);
+        onHoverChange?.(false);
+      }}
+      title={label}
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: 9,
+        width: "100%",
+        minHeight: 40,
+        justifyContent: collapsed ? "center" : "flex-start",
+        padding: collapsed ? "10px 0" : "10px 12px",
+        background: hover ? "var(--ds-bg-bay)" : "var(--ds-bg-deck)",
+        border: `1px solid ${hover ? "var(--ds-line-bright)" : "var(--ds-line-conduit)"}`,
+        borderRadius: "var(--ds-radius-xs)",
+        cursor: "pointer",
+        transition: "background var(--ds-dur-fast) var(--ds-ease-standard), border-color var(--ds-dur-fast) var(--ds-ease-standard)",
+      }}
+    >
+      {/* Green lower-case "i" — information */}
+      <span
+        style={{
+          display: "flex",
+          flex: "0 0 auto",
+          color: green,
+          filter: `drop-shadow(0 0 6px ${green})`,
+        }}
+      >
+        <Info size={16} strokeWidth={2} />
+      </span>
+      {!collapsed && (
+        <span
+          style={{
+            fontFamily: "var(--ds-font-display)",
+            fontSize: 11,
+            fontWeight: 600,
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "var(--ds-text-secondary)",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+          }}
+        >
+          {label}
+        </span>
+      )}
+    </button>
   );
 }
 
