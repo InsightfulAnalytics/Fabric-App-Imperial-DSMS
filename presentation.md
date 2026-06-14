@@ -228,15 +228,3 @@ seen, approved, and recoverable."
 - Where would write-back (planning, adjustments, approvals) add value?
 - What's our appetite for adopting a preview feature, and on what timeline?
 
----
-
-## Things I'd suggest adding (your "anything else?")
-
-These aren't required, but each is a natural, on-brand talking point:
-
-1. **Live vs. extract** — emphasise there is *no* data duplication; every number is a
-   live DAX query. Good reassurance for a Data & AI lead.
-2. **The "learnings → skills" story** — frame it as building reusable institutional
-   capability, not just one app. This is the strategic angle for the Head of Data & AI.
-3. **Theming = governance** — draw the explicit parallel: design tokens are to an app
-   what a theme is to a report. Familiar concept, bigger blast radius.
