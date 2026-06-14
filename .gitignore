@@ -1,0 +1,57 @@
+# ---- Dependencies ----
+node_modules/
+
+# ---- Build output ----
+dist/
+dist-ssr/
+.vite/
+coverage/
+*.tsbuildinfo
+
+# ---- Logs ----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ---- Environment / secrets ----
+.env
+.env.*
+*.local
+**/rayfin/.env*
+**/rayfin/.deployments.json
+**/rayfin/.temp/
+
+# ---- Fabric / generated ----
+**/src/fabric.generated.ts
+
+# ---- Power BI project caches ----
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# ---- Tooling / editor ----
+.claude/
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# ---- OS ----
+.DS_Store
+Thumbs.db
+
+# ---- Redundant empty clone of this repo (kept locally, not tracked) ----
+Fabric App Imperial DSMS/

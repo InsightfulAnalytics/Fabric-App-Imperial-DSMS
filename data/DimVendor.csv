@@ -1,0 +1,22 @@
+VendorKey,Vendor,VendorType,HomeWorld,ContractTier,RiskRating
+0,Not Applicable,Internal,-,-,-
+1,Sienar Fleet Systems,Ships,Lianna,Prime,Low
+2,Kuat Drive Yards,Materials,Kuat,Prime,Low
+3,BlasTech Industries,Weapons,Coruscant,Preferred,Low
+4,Merr-Sonn Munitions,Munitions,Capella,Preferred,Medium
+5,Arakyd Industries,Droids,Coruscant,Preferred,Medium
+6,Industrial Automaton,Droids,Coruscant,Standard,Low
+7,Corellia Engineering Corp,Ships,Corellia,Preferred,Medium
+8,SoroSuub Corporation,Energy,Sullust,Preferred,Medium
+9,Tagge Company (TaggeCo),Materials,Tepasi,Prime,Low
+10,Czerka Corporation,Weapons,Livien,Standard,High
+11,Imperial Dept. of Military Research,Services,Coruscant,Prime,Low
+12,Santhe / Sienar Technologies,Services,Lianna,Preferred,Low
+13,Cygnus Spaceworks,Ships,Cygnus,Standard,Medium
+14,Loronar Corporation,Materials,Loronar,Standard,High
+15,Rendili StarDrive,Materials,Rendili,Preferred,Medium
+16,Quartermaster Corps (Imperial),Consumables,Coruscant,Prime,Low
+17,Xucphra Bacta Corp,Consumables,Thyferra,Preferred,High
+18,Greater Plooriod Mining Guild,Materials,Plooriod,Spot,High
+19,Tibanna Gas Collective,Energy,Bespin,Standard,Medium
+20,Outer Rim Hydrospanner & Tool Co.,Services,Tatooine,Spot,Medium

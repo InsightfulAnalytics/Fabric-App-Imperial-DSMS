@@ -1,0 +1,7 @@
+activeProfile: default
+profiles:
+  default:
+    semanticModels:
+      imperialdsms:
+        workspaceId: 6c6afb09-761b-4ef5-9f5f-e8f91c228680
+        itemId: 7aacd8fb-b38d-4df3-ba21-8fcd9a5abe91

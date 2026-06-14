@@ -1,0 +1,112 @@
+table FactInventory
+	lineageTag: b1000002-0000-0000-0000-000000000001
+
+	column SnapshotDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000002-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: SnapshotDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ItemKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000002-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: ItemKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column LocationKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000002-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: LocationKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column OnHandQty
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000002-0000-0000-0000-000000000005
+		summarizeBy: sum
+		sourceColumn: OnHandQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column OnOrderQty
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000002-0000-0000-0000-000000000006
+		summarizeBy: sum
+		sourceColumn: OnOrderQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReorderPoint
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000002-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: ReorderPoint
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitCostCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000002-0000-0000-0000-000000000008
+		summarizeBy: none
+		sourceColumn: UnitCostCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	column InventoryValueCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000002-0000-0000-0000-000000000009
+		summarizeBy: sum
+		sourceColumn: InventoryValueCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	column StockStatus
+		dataType: string
+		lineageTag: b1000002-0000-0000-0000-00000000000a
+		summarizeBy: none
+		sourceColumn: StockStatus
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactInventory = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\FactInventory.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"SnapshotDateKey", Int64.Type},
+				        {"ItemKey", Int64.Type},
+				        {"LocationKey", Int64.Type},
+				        {"OnHandQty", Int64.Type},
+				        {"OnOrderQty", Int64.Type},
+				        {"ReorderPoint", Int64.Type},
+				        {"UnitCostCredits", Int64.Type},
+				        {"InventoryValueCredits", Int64.Type},
+				        {"StockStatus", type text}
+				    }),
+				    #"Replaced Value" = Table.ReplaceValue(ChangeTypes,0,null,Replacer.ReplaceValue,{"OnOrderQty"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

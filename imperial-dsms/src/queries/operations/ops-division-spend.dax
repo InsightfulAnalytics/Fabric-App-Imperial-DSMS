@@ -1,0 +1,11 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDepartment[DivisionGroup],
+        "Spend", [Total Expenses]
+    ),
+    DimDate[Year] = CurrentYear<<FILTERS>>
+)
+ORDER BY [Spend] DESC

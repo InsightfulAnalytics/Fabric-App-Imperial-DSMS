@@ -1,0 +1,67 @@
+/// Per-department, per-month budget for income (allocated Imperial Treasury
+/// subsidy) and expenses. One row per Department x Month. Budgets are
+/// calibrated so that annual variance vs actuals is within roughly +/- 15%
+/// for every department in every year. UNALLOC dept (key 25) is excluded.
+table FactBudget
+	lineageTag: b1000005-0000-0000-0000-000000000001
+
+	column MonthDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000005-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: MonthDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000005-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Budgeted allocated subsidy income for this department-month.
+	column IncomeBudgetCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000005-0000-0000-0000-000000000004
+		summarizeBy: sum
+		sourceColumn: IncomeBudgetCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Budgeted expenses for this department-month.
+	column ExpenseBudgetCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000005-0000-0000-0000-000000000005
+		summarizeBy: sum
+		sourceColumn: ExpenseBudgetCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactBudget = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\FactBudget.csv"), [Delimiter=",", Columns=4, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"MonthDateKey", Int64.Type},
+				        {"DepartmentKey", Int64.Type},
+				        {"IncomeBudgetCredits", Int64.Type},
+				        {"ExpenseBudgetCredits", Int64.Type}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

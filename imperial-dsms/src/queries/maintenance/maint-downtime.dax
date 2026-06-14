@@ -1,0 +1,15 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+TOPN (
+    6,
+    CALCULATETABLE (
+        SUMMARIZECOLUMNS (
+            DimDepartment[Department],
+            "DowntimeHrs", [Total Downtime Hrs]
+        ),
+        DimDate[Year] = CurrentYear<<FILTERS>>
+    ),
+    [DowntimeHrs], DESC
+)
+ORDER BY [DowntimeHrs] DESC

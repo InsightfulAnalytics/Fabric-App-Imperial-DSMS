@@ -1,0 +1,23 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR TopItems =
+    TOPN (
+        5,
+        CALCULATETABLE (
+            SUMMARIZECOLUMNS ( DimItem[Item], "S", [Stockout Lines] ),
+            DimDate[Year] = CurrentYear<<FILTERS>>
+        ),
+        [S], DESC
+    )
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimItem[Item],
+        FactInventory[SnapshotDateKey],
+        "StockoutLines", CALCULATE ( COUNTROWS ( FactInventory ), FactInventory[StockStatus] = "Stockout" ),
+        "LowLines",      CALCULATE ( COUNTROWS ( FactInventory ), FactInventory[StockStatus] IN { "Low", "Reorder" } )
+    ),
+    DimDate[Year] = CurrentYear,
+    TREATAS ( SELECTCOLUMNS ( TopItems, "Item", DimItem[Item] ), DimItem[Item] )<<FILTERS>>
+)
+ORDER BY DimItem[Item], FactInventory[SnapshotDateKey]

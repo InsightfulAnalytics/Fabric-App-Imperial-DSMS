@@ -1,0 +1,139 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "tableheadcount000a10",
+  "position": {
+    "x": 660,
+    "y": 460,
+    "z": 9,
+    "height": 240,
+    "width": 600
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimDepartment"
+                    }
+                  },
+                  "Property": "DivisionGroup"
+                }
+              },
+              "queryRef": "DimDepartment.DivisionGroup",
+              "nativeQueryRef": "DivisionGroup"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Combat Losses"
+                }
+              },
+              "queryRef": "Measure Table.Combat Losses",
+              "nativeQueryRef": "Combat Losses"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Attrition %"
+                }
+              },
+              "queryRef": "Measure Table.Attrition %",
+              "nativeQueryRef": "Attrition %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Payroll Cost"
+                }
+              },
+              "queryRef": "Measure Table.Payroll Cost",
+              "nativeQueryRef": "Payroll Cost"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "75945c100b908de60956",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimDepartment"
+              }
+            },
+            "Property": "DivisionGroup"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "8c02192d241e09a8c8cd",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Combat Losses"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "b12b969b1601e9ca5b51",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Attrition %"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2844468c1e0168bc74bd",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Payroll Cost"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

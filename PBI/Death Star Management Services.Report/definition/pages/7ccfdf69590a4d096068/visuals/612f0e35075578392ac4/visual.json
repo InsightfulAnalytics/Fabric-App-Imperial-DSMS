@@ -1,0 +1,84 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "612f0e35075578392ac4",
+  "position": {
+    "x": 47.462686567164177,
+    "y": 43.880597014925371,
+    "z": 0,
+    "height": 280.29850746268659,
+    "width": 280.29850746268659,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Net Surplus"
+                }
+              },
+              "queryRef": "Measure Table.Net Surplus",
+              "nativeQueryRef": "Net Surplus"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Operating Margin %"
+                }
+              },
+              "queryRef": "Measure Table.Operating Margin %",
+              "nativeQueryRef": "Operating Margin %"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "428fddd89e3b737dca3d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Net Surplus"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "c0a793a0634c223db016",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Operating Margin %"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

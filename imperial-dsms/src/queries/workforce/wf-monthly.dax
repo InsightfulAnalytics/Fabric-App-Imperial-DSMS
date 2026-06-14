@@ -1,0 +1,13 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDate[MonthOfYear],
+        "Headcount",     [Total Headcount],
+        "AttritionPct",  [Attrition %],
+        "CombatLossPct", DIVIDE ( SUM ( FactHeadcount[CombatLosses] ), SUM ( FactHeadcount[Headcount] ) )
+    ),
+    DimDate[Year] = CurrentYear<<FILTERS>>
+)
+ORDER BY DimDate[MonthOfYear]

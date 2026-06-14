@@ -1,0 +1,31 @@
+<!-- @dsCard group="Brand" viewport="700x180" name="Seal & Wordmark" subtitle="Austere geometric command seal and lockup" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-display); background: var(--ds-bg-void); padding: 24px; display:flex; gap: 48px; align-items:center; }
+  .lockup { display:flex; align-items:center; gap: 16px; }
+  .wm { line-height: 1; }
+  .wm .name { font-size: 30px; font-weight: 700; letter-spacing: 0.14em; color: var(--ds-text-primary); }
+  .wm .sub { font-size: 13px; font-weight: 600; letter-spacing: 0.2em; color: var(--ds-text-secondary); margin-top: 8px; max-width: 280px; line-height: 1.4; }
+  .sep { width:1px; align-self:stretch; background: var(--ds-line-conduit); }
+  .seal-only { display:flex; gap: 18px; align-items:center; }
+</style>
+</head>
+<body>
+  <div class="lockup">
+    <img src="../assets/dsms-seal.svg" width="76" height="76" alt="DSMS seal">
+    <div class="wm">
+      <div class="name">DSMS</div>
+      <div class="sub">DEATH STAR MANAGEMENT SERVICES</div>
+    </div>
+  </div>
+  <div class="sep"></div>
+  <div class="seal-only">
+    <img src="../assets/dsms-seal.svg" width="44" height="44" alt="" style="opacity:0.95">
+    <img src="../assets/dsms-seal.svg" width="28" height="28" alt="" style="opacity:0.7">
+  </div>
+</body>
+</html>

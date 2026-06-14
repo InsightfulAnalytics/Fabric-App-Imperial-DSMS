@@ -1,0 +1,12 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDate[MonthOfYear],
+        "NetSurplus",        <<NET>>,
+        "HeadcountVsBudget", [Headcount vs Budget]
+    ),
+    DimDate[Year] = CurrentYear<<FILTERS>>
+)
+ORDER BY DimDate[MonthOfYear]

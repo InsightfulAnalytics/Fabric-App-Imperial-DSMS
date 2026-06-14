@@ -1,0 +1,6 @@
+# Auto detect text files and perform LF normalization
+* text=auto
+
+# Treat Power BI binary caches as binary (defensive; usually gitignored)
+*.abf binary
+*.pbix binary

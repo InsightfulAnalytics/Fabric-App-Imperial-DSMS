@@ -1,0 +1,15 @@
+LocationKey,Location,Zone,DeckLevel,LocationType
+1,Primary Quartermaster Depot,Equatorial,Deck 04,Central Depot
+2,Northern Hangar Stores,Northern Hemisphere,Deck 11,Forward Store
+3,Hangar Bay 327 Stores,Equatorial,Deck 09,Forward Store
+4,Equatorial Trench Depot,Equatorial,Deck 02,Central Depot
+5,Reactor Core Supply Cache,Core,Deck 00,Central Depot
+6,Detention Block Stores,Northern Hemisphere,Deck 05,Forward Store
+7,Medical Bay Stores,Equatorial,Deck 06,Cold Storage
+8,Mess Hall Pantry A,Northern Hemisphere,Deck 07,Cold Storage
+9,Mess Hall Pantry B,Southern Hemisphere,Deck 07,Cold Storage
+10,Overbridge Equipment Locker,Northern Hemisphere,Deck 12,Forward Store
+11,Sublight Engineering Stores,Southern Hemisphere,Deck 03,Forward Store
+12,Superlaser Maintenance Bay,Equatorial,Deck 08,Forward Store
+13,Waste Compaction Sublevel,Core,Sublevel 14,Forward Store
+14,Forward Munitions Magazine,Southern Hemisphere,Deck 10,Magazine

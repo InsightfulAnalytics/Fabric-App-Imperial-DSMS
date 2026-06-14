@@ -1,0 +1,147 @@
+table FactMaintenance
+	lineageTag: b1000004-0000-0000-0000-000000000001
+
+	column WorkOrderID
+		dataType: string
+		isHidden
+		lineageTag: b1000004-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: WorkOrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column OpenedDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000004-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: OpenedDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ClosedDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: b1000004-0000-0000-0000-000000000004
+		summarizeBy: count
+		sourceColumn: ClosedDateKey
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000004-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column LocationKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000004-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: LocationKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ItemKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000004-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: ItemKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Priority
+		dataType: string
+		lineageTag: b1000004-0000-0000-0000-000000000008
+		summarizeBy: none
+		sourceColumn: Priority
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: b1000004-0000-0000-0000-000000000009
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: b1000004-0000-0000-0000-00000000000a
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column DowntimeHours
+		dataType: double
+		lineageTag: b1000004-0000-0000-0000-00000000000b
+		summarizeBy: sum
+		sourceColumn: DowntimeHours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LaborHours
+		dataType: double
+		lineageTag: b1000004-0000-0000-0000-00000000000c
+		summarizeBy: sum
+		sourceColumn: LaborHours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RepairCostCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000004-0000-0000-0000-00000000000d
+		summarizeBy: sum
+		sourceColumn: RepairCostCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactMaintenance = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\FactMaintenance.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ReplaceBlankClosed = Table.ReplaceValue(PromoteHeaders, "", null, Replacer.ReplaceValue, {"ClosedDateKey"}),
+				    ChangeTypes = Table.TransformColumnTypes(ReplaceBlankClosed, {
+				        {"WorkOrderID", type text},
+				        {"OpenedDateKey", Int64.Type},
+				        {"ClosedDateKey", Int64.Type},
+				        {"DepartmentKey", Int64.Type},
+				        {"LocationKey", Int64.Type},
+				        {"ItemKey", Int64.Type},
+				        {"Priority", type text},
+				        {"Category", type text},
+				        {"Status", type text},
+				        {"DowntimeHours", type number},
+				        {"LaborHours", type number},
+				        {"RepairCostCredits", Int64.Type}
+				    }),
+				    ReplaceZeroClosed = Table.ReplaceValue(ChangeTypes, 0, null, Replacer.ReplaceValue, {"ClosedDateKey"}),
+				    #"Replaced Value" = Table.ReplaceValue(ReplaceZeroClosed,0,null,Replacer.ReplaceValue,{"DowntimeHours"})
+				in
+				    #"Replaced Value"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

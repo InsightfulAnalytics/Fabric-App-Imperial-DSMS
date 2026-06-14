@@ -1,0 +1,19 @@
+EVALUATE
+VAR LatestYear = <<YEAR>>
+VAR PriorYear = LatestYear - 1
+RETURN
+ROW (
+    "LatestYear",         LatestYear,
+    "TotalIncomeCY",      CALCULATE ( [Total Income],      DimDate[Year] = LatestYear ),
+    "TotalIncomePY",      CALCULATE ( [Total Income],      DimDate[Year] = PriorYear  ),
+    "TotalExpensesCY",    CALCULATE ( [Total Expenses],    DimDate[Year] = LatestYear ),
+    "TotalExpensesPY",    CALCULATE ( [Total Expenses],    DimDate[Year] = PriorYear  ),
+    "NetSurplusCY",       CALCULATE ( [Net Surplus],       DimDate[Year] = LatestYear ),
+    "NetSurplusPY",       CALCULATE ( [Net Surplus],       DimDate[Year] = PriorYear  ),
+    "ImperialSubsidyCY",  CALCULATE ( [Imperial Subsidy],  DimDate[Year] = LatestYear ),
+    "ImperialSubsidyPY",  CALCULATE ( [Imperial Subsidy],  DimDate[Year] = PriorYear  ),
+    "SubsidyCoverageCY",  CALCULATE ( [Subsidy Coverage %],DimDate[Year] = LatestYear ),
+    "SubsidyCoveragePY",  CALCULATE ( [Subsidy Coverage %],DimDate[Year] = PriorYear  ),
+    "OperatingMarginCY",  CALCULATE ( [Operating Margin %],DimDate[Year] = LatestYear ),
+    "OperatingMarginPY",  CALCULATE ( [Operating Margin %],DimDate[Year] = PriorYear  )
+)

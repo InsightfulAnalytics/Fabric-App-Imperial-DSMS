@@ -1,0 +1,97 @@
+table DimItem
+	lineageTag: a1000004-0000-0000-0000-000000000001
+
+	column ItemKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a1000004-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: ItemKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Item
+		dataType: string
+		lineageTag: a1000004-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: Item
+
+		annotation SummarizationSetBy = Automatic
+
+	column ItemCategory
+		dataType: string
+		lineageTag: a1000004-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: ItemCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitOfMeasure
+		dataType: string
+		lineageTag: a1000004-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: UnitOfMeasure
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitCostCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: a1000004-0000-0000-0000-000000000006
+		summarizeBy: sum
+		sourceColumn: UnitCostCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	column Perishable
+		dataType: string
+		lineageTag: a1000004-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: Perishable
+
+		annotation SummarizationSetBy = Automatic
+
+	column LeadTimeDays
+		dataType: int64
+		formatString: 0
+		lineageTag: a1000004-0000-0000-0000-000000000008
+		summarizeBy: none
+		sourceColumn: LeadTimeDays
+
+		annotation SummarizationSetBy = Automatic
+
+	column PreferredVendorKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a1000004-0000-0000-0000-000000000009
+		summarizeBy: none
+		sourceColumn: PreferredVendorKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimItem = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\DimItem.csv"), [Delimiter=",", Columns=8, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"ItemKey", Int64.Type},
+				        {"Item", type text},
+				        {"ItemCategory", type text},
+				        {"UnitOfMeasure", type text},
+				        {"UnitCostCredits", Int64.Type},
+				        {"Perishable", type text},
+				        {"LeadTimeDays", Int64.Type},
+				        {"PreferredVendorKey", Int64.Type}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

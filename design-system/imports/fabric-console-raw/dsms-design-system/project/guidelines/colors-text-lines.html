@@ -1,0 +1,36 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Text & Lines" subtitle="Text hierarchy and conduit borders on the void" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); }
+  .grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 24px; padding: 18px; }
+  .row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 9px; }
+  .row .t { font-size: 15px; }
+  .row .k { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-text-muted); margin-left: auto; }
+  .lines { display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+  .lblk { display:flex; align-items:center; gap:12px; }
+  .lblk .bar { flex:1; height: 0; }
+  .lblk .k { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-text-secondary); white-space:nowrap; }
+  .lblk .hex { font-family: var(--ds-font-mono); font-size: 10px; color: var(--ds-text-muted); white-space:nowrap; }
+</style>
+</head>
+<body>
+<div class="grid">
+  <div>
+    <div class="row"><span class="t" style="color:var(--ds-text-primary);font-weight:600">Primary — headings, KPI</span><span class="k">--ds-text-primary</span></div>
+    <div class="row"><span class="t" style="color:var(--ds-text-secondary)">Secondary — body, axis labels</span><span class="k">--ds-text-secondary</span></div>
+    <div class="row"><span class="t" style="color:var(--ds-text-muted)">Muted — captions, footnotes</span><span class="k">--ds-text-muted</span></div>
+    <div class="row"><span class="t" style="color:var(--ds-text-faint)">Faint — placeholder, watermark</span><span class="k">--ds-text-faint</span></div>
+  </div>
+  <div class="lines">
+    <div class="lblk"><div class="bar" style="border-top:1px solid var(--ds-line-faint)"></div><span class="k">faint</span><span class="hex">#20262E</span></div>
+    <div class="lblk"><div class="bar" style="border-top:1px solid var(--ds-line-conduit)"></div><span class="k">conduit</span><span class="hex">#2A323D</span></div>
+    <div class="lblk"><div class="bar" style="border-top:1px solid var(--ds-line-bright)"></div><span class="k">bright</span><span class="hex">#3A4452</span></div>
+    <div class="lblk"><div class="bar" style="border-top:2px solid var(--ds-accent-imperial)"></div><span class="k">accent 2px</span><span class="hex">#C8102E</span></div>
+  </div>
+</div>
+</body>
+</html>

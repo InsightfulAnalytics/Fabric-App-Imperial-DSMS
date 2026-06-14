@@ -1,0 +1,13 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDate[MonthOfYear],
+        "InventoryValue",
+            VAR s = MAX ( FactInventory[SnapshotDateKey] )
+            RETURN CALCULATE ( SUM ( FactInventory[InventoryValueCredits] ), FactInventory[SnapshotDateKey] = s )
+    ),
+    DimDate[Year] = CurrentYear<<FILTERS>>
+)
+ORDER BY DimDate[MonthOfYear]

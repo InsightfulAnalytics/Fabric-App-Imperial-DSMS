@@ -1,0 +1,92 @@
+/// Per-department, per-role, per-month budget for headcount, average monthly
+/// pay, and projected payroll cost. One row per Department x Role x Month.
+/// Budget is set annually as a planning baseline (held flat across the year)
+/// and is calibrated so annual variance vs actuals stays within roughly +/-
+/// 12% on headcount and +/- 5% on average pay.
+table FactBudgetHeadcount
+	lineageTag: b1000006-0000-0000-0000-000000000001
+
+	column MonthDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000006-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: MonthDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000006-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoleKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b1000006-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: RoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Budgeted headcount for this department-role-month.
+	column BudgetedHeadcount
+		dataType: int64
+		formatString: #,0
+		lineageTag: b1000006-0000-0000-0000-000000000005
+		summarizeBy: sum
+		sourceColumn: BudgetedHeadcount
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Budgeted average monthly pay rate per head. Do not sum across rows;
+	/// always wrap in AVERAGE or use the dedicated measure.
+	column BudgetedAvgMonthlyPayCredits
+		dataType: int64
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: b1000006-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: BudgetedAvgMonthlyPayCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	/// Projected payroll cost = BudgetedHeadcount x BudgetedAvgMonthlyPayCredits.
+	/// Pre-calculated at the row grain so totals are additive.
+	column BudgetedPayrollCostCredits
+		dataType: int64
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: b1000006-0000-0000-0000-000000000007
+		summarizeBy: sum
+		sourceColumn: BudgetedPayrollCostCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactBudgetHeadcount = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\FactBudgetHeadcount.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"MonthDateKey", Int64.Type},
+				        {"DepartmentKey", Int64.Type},
+				        {"RoleKey", Int64.Type},
+				        {"BudgetedHeadcount", Int64.Type},
+				        {"BudgetedAvgMonthlyPayCredits", Int64.Type},
+				        {"BudgetedPayrollCostCredits", Int64.Type}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

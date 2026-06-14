@@ -1,0 +1,61 @@
+<!-- @dsCard group="Components" viewport="900x460" name="Chrome & Layout" subtitle="SidebarRail · TopBar · Panel · SectionHeader" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  html, body { margin: 0; height: 100%; background: var(--ds-bg-void); font-family: var(--ds-font-body); }
+  #root { height: 460px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+  const { SidebarRail, TopBar, Panel, SectionHeader, Select, Button, KpiTile, Gauge } = window.DSMSDesignSystem_197d77;
+  const inc = [62,64,63,68,70,69,74,73,78,80,84,88];
+  function App() {
+    const [active, setActive] = React.useState("briefing");
+    return (
+      <div style={{ display: "flex", height: 460, background: "var(--ds-bg-void)" }}>
+        <SidebarRail
+          active={active}
+          onSelect={setActive}
+          items={[
+            { id: "briefing", label: "Executive Briefing", icon: "layout-dashboard" },
+            { id: "ops", label: "Operations Command", icon: "git-branch" },
+            { id: "supply", label: "Supply Chain", icon: "boxes" },
+            { id: "workforce", label: "Workforce", icon: "users" },
+            { id: "maint", label: "Maintenance", icon: "wrench" },
+          ]}
+        />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", minWidth: 0 }}>
+          <TopBar title="Imperial Executive Briefing" breadcrumb={["Finance", "P&L"]}>
+            <Select icon="calendar" size="sm" defaultValue="12m" options={[{ value: "12m", label: "Last 12 months" }]} />
+            <Button variant="secondary" size="sm" icon="download">Export</Button>
+          </TopBar>
+          <div style={{ flex: 1, padding: 20, overflow: "auto", backgroundImage: "var(--ds-texture-grid)", backgroundSize: "var(--ds-texture-grid-size)" }}>
+            <SectionHeader eyebrow="Financial Posture" title="Trailing Twelve Months" style={{ marginBottom: 16 }} />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 220px", gap: 12 }}>
+              <KpiTile label="Net Surplus" value="₡ 1.28B" delta={0.064} sparkData={inc} accent />
+              <KpiTile label="Subsidy" value="₡ 8.55B" delta={0.011} sparkColor="var(--ds-signal-info)" sparkData={inc} />
+              <Panel title="Coverage" eyebrow="Treasury">
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Gauge value={0.94} label="Subsidy" size={120} />
+                </div>
+              </Panel>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>

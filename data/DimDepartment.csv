@@ -1,0 +1,26 @@
+DepartmentKey,Department,DivisionGroup,CommandingOfficer,Sector,HeadcountWeight,CostDriverWeight
+1,Superlaser Operations,Combat Systems,Cmdr. Tarrin Vause,Equatorial Ring,4,10
+2,Turbolaser Batteries,Combat Systems,Lt. Cmdr. Hela Dox,Trench 12,6,6
+3,Ion Cannon Defense,Combat Systems,Lt. Cmdr. Orlok Vane,Sector L-3,4,4
+4,Shield Generator Control,Combat Systems,Cmdr. Pell Sorano,Equatorial Ring,3,5
+5,Tractor Beam Operations,Combat Systems,Lt. Marek Quan,Sector H-22,3,3
+6,Main Reactor Core,Engineering & Power,Chief Eng. Brunin,Sector A-1,7,12
+7,Hypermatter Fuel Systems,Engineering & Power,Eng. Sora Teppin,Equatorial Ring,4,6
+8,Power Distribution,Engineering & Power,Eng. Dav Holox,Sector L-3,5,4
+9,Sublight Propulsion,Engineering & Power,Eng. Kalla Wren,Trench 7,4,5
+10,Hyperdrive Engineering,Engineering & Power,Eng. Tovan Reece,Overbridge,3,5
+11,Structural Integrity & Hull,Engineering & Power,Eng. Mara Voll,Sector R-9,6,8
+12,Life Support & Atmosphere,Habitation & Life Support,Supt. Greel Ankin,Quadrant 5,5,3
+13,Sanitation & Waste Compaction,Habitation & Life Support,Supt. Dianoga (acting),Sublevel 14,6,1
+14,Food Services & Mess,Habitation & Life Support,Supt. Olia Fenn,Core Shaft,7,2
+15,Medical & Bacta Bay,Habitation & Life Support,Dr. Senna Korr,Sublevel 14,5,3
+16,Stormtrooper Garrison,Security & Detention,Cmdr. TK-7340,Sector M-19,12,7
+17,Detention Block Operations,Security & Detention,Lt. Shann Mott,Core Shaft,4,1
+18,Internal Security (ISB),Security & Detention,Col. Yularen Jr.,Trench 12,3,2
+19,Hangar & TIE Flight Ops,Flight Operations,Cmdr. Jix Daro,Sector R-9,8,6
+20,Docking & Traffic Control,Flight Operations,Lt. Pora Vess,Sublevel 14,3,2
+21,Procurement & Logistics,Logistics & Supply,Q.M. Bron Tagge,Trench 12,5,4
+22,Droid Maintenance Pool,Logistics & Supply,Tech. Lead IT-O,Overbridge,4,2
+23,Command & Overbridge,Command & Administration,Grand Moff Tarkin,Core Shaft,3,3
+24,Personnel & Recruitment,Command & Administration,Adj. Lira Penn,Sector L-3,4,2
+25,Station-Wide (Unallocated),Command & Administration,Office of the Moff,Sector M-19,0,0

@@ -1,0 +1,31 @@
+<!-- @dsCard group="Type" viewport="700x180" name="Numeric — JetBrains Mono" subtitle="Every number on screen. Tabular figures, columns align" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); padding: 20px; display:flex; gap:40px; align-items:center; }
+  .num { font-family: var(--ds-font-mono); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; color: var(--ds-text-primary); }
+  .kpi { font-size: 34px; font-weight: 600; }
+  .col { display:flex; flex-direction:column; gap:5px; text-align:right; }
+  .col .num { font-size: 14px; color: var(--ds-text-secondary); }
+  .label { font-family: var(--ds-font-display); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ds-text-muted); margin-bottom: 6px; }
+</style>
+</head>
+<body>
+  <div>
+    <div class="label">Net Surplus</div>
+    <div class="num kpi">₡ 1,284,900,002</div>
+  </div>
+  <div>
+    <div class="label">Aligned columns</div>
+    <div class="col">
+      <span class="num">  12,400,331</span>
+      <span class="num">   8,019,557</span>
+      <span class="num">1,284,900,002</span>
+      <span class="num">      90,118</span>
+    </div>
+  </div>
+</body>
+</html>

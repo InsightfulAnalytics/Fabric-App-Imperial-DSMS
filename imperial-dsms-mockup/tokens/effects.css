@@ -1,0 +1,83 @@
+/* ============================================================
+   DSMS — SURFACE EFFECTS & TEXTURES
+   Background textures (scanline / grid) at <=3% opacity, the
+   imperial accent stripe, and base element resets for the dark
+   console. These are reusable utility classes + tokens.
+   ============================================================ */
+
+:root {
+  /* Subtle technical textures for the page void. Kept at low opacity. */
+  --ds-texture-grid:
+    linear-gradient(to right,  rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px); /* @kind other */
+  --ds-texture-grid-size: 32px 32px;
+
+  --ds-texture-scanline:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.018) 0px,
+      rgba(255, 255, 255, 0.018) 1px,
+      transparent 1px,
+      transparent 3px
+    ); /* @kind other */
+
+  /* Top/bottom protection gradient for scroll regions over the void. */
+  --ds-protect-top:    linear-gradient(to bottom, var(--ds-bg-void), transparent);
+  --ds-protect-bottom: linear-gradient(to top,    var(--ds-bg-void), transparent);
+}
+
+/* ---- Background utilities ---- */
+.ds-bg-void {
+  background-color: var(--ds-bg-void);
+}
+.ds-bg-grid {
+  background-color: var(--ds-bg-void);
+  background-image: var(--ds-texture-grid);
+  background-size: var(--ds-texture-grid-size);
+}
+.ds-bg-scanline {
+  background-color: var(--ds-bg-void);
+  background-image: var(--ds-texture-scanline);
+}
+
+/* ---- Imperial accent stripe — the one allowed motif on active chrome ---- */
+.ds-accent-stripe {
+  position: relative;
+}
+.ds-accent-stripe::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--ds-border-mark);
+  background: var(--ds-accent-imperial);
+}
+
+/* ---- Tabular numerics helper — apply to every number element ---- */
+.ds-num {
+  font-family: var(--ds-font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: var(--ds-tracking-tight);
+}
+
+/* ---- ALL-CAPS eyebrow helper ---- */
+.ds-eyebrow {
+  font-family: var(--ds-font-display);
+  font-size: var(--type-eyebrow-size);
+  font-weight: var(--type-eyebrow-weight);
+  letter-spacing: var(--type-eyebrow-track);
+  text-transform: uppercase;
+  color: var(--ds-text-muted);
+}
+
+/* ---- Base reset for design-system specimen surfaces ---- */
+.ds-root {
+  background-color: var(--ds-bg-void);
+  color: var(--ds-text-secondary);
+  font-family: var(--ds-font-body);
+  font-size: var(--ds-text-md);
+  line-height: var(--ds-leading-normal);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}

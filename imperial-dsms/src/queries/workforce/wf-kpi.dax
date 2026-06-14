@@ -1,0 +1,14 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR PriorYear   = CurrentYear - 1
+RETURN
+CALCULATETABLE (
+ROW (
+    "HeadcountCY", CALCULATE ( [Total Headcount], DimDate[Year] = CurrentYear ),
+    "HeadcountPY", CALCULATE ( [Total Headcount], DimDate[Year] = PriorYear ),
+    "DroidShareCY",
+        VAR total  = CALCULATE ( [Total Headcount], DimDate[Year] = CurrentYear )
+        VAR droids = CALCULATE ( [Total Headcount], DimDate[Year] = CurrentYear, DimRole[RoleType] = "Droid" )
+        RETURN DIVIDE ( droids, total )
+)<<FILTERS>>
+)

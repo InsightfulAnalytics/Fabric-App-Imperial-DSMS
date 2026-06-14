@@ -1,0 +1,71 @@
+// TEMPLATE: Horizontal Bar Chart with Value Labels
+// Based on: https://vega.github.io/vega-lite/examples/bar_negative_horizontal_label.html
+// Adapted for Fabric Apps: data: { name: "table" }, container sizing, positive/negative label alignment
+//
+// DATA BINDING
+// category  : string  — dimension — e.g. Product[Product], Product[Category]
+// value     : number  — measure   — e.g. [Sales Total], [Var Sales To Budget]
+//
+// HOW IT WORKS
+// Two layers: a bar mark + a text mark.
+// The text label automatically aligns left for negative values and right for positive.
+// This makes it ideal for variance bars (positive = above budget, negative = below).
+// The zero line is highlighted black; all other grid lines are light grey.
+//
+// VARIANTS
+// - Remove the text layer for a clean bar without labels
+// - Add "color": { "condition": ... } to color positive/negative bars differently
+// - Change "y"/"x" fields to swap to vertical orientation
+//
+// PRODUCTION WIRING
+// DAX query: SUMMARIZECOLUMNS(Product[Product], "value", [Sales Total])
+// ORDER BY value DESC for rank-sorted bars
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "data": { "name": "table" },
+  "width": "container",
+  "height": "container",
+  "encoding": {
+    "y": {
+      "field": "category",
+      "type": "nominal",
+      "sort": "-x",   // sort by value descending — remove for natural order
+      "axis": {
+        "domain": false,
+        "ticks": false,
+        "labelAngle": 0,
+        "labelPadding": 4
+      }
+    },
+    "x": {
+      "field": "value",
+      "type": "quantitative",
+      "scale": { "padding": 20 },
+      "axis": {
+        // Highlight zero baseline black, other gridlines light grey
+        "gridColor": {
+          "condition": { "test": "datum.value === 0", "value": "black" },
+          "value": "#ddd"
+        }
+      }
+    },
+    "tooltip": [
+      { "field": "category", "type": "nominal" },
+      { "field": "value", "type": "quantitative" }
+    ]
+  },
+  "layer": [
+    // Bar
+    { "mark": "bar" },
+    // Value label — right of bar for positive, left for negative
+    {
+      "mark": {
+        "type": "text",
+        "align": { "expr": "datum.value < 0 ? 'right' : 'left'" },
+        "dx": { "expr": "datum.value < 0 ? -2 : 2" }
+      },
+      "encoding": { "text": { "field": "value", "type": "quantitative" } }
+    }
+  ],
+  "config": { "view": { "stroke": null } }
+}

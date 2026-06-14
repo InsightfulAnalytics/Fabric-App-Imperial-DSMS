@@ -1,0 +1,15 @@
+EVALUATE
+VAR LatestYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDate[MonthnYear],
+        DimDate[Month & Year],
+        "TotalIncome",   [Total Income],
+        "TotalExpenses", [Total Expenses],
+        "NetSurplus",    [Net Surplus]
+    ),
+    DimDate[Year] >= LatestYear - 1,
+    DimDate[Year] <= LatestYear
+)
+ORDER BY DimDate[MonthnYear]

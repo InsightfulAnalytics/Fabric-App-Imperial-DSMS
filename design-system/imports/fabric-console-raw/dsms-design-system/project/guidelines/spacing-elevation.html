@@ -1,0 +1,20 @@
+<!-- @dsCard group="Spacing" viewport="700x160" name="Elevation" subtitle="Dark UI reads elevation via surface step + hairline; shadow only for overlays" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); padding: 22px; display:flex; gap: 20px; align-items:center; }
+  .item { text-align:center; }
+  .box { width: 120px; height: 72px; border-radius: var(--ds-radius-md); border: 1px solid var(--ds-line-conduit); display:flex; align-items:center; justify-content:center; color: var(--ds-text-secondary); font-size:12px; }
+  .lab { font-size: 11px; color: var(--ds-text-muted); margin-top: 8px; }
+</style>
+</head>
+<body>
+  <div class="item"><div class="box" style="background:var(--ds-bg-hull)">Hull · card</div><div class="lab">surface + hairline</div></div>
+  <div class="item"><div class="box" style="background:var(--ds-bg-bay)">Bay · raised</div><div class="lab">+1 surface step</div></div>
+  <div class="item"><div class="box" style="background:var(--ds-bg-bay);box-shadow:var(--ds-shadow-popover)">Popover</div><div class="lab">--ds-shadow-popover</div></div>
+  <div class="item"><div class="box" style="background:var(--ds-bg-bay);box-shadow:var(--ds-shadow-overlay)">Overlay · dialog</div><div class="lab">--ds-shadow-overlay</div></div>
+</body>
+</html>

@@ -1,0 +1,24 @@
+<!-- @dsCard group="Spacing" viewport="700x150" name="Radius & Borders" subtitle="Austere — nothing rounder than 4px; hairline + accent marks" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); padding: 20px; display:flex; gap: 28px; align-items:center; }
+  .item { text-align:center; }
+  .box { width: 72px; height: 56px; background: var(--ds-bg-hull); border: 1px solid var(--ds-line-conduit); }
+  .lab { font-size: 11px; color: var(--ds-text-secondary); margin-top: 8px; }
+  .tk { font-family: var(--ds-font-mono); font-size: 10px; color: var(--ds-text-faint); }
+  .sep { width:1px; align-self:stretch; background: var(--ds-line-conduit); }
+</style>
+</head>
+<body>
+  <div class="item"><div class="box" style="border-radius:0"></div><div class="lab">none</div><div class="tk">0px</div></div>
+  <div class="item"><div class="box" style="border-radius:2px"></div><div class="lab">xs · control</div><div class="tk">2px</div></div>
+  <div class="item"><div class="box" style="border-radius:4px"></div><div class="lab">md · card</div><div class="tk">4px</div></div>
+  <div class="sep"></div>
+  <div class="item"><div class="box" style="border-radius:4px;box-shadow:inset 0 0 0 2px var(--ds-accent-imperial);border-color:transparent"></div><div class="lab">active inset</div><div class="tk">2px red</div></div>
+  <div class="item"><div class="box" style="border-radius:4px;outline:0;box-shadow:0 0 0 1px var(--ds-accent-imperial),0 0 0 4px rgba(200,16,46,0.22);border-color:transparent"></div><div class="lab">focus glow</div><div class="tk">--ds-glow-focus</div></div>
+</body>
+</html>

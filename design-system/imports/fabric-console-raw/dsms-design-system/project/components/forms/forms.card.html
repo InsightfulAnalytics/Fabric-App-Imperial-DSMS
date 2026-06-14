@@ -1,0 +1,84 @@
+<!-- @dsCard group="Components" viewport="700x400" name="Forms" subtitle="Button · IconButton · Input · Select · Slicer · Switch" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../../styles.css">
+<style>
+  body { margin: 0; background: var(--ds-bg-void); font-family: var(--ds-font-body); padding: 22px; }
+  .group { margin-bottom: 20px; }
+  .glabel { font-family: var(--ds-font-display); font-size: 10px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ds-text-muted); margin-bottom: 10px; }
+  .row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="../../_ds_bundle.js"></script>
+<script type="text/babel">
+  const { Button, IconButton, Input, Select, Slicer, Switch } = window.DSMSDesignSystem_197d77;
+  function Demo() {
+    return (
+      <div>
+        <div className="group">
+          <div className="glabel">Button</div>
+          <div className="row">
+            <Button variant="primary" icon="play">Authorize</Button>
+            <Button variant="secondary" icon="download">Export</Button>
+            <Button variant="ghost">Dismiss</Button>
+            <Button variant="danger" icon="alert-triangle">Lockdown</Button>
+            <Button variant="secondary" disabled>Disabled</Button>
+            <Button variant="secondary" size="sm" iconTrailing="chevron-down">Last 12 mo</Button>
+          </div>
+        </div>
+        <div className="group">
+          <div className="glabel">Icon Button</div>
+          <div className="row">
+            <IconButton icon="layout-dashboard" active title="Briefing" />
+            <IconButton icon="git-branch" title="Operations" />
+            <IconButton icon="boxes" title="Supply" />
+            <IconButton icon="settings" variant="solid" title="Settings" />
+            <IconButton icon="more-horizontal" title="More" />
+          </div>
+        </div>
+        <div className="group">
+          <div className="glabel">Input &amp; Select</div>
+          <div className="row">
+            <Input icon="search" placeholder="Filter vendors…" style={{ width: 200 }} />
+            <Input numeric defaultValue="1284900002" style={{ width: 160 }} />
+            <Select icon="calendar" defaultValue="12m" options={[
+              { value: "12m", label: "Last 12 months" },
+              { value: "ytd", label: "Year to date" },
+              { value: "0bby", label: "Ending 0 BBY" },
+            ]} />
+          </div>
+        </div>
+        <div className="group">
+          <div className="glabel">Slicer</div>
+          <div className="row">
+            <Slicer defaultValue="0bby" options={[
+              { value: "3bby", label: "3 BBY" },
+              { value: "2bby", label: "2 BBY" },
+              { value: "1bby", label: "1 BBY" },
+              { value: "0bby", label: "0 BBY" },
+            ]} />
+          </div>
+        </div>
+        <div className="group" style={{ marginBottom: 0 }}>
+          <div className="glabel">Switch</div>
+          <div className="row">
+            <Switch label="Combat losses" defaultChecked />
+            <Switch label="Dense rows" />
+            <Switch label="Disabled" disabled />
+          </div>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById("root")).render(<Demo />);
+</script>
+</body>
+</html>

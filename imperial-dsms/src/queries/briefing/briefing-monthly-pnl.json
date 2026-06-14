@@ -1,0 +1,81 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "Income vs Expenses vs Net Surplus by month, trailing 2 years.",
+  "data": { "name": "table" },
+  "width": "container",
+  "height": "container",
+  "transform": [
+    {
+      "fold": ["TotalIncome", "TotalExpenses", "NetSurplus"],
+      "as": ["Series", "Value"]
+    },
+    {
+      "calculate": "{'TotalIncome': 'Income', 'TotalExpenses': 'Expenses', 'NetSurplus': 'Net Surplus'}[datum.Series]",
+      "as": "SeriesLabel"
+    }
+  ],
+  "mark": {
+    "type": "line",
+    "point": { "size": 32, "filled": true },
+    "strokeWidth": 1.75
+  },
+  "encoding": {
+    "x": {
+      "field": "DimDateMonth & Year",
+      "type": "nominal",
+      "sort": { "field": "DimDateMonthnYear" },
+      "axis": {
+        "title": null,
+        "labelAngle": -35,
+        "labelFontSize": 10,
+        "labelColor": "#A6ADB6",
+        "labelFont": "Inter, system-ui, sans-serif",
+        "domain": false,
+        "tickColor": "#2A323D",
+        "grid": false
+      }
+    },
+    "y": {
+      "field": "Value",
+      "type": "quantitative",
+      "axis": {
+        "title": null,
+        "labelFontSize": 10,
+        "labelColor": "#A6ADB6",
+        "labelFont": "JetBrains Mono, ui-monospace, monospace",
+        "format": "~s",
+        "tickCount": 5,
+        "domain": false,
+        "ticks": false,
+        "gridColor": "#1C2128",
+        "gridDash": [2, 3]
+      }
+    },
+    "color": {
+      "field": "SeriesLabel",
+      "type": "nominal",
+      "scale": {
+        "domain": ["Income", "Expenses", "Net Surplus"],
+        "range": ["#5BC8F5", "#E45755", "#3CB371"]
+      },
+      "legend": {
+        "title": null,
+        "orient": "top",
+        "labelColor": "#E8ECEF",
+        "labelFontSize": 11,
+        "labelFont": "Inter, system-ui, sans-serif",
+        "symbolSize": 80,
+        "symbolStrokeWidth": 2
+      }
+    },
+    "tooltip": [
+      { "field": "DimDateMonth & Year", "title": "Month" },
+      { "field": "SeriesLabel", "title": "Series" },
+      { "field": "Value", "type": "quantitative", "format": ",.0f", "title": "Credits" }
+    ]
+  },
+  "config": {
+    "view": { "stroke": null },
+    "background": "transparent"
+  }
+}

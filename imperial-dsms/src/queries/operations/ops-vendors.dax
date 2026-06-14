@@ -1,0 +1,22 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+TOPN (
+    10,
+    CALCULATETABLE (
+        FILTER (
+            SUMMARIZECOLUMNS (
+                DimVendor[Vendor],
+                DimVendor[VendorType],
+                DimVendor[HomeWorld],
+                DimVendor[ContractTier],
+                DimVendor[RiskRating],
+                "Spend", [Total Expenses]
+            ),
+            [Spend] > 0 && DimVendor[RiskRating] <> "-"
+        ),
+        DimDate[Year] = CurrentYear<<FILTERS>>
+    ),
+    [Spend], DESC
+)
+ORDER BY [Spend] DESC

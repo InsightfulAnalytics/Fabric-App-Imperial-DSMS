@@ -1,0 +1,77 @@
+// TEMPLATE: KPI Card (Large Metric + Subtitle)
+// Based on: labelCallout / labelSubtitle named styles from .agents/skills/visuals/references/formatting.md
+// Purpose: show a single headline number with a descriptive label below it
+//
+// DATA BINDING
+// metric_value  : number  — measure   — e.g. [Sales Total], [Budget Total]
+// metric_label  : string  — dimension — static label, e.g. "Total Sales"
+// change_value  : number  — measure   — optional: period-over-period change (e.g. [Var Sales To Budget %])
+// change_label  : string  — dimension — optional: change label, e.g. "vs Budget"
+//
+// HOW IT WORKS
+// Two required layers:
+//   1. Large metric value — uses "labelCallout" named style (large, bold, primary color)
+//   2. Subtitle label     — uses "labelSubtitle" named style (small, muted)
+// Two optional layers:
+//   3. Change value       — variance percentage (green if positive, red if negative)
+//   4. Change label       — e.g. "vs Budget" next to the change value
+//
+// SINGLE-ROW DATA
+// The DAX query should return exactly ONE row (grand total, no GROUP BY).
+// Example: EVALUATE { [Sales Total] }  or  EVALUATE ROW("metric_value", [Sales Total])
+//
+// SIZING
+// Designed to fill a card — set height on the React card wrapper, not the spec.
+// The spec uses height: "container" to fill whatever space is given.
+//
+// PRODUCTION WIRING
+// For a simple single-value card:
+//   DAX: EVALUATE ROW("metric_value", [Sales Total], "metric_label", "Total Sales")
+// For a card with variance:
+//   DAX: EVALUATE ROW("metric_value", [Sales Total], "metric_label", "Total Sales",
+//                     "change_value", [Var Sales To Budget %], "change_label", "vs Budget")
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "data": { "name": "table" },
+  "width": "container",
+  "height": "container",
+  "layer": [
+    // Primary metric value — large, bold, centered
+    {
+      "mark": {
+        "type": "text",
+        "style": "labelCallout",   // defined in VegaVisual base theme
+        "align": "center",
+        "baseline": "middle",
+        "dy": -12    // shift up slightly to leave room for subtitle
+      },
+      "encoding": {
+        "text": { "field": "metric_value", "type": "quantitative" },
+        "x": { "value": { "expr": "width / 2" } },
+        "y": { "value": { "expr": "height / 2" } }
+      }
+    },
+    // Subtitle label — small, muted, below the metric
+    {
+      "mark": {
+        "type": "text",
+        "style": "labelSubtitle",  // defined in VegaVisual base theme
+        "align": "center",
+        "baseline": "top",
+        "dy": 12
+      },
+      "encoding": {
+        "text": { "field": "metric_label", "type": "nominal" },
+        "x": { "value": { "expr": "width / 2" } },
+        "y": { "value": { "expr": "height / 2" } }
+      }
+    }
+    // Optional: add change_value and change_label layers here
+    // Use conditional color: positive → "#1E7C36", negative → "#C62F2F"
+  ],
+  "config": {
+    "view": { "stroke": null, "fill": "transparent" },
+    "axis": { "ticks": false, "grid": false, "domain": false, "labels": false },
+    "font": "Segoe UI"
+  }
+}

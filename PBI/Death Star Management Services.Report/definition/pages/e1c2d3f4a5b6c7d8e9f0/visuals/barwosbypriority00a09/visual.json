@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "barwosbypriority00a09",
+  "position": {
+    "x": 20,
+    "y": 460,
+    "z": 8,
+    "height": 240,
+    "width": 620
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactMaintenance"
+                    }
+                  },
+                  "Property": "Priority"
+                }
+              },
+              "queryRef": "FactMaintenance.Priority",
+              "nativeQueryRef": "Priority",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Work Orders"
+                }
+              },
+              "queryRef": "Measure Table.Work Orders",
+              "nativeQueryRef": "Work Orders"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Open Work Orders"
+                }
+              },
+              "queryRef": "Measure Table.Open Work Orders",
+              "nativeQueryRef": "Open Work Orders"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "dc501b2d7b003da37337",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "FactMaintenance"
+              }
+            },
+            "Property": "Priority"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "42ea7f70150ac936562c",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Work Orders"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "7c45bd69b3b970b2882d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Open Work Orders"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

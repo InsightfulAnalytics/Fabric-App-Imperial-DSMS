@@ -1,0 +1,27 @@
+AccountKey,Account,AccountCategory,AccountType,NaturalSign,ImperialSubsidy
+1,Imperial Treasury Subsidy,Imperial Funding,Income,1,Yes
+2,Officer Salaries,Personnel,Expense,-1,No
+3,Stormtrooper Wages,Personnel,Expense,-1,No
+4,Technician & Crew Wages,Personnel,Expense,-1,No
+5,Droid Lease & Operation,Personnel,Expense,-1,No
+6,Recruitment & Training,Personnel,Expense,-1,No
+7,Personnel Benefits & Rations,Personnel,Expense,-1,No
+8,Hypermatter Fuel,Operations,Expense,-1,No
+9,Reactor Coolant & Maintenance,Operations,Expense,-1,No
+10,Turbolaser Munitions,Operations,Expense,-1,No
+11,Superlaser Charging Costs,Operations,Expense,-1,No
+12,Life Support Consumables,Operations,Expense,-1,No
+13,Medical & Bacta Supplies,Operations,Expense,-1,No
+14,Food & Catering,Operations,Expense,-1,No
+15,Waste Disposal & Compaction,Operations,Expense,-1,No
+16,TIE Fighter Maintenance,Operations,Expense,-1,No
+17,Droid Spare Parts,Operations,Expense,-1,No
+18,Structural Construction Materials,Capital & Construction,Expense,-1,No
+19,Hull Plating & Durasteel,Capital & Construction,Expense,-1,No
+20,Systems Installation & Upgrades,Capital & Construction,Expense,-1,No
+21,Equipment & Weapons Procurement,Capital & Construction,Expense,-1,No
+22,Communications & Holonet,Overhead,Expense,-1,No
+23,Transport & Shuttle Services,Overhead,Expense,-1,No
+24,Security Operations,Overhead,Expense,-1,No
+25,Administrative Overhead,Overhead,Expense,-1,No
+26,Contingency & Misc,Overhead,Expense,-1,No

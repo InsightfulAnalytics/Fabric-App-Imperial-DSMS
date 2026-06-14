@@ -1,0 +1,16 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDepartment[Department],
+        DimDepartment[DivisionGroup],
+        DimDepartment[CostDriverWeight],
+        "IncomeVarPct",   [Income Variance %],
+        "ExpenseVarPct",  [Expense Variance %],
+        "Allocation",     [Department Subsidy Allocation],
+        "ExpenseActual",  [Total Expenses]
+    ),
+    DimDate[Year] = CurrentYear,
+    DimDepartment[CostDriverWeight] > 0<<FILTERS>>
+)

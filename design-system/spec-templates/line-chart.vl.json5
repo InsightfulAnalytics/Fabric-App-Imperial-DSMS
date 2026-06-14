@@ -1,0 +1,87 @@
+// TEMPLATE: Multi-Series Line Chart with Interactive Tooltip
+// Based on: https://vega.github.io/vega-lite/examples/interactive_multi_line_tooltip.html
+// Adapted for Fabric Apps: data: { name: "table" }, container sizing, hover rule tooltip
+//
+// DATA BINDING
+// date    : date    — dimension — temporal x axis, e.g. Dates[Date], formatted as date
+// value   : number  — measure   — the plotted value, e.g. [Sales Total]
+// series  : string  — dimension — series grouping for color, e.g. Product[Category]
+//
+// HOW IT WORKS
+// Three layers:
+//   1. Colored lines — one per series, color-encoded by the "series" field
+//   2. Hover rule    — transparent vertical rule that shows a tooltip for all series at the hovered date
+//   3. (The tooltip is attached to the rule, not the line — this shows values for ALL series at once)
+//
+// SINGLE-SERIES VARIANT
+// Remove the "color" encoding and the "series" field from your DAX query.
+// The hover tooltip will still work for the single line.
+//
+// DATE FORMATTING
+// Use "timeUnit" on the x encoding to control axis label granularity:
+//   "yearmonth"     → Jan 2024, Feb 2024 ...  (monthly data)
+//   "year"          → 2022, 2023, 2024         (annual data)
+//   "yearquarter"   → Q1 2024, Q2 2024 ...     (quarterly data)
+// Match the timeUnit to the grain of your DAX query.
+//
+// PRODUCTION WIRING
+// DAX: SUMMARIZECOLUMNS(Dates[Date], Product[Category], "value", [Sales Total])
+// ORDER BY Dates[Date] ASC
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "data": { "name": "table" },
+  "width": "container",
+  "height": "container",
+  "encoding": {
+    "x": {
+      "field": "date",
+      "type": "temporal",
+      "timeUnit": "yearmonth",   // adjust to match DAX query grain
+      "axis": { "labelAngle": -45, "format": "%b %Y" }
+    },
+    "tooltip": [
+      { "field": "date", "type": "temporal", "timeUnit": "yearmonth", "title": "Period" },
+      { "field": "value", "type": "quantitative" },
+      { "field": "series", "type": "nominal" }
+    ]
+  },
+  "layer": [
+    // Lines — one per series, color-encoded
+    {
+      "mark": { "type": "line", "interpolate": "monotone" },
+      "encoding": {
+        "y": { "field": "value", "type": "quantitative", "scale": { "zero": false } },
+        "color": { "field": "series", "type": "nominal" }
+      }
+    },
+    // Interactive hover rule — selects the nearest date point on pointer move
+    {
+      "mark": "rule",
+      "params": [{
+        "name": "hover",
+        "select": {
+          "type": "point",
+          "fields": ["date"],
+          "nearest": true,
+          "on": "pointerover",
+          "clear": "pointerout"
+        }
+      }],
+      "encoding": {
+        "color": {
+          "condition": { "param": "hover", "empty": false, "value": "#333" },
+          "value": "transparent"
+        },
+        "opacity": {
+          "condition": { "param": "hover", "empty": false, "value": 0.5 },
+          "value": 0
+        }
+      }
+    }
+  ],
+  "config": {
+    "view": { "stroke": null },
+    "axisY": { "minExtent": 30 },
+    "font": "Segoe UI"
+  }
+}

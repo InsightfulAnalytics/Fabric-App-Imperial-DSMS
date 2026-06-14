@@ -1,0 +1,25 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR PriorYear   = CurrentYear - 1
+RETURN
+CALCULATETABLE (
+ROW (
+    "OpenWOCY",      CALCULATE ( [Open Work Orders], DimDate[Year] = CurrentYear ),
+    "OpenWOPY",      CALCULATE ( [Open Work Orders], DimDate[Year] = PriorYear ),
+    "CriticalCY",    CALCULATE ( [Open Work Orders], DimDate[Year] = CurrentYear, FactMaintenance[Priority] = "Critical" ),
+    "CriticalPY",    CALCULATE ( [Open Work Orders], DimDate[Year] = PriorYear,  FactMaintenance[Priority] = "Critical" ),
+    "MttrCY",        DIVIDE ( CALCULATE ( [Total Downtime Hrs], DimDate[Year] = CurrentYear ), CALCULATE ( [Work Orders], DimDate[Year] = CurrentYear ) ),
+    "MttrPY",        DIVIDE ( CALCULATE ( [Total Downtime Hrs], DimDate[Year] = PriorYear ),  CALCULATE ( [Work Orders], DimDate[Year] = PriorYear ) ),
+    // Availability proxy: downtime over scheduled hours (8,760 h × systems with WOs).
+    "AvailabilityCY",
+        1 - DIVIDE (
+            CALCULATE ( [Total Downtime Hrs], DimDate[Year] = CurrentYear ),
+            8760 * CALCULATE ( DISTINCTCOUNT ( FactMaintenance[LocationKey] ), DimDate[Year] = CurrentYear )
+        ),
+    "AvailabilityPY",
+        1 - DIVIDE (
+            CALCULATE ( [Total Downtime Hrs], DimDate[Year] = PriorYear ),
+            8760 * CALCULATE ( DISTINCTCOUNT ( FactMaintenance[LocationKey] ), DimDate[Year] = PriorYear )
+        )
+)<<FILTERS>>
+)

@@ -1,0 +1,156 @@
+// TEMPLATE: Sparkline (Mini Line + Area + Min/Max Dots + End Label)
+// Based on: src/components/sparklines/Sparkline.tsx in this project
+// Purpose-built for compact inline trend lines in table cells or cards
+//
+// DATA BINDING
+// label  : string  — dimension — period label shown in tooltip, e.g. "2024 Jan"
+// value  : number  — measure   — the trend value, e.g. [Sales Total], [GP %]
+// sort   : number  — sort key  — numeric sort key for chronological order, e.g. year*100+month
+//
+// HOW IT WORKS
+// Four layers stacked:
+//   1. Area fill  — subtle fill under the line (navy, 18% opacity)
+//   2. Line       — the trend line (navy, 1.5px)
+//   3. Dots       — green dot at max value, red dot at min value
+//   4. End label  — the final (most recent) value shown to the right of the line
+//
+// Uses joinaggregate to find the max, min, and last row across all data points.
+// The sort field controls chronological order of the ordinal x axis.
+//
+// SIZING
+// Designed for small cells: width ~200px, height ~56px (set on container, not spec).
+// Override the container <style> to change size.
+// The right padding makes room for the end-value label (PADDING_RIGHT_WITH_LABEL = 48px).
+// Remove the text layer and use PADDING_RIGHT_NO_LABEL = 8px if no end label is needed.
+//
+// SCALE
+// scaleZero: true  →  y axis starts at 0 (good for revenue, counts)
+// scaleZero: false →  y axis auto-ranges (good for %, ratios near a midpoint)
+// The domainMin offset (-4% of max) prevents the area baseline from clipping at the SVG boundary.
+//
+// PRODUCTION WIRING
+// DAX query should return rows at (businessLine, yearMonth) grain with:
+//   label  = FORMAT(DATE(year, month, 1), "YYYY MMM")
+//   value  = [Your Measure]
+//   sort   = year * 100 + monthOfYear
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "data": { "name": "table" },
+  "background": "transparent",
+  "width": 200,     // override per usage; set on container not spec for responsive
+  "height": 56,
+  "padding": { "left": 4, "right": 48, "top": 6, "bottom": 6 },
+  "transform": [
+    {
+      "joinaggregate": [
+        { "op": "max",    "field": "value", "as": "maxVal" },
+        { "op": "min",    "field": "value", "as": "minVal" },
+        { "op": "argmax", "field": "sort",  "as": "lastRow" }
+      ]
+    },
+    {
+      "calculate": "datum.sort === datum.lastRow.sort ? datum.value : null",
+      "as": "endValue"
+    }
+  ],
+  "layer": [
+    // Layer 1: area fill
+    {
+      "mark": {
+        "type": "area",
+        "color": "#294269",
+        "opacity": 0.18,
+        "line": false,
+        "interpolate": "monotone"
+      },
+      "encoding": {
+        "x": {
+          "field": "label", "type": "ordinal", "axis": null,
+          "sort": { "field": "sort", "order": "ascending" }
+        },
+        "y": {
+          "field": "value", "type": "quantitative", "axis": null,
+          // scaleZero=true: domainMin offset prevents baseline clipping at SVG boundary
+          "scale": { "zero": true, "domainMin": { "expr": "-max(datum.value, 1) * 0.04" } }
+        }
+      }
+    },
+    // Layer 2: trend line
+    {
+      "mark": {
+        "type": "line",
+        "color": "#294269",
+        "strokeWidth": 1.5,
+        "interpolate": "monotone"
+      },
+      "encoding": {
+        "x": {
+          "field": "label", "type": "ordinal", "axis": null,
+          "sort": { "field": "sort", "order": "ascending" }
+        },
+        "y": {
+          "field": "value", "type": "quantitative", "axis": null,
+          "scale": { "zero": true, "domainMin": { "expr": "-max(datum.value, 1) * 0.04" } }
+        },
+        "tooltip": [
+          { "field": "label", "title": "Period" },
+          { "field": "value", "type": "quantitative" }
+        ]
+      }
+    },
+    // Layer 3: min/max highlight dots
+    {
+      "transform": [
+        { "filter": "datum.value === datum.maxVal || datum.value === datum.minVal" }
+      ],
+      "mark": {
+        "type": "point", "shape": "circle", "filled": true,
+        "size": 40, "stroke": "white", "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "label", "type": "ordinal", "axis": null,
+          "sort": { "field": "sort", "order": "ascending" }
+        },
+        "y": {
+          "field": "value", "type": "quantitative", "axis": null,
+          "scale": { "zero": true, "domainMin": { "expr": "-max(datum.value, 1) * 0.04" } }
+        },
+        "color": {
+          "condition": { "test": "datum.value === datum.maxVal", "value": "#1E7C36" },
+          "value": "#C62F2F"
+        },
+        "tooltip": [
+          { "field": "label", "title": "Period" },
+          { "field": "value", "type": "quantitative" }
+        ]
+      }
+    },
+    // Layer 4: end-of-line value label
+    {
+      "transform": [{ "filter": "datum.endValue !== null" }],
+      "mark": {
+        "type": "text",
+        "align": "left", "baseline": "middle",
+        "dx": 6, "fontSize": 10, "fontWeight": 600,
+        "color": "#294269"
+      },
+      "encoding": {
+        "x": {
+          "field": "label", "type": "ordinal", "axis": null,
+          "sort": { "field": "sort", "order": "ascending" }
+        },
+        "y": {
+          "field": "endValue", "type": "quantitative", "axis": null,
+          "scale": { "zero": true, "domainMin": { "expr": "-max(datum.value, 1) * 0.04" } }
+        },
+        "text": { "field": "endValue", "type": "quantitative" }
+      }
+    }
+  ],
+  "config": {
+    "view": { "stroke": null, "fill": "transparent" },
+    "axis": { "ticks": false, "grid": false, "domain": false, "labels": false },
+    "font": "Segoe UI"
+  }
+}

@@ -1,0 +1,28 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR PriorYear   = CurrentYear - 1
+RETURN
+CALCULATETABLE (
+ROW (
+    "Year",                  CurrentYear,
+    // --- Net Subsidy card ---
+    "NetSurplusCY",          CALCULATE ( <<NET>>,        DimDate[Year] = CurrentYear ),
+    "NetSurplusPY",          CALCULATE ( <<NET>>,        DimDate[Year] = PriorYear  ),
+    "NetSurplusVsBudget",    CALCULATE ( [Net Surplus vs Budget], DimDate[Year] = CurrentYear ),
+    "TotalIncomeCY",         CALCULATE ( <<INCOME>>,     DimDate[Year] = CurrentYear ),
+    "TotalIncomePY",         CALCULATE ( <<INCOME>>,     DimDate[Year] = PriorYear  ),
+    "IncomeVarPct",          CALCULATE ( [Income Variance %],  DimDate[Year] = CurrentYear ),
+    "TotalExpensesCY",       CALCULATE ( [Total Expenses],     DimDate[Year] = CurrentYear ),
+    "TotalExpensesPY",       CALCULATE ( [Total Expenses],     DimDate[Year] = PriorYear  ),
+    "ExpenseVarPct",         CALCULATE ( [Expense Variance %], DimDate[Year] = CurrentYear ),
+    // --- Headcount card ---
+    "TotalHeadcountCY",      CALCULATE ( [Total Headcount],    DimDate[Year] = CurrentYear ),
+    "TotalHeadcountPY",      CALCULATE ( [Total Headcount],    DimDate[Year] = PriorYear  ),
+    "BudgetedHeadcountCY",   CALCULATE ( [Budgeted Headcount], DimDate[Year] = CurrentYear ),
+    "HeadcountVsBudget",     CALCULATE ( [Headcount vs Budget],   DimDate[Year] = CurrentYear ),
+    "HeadcountVsBudgetPct",  CALCULATE ( [Headcount vs Budget %], DimDate[Year] = CurrentYear ),
+    "PayrollCostCY",         CALCULATE ( [Payroll Cost],          DimDate[Year] = CurrentYear ),
+    "PayrollCostPY",         CALCULATE ( [Payroll Cost],          DimDate[Year] = PriorYear  ),
+    "PayrollVsBudgetPct",    CALCULATE ( [Payroll Cost vs Budget %], DimDate[Year] = CurrentYear )
+)<<FILTERS>>
+)

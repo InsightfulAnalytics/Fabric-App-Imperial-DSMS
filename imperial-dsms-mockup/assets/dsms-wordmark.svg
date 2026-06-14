@@ -1,0 +1,12 @@
+<svg width="280" height="60" viewBox="0 0 280 60" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="DSMS — Death Star Management Services">
+  
+  <g transform="translate(2 6)">
+    <path d="M24 1 L46 13.5 L46 38.5 L24 51 L2 38.5 L2 13.5 Z" stroke="#C8102E" stroke-width="1.5" fill="none"></path>
+    <circle cx="24" cy="26" r="13" stroke="#3A4452" stroke-width="1" fill="none"></circle>
+    <circle cx="24" cy="26" r="4.5" stroke="#C8102E" stroke-width="1.5" fill="none"></circle>
+    <circle cx="24" cy="26" r="1.6" fill="#C8102E"></circle>
+  </g>
+  
+  <text x="62" y="27" font-family="Rajdhani, sans-serif" font-size="26" font-weight="700" letter-spacing="3" fill="#E8ECEF">DSMS</text>
+  <text x="63" y="46" font-family="Rajdhani, sans-serif" font-size="10.5" font-weight="600" letter-spacing="3.4" fill="#6B7480">DEATH STAR MANAGEMENT</text>
+</svg>

@@ -1,0 +1,20 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR PriorYear   = CurrentYear - 1
+RETURN
+CALCULATETABLE (
+FILTER (
+    SUMMARIZECOLUMNS (
+        DimDepartment[Department],
+        "CombatLosses", CALCULATE ( [Combat Losses], DimDate[Year] = CurrentYear ),
+        "HeadcountCY",  CALCULATE ( [Total Headcount], DimDate[Year] = CurrentYear ),
+        "HeadcountPY",  CALCULATE ( [Total Headcount], DimDate[Year] = PriorYear ),
+        "HeadcountVarPct",
+            VAR cy = CALCULATE ( [Total Headcount], DimDate[Year] = CurrentYear )
+            VAR py = CALCULATE ( [Total Headcount], DimDate[Year] = PriorYear )
+            RETURN DIVIDE ( cy - py, py )
+    ),
+    [CombatLosses] > 0
+)<<FILTERS>>
+)
+ORDER BY [CombatLosses] DESC

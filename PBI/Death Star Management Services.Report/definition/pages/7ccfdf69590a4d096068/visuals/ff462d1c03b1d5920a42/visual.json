@@ -1,0 +1,84 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "ff462d1c03b1d5920a42",
+  "position": {
+    "x": 27.761194029850746,
+    "y": 385.07462686567163,
+    "z": 2,
+    "height": 300,
+    "width": 300,
+    "tabOrder": 2
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimDepartment"
+                    }
+                  },
+                  "Property": "HeadcountWeight"
+                }
+              },
+              "queryRef": "DimDepartment.HeadcountWeight",
+              "nativeQueryRef": "HeadcountWeight"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimDepartment"
+                    }
+                  },
+                  "Property": "Sector"
+                }
+              },
+              "queryRef": "DimDepartment.Sector",
+              "nativeQueryRef": "Sector"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "53f48b110dc37a4d3ab7",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimDepartment"
+              }
+            },
+            "Property": "HeadcountWeight"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "1a36e243e17dd22611dd",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimDepartment"
+              }
+            },
+            "Property": "Sector"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

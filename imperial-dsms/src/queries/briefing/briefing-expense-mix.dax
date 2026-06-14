@@ -1,0 +1,12 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimAccount[AccountCategory],
+        "ExpenseValue", [Total Expenses]
+    ),
+    DimDate[Year] = CurrentYear,
+    DimAccount[AccountType] = "Expense"<<FILTERS>>
+)
+ORDER BY [ExpenseValue] DESC

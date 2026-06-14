@@ -1,0 +1,21 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR OpenPostings =
+    CALCULATETABLE (
+        SUMMARIZECOLUMNS (
+            FactLedger[LedgerID],
+            DimVendor[Vendor],
+            FactLedger[Status],
+            "Amount", SUM ( FactLedger[AmountCredits] )
+        ),
+        DimDate[Year] = CurrentYear,
+        FactLedger[Status] IN { "Pending", "Disputed" }<<FILTERS>>
+    )
+VAR OpenCount = COUNTROWS ( OpenPostings )
+RETURN
+TOPN (
+    8,
+    ADDCOLUMNS ( OpenPostings, "OpenCount", OpenCount ),
+    [Amount], DESC
+)
+ORDER BY [Amount] DESC

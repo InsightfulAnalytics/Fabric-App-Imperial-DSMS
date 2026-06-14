@@ -1,0 +1,69 @@
+/* ============================================================
+   DSMS — TYPOGRAPHY TOKENS
+   Display: Rajdhani  (techno-sans, wide geometric letterforms)
+   Body/UI: Inter     (tight tracking, 14px base)
+   Numeric: JetBrains Mono (tabular figures everywhere)
+   Fonts are loaded via Google Fonts @import in the root styles.css.
+   ============================================================ */
+
+:root {
+  /* ---- Families ---- */
+  --ds-font-display: "Rajdhani", "Eurostile", "Bahnschrift", system-ui, sans-serif;
+  --ds-font-body:    "Inter", "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --ds-font-mono:    "JetBrains Mono", "IBM Plex Mono", "Roboto Mono", ui-monospace, monospace;
+
+  /* ---- Type scale (px-based; 14px UI base) ---- */
+  --ds-text-2xs: 10px;   /* micro labels, table superscripts */
+  --ds-text-xs:  11px;   /* captions, footnotes, axis ticks */
+  --ds-text-sm:  12px;   /* dense table cells, secondary UI */
+  --ds-text-md:  14px;   /* body / UI base */
+  --ds-text-lg:  16px;   /* emphasised body, sub-headings */
+  --ds-text-xl:  20px;   /* panel titles */
+  --ds-text-2xl: 26px;   /* page section titles */
+  --ds-text-3xl: 34px;   /* KPI values */
+  --ds-text-4xl: 48px;   /* hero metric */
+  --ds-text-5xl: 64px;   /* command headline */
+
+  /* ---- Weights ---- */
+  --ds-weight-regular:  400;
+  --ds-weight-medium:   500;
+  --ds-weight-semibold: 600;
+  --ds-weight-bold:     700;
+
+  /* ---- Line heights ---- */
+  --ds-leading-tight:  1.1;
+  --ds-leading-snug:   1.25;
+  --ds-leading-normal: 1.45;
+  --ds-leading-relaxed:1.6;
+
+  /* ---- Tracking ---- */
+  --ds-tracking-tight:   -0.01em;
+  --ds-tracking-normal:  0em;
+  --ds-tracking-wide:    0.04em;
+  --ds-tracking-wider:   0.08em;  /* ALL-CAPS eyebrows */
+  --ds-tracking-widest:  0.16em;  /* nav eyebrows, status pills */
+
+  /* ---- Semantic roles ---- */
+  --type-eyebrow-size:    var(--ds-text-xs);
+  --type-eyebrow-weight:  var(--ds-weight-semibold);
+  --type-eyebrow-track:   var(--ds-tracking-widest);
+
+  --type-page-title-font:   var(--ds-font-display);
+  --type-page-title-size:   var(--ds-text-2xl);
+  --type-page-title-weight: var(--ds-weight-bold);
+
+  --type-panel-title-font:   var(--ds-font-display);
+  --type-panel-title-size:   var(--ds-text-lg);
+  --type-panel-title-weight: var(--ds-weight-semibold);
+
+  --type-kpi-font:   var(--ds-font-mono);
+  --type-kpi-size:   var(--ds-text-3xl);
+  --type-kpi-weight: var(--ds-weight-semibold);
+
+  --type-body-font:   var(--ds-font-body);
+  --type-body-size:   var(--ds-text-md);
+  --type-body-weight: var(--ds-weight-regular);
+
+  --type-numeric-font:    var(--ds-font-mono);
+  --type-numeric-feature: tabular-nums;
+}

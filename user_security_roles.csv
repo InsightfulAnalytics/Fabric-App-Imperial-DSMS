@@ -1,0 +1,8 @@
+﻿displayName,userPrincipalName,Worspace Access,DimRole,DimVendor,DimLocation,DimItem,DimDepartment,Pages viewable,Group
+Otto Totland,Otto@timosborn6gmail.onmicrosoft.com,Admin,All access,All access,All access,All access,All access,All access,Security Group 1
+Tim Osborn,timosborn6@timosborn6gmail.onmicrosoft.com,Admin,All access,All access,All access,All access,All access,All access,Security Group 1
+Happy Smurf,hSmurf@timosborn6gmail.onmicrosoft.com,Admin,All access,All access,All access,All access,All access,All access,Security Group 1
+License Admin,LAdmin@timosborn6gmail.onmicrosoft.com,Viewer,All access,All access,All access,All access,All access,Operations command only,Security Group 2
+Not Admin,NotAdmin@timosborn6gmail.onmicrosoft.com,Viewer,All access,All access,All access,All access,All access,Operations command only,Security Group 2
+ServiceSupport Admin,SSupport@timosborn6gmail.onmicrosoft.com,Viewer,All access,All access,All access,All access,All access,Operations command only,Security Group 2
+User Admin,UAdmin@timosborn6gmail.onmicrosoft.com,Viewer,No access,No access,No access,No access,No access,No access,

@@ -1,0 +1,76 @@
+table DimRole
+	lineageTag: a1000006-0000-0000-0000-000000000001
+
+	column RoleKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a1000006-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: RoleKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Role
+		dataType: string
+		lineageTag: a1000006-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: Role
+
+		annotation SummarizationSetBy = Automatic
+
+	column RoleType
+		dataType: string
+		lineageTag: a1000006-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: RoleType
+
+		annotation SummarizationSetBy = Automatic
+
+	column PayGrade
+		dataType: string
+		lineageTag: a1000006-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: PayGrade
+
+		annotation SummarizationSetBy = Automatic
+
+	column BaseMonthlyPayCredits
+		dataType: int64
+		formatString: #,0
+		lineageTag: a1000006-0000-0000-0000-000000000006
+		summarizeBy: sum
+		sourceColumn: BaseMonthlyPayCredits
+
+		annotation SummarizationSetBy = Automatic
+
+	column IsCombat
+		dataType: string
+		lineageTag: a1000006-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: IsCombat
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimRole = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\DimRole.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"RoleKey", Int64.Type},
+				        {"Role", type text},
+				        {"RoleType", type text},
+				        {"PayGrade", type text},
+				        {"BaseMonthlyPayCredits", Int64.Type},
+				        {"IsCombat", type text}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

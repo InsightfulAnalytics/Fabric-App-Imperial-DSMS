@@ -1,0 +1,23 @@
+id: imperial-dsms
+name: imperial-dsms
+version: 1.0.0
+services:
+  auth:
+    enabled: true
+    fabric:
+      enabled: true
+    allowedRedirectUris:
+      - http://localhost:5173
+      - https://nice-tide-3130166e08-australiaeast.webapp.fabricapps.net
+      - https://terse-creek-a4f02625a1-australiaeast.webapp.fabricapps.net
+  data:
+    enabled: false
+  storage:
+    enabled: false
+  staticHosting:
+    enabled: true
+    folder: dist
+    buildCommand: npm run build:fabric
+    indexDocument: index.html
+  functions:
+    enabled: false

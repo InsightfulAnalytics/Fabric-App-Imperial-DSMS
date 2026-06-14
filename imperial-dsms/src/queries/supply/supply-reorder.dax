@@ -1,0 +1,26 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR LastSnap =
+    CALCULATE ( MAX ( FactInventory[SnapshotDateKey] ), DimDate[Year] = CurrentYear )
+RETURN
+CALCULATETABLE (
+    FILTER (
+        SUMMARIZECOLUMNS (
+            DimItem[Item],
+            DimItem[ItemCategory],
+            DimItem[LeadTimeDays],
+            "OnHand",        SUM ( FactInventory[OnHandQty] ),
+            "OnOrder",       SUM ( FactInventory[OnOrderQty] ),
+            "ReorderLines",  CALCULATE ( COUNTROWS ( FactInventory ), FactInventory[StockStatus] IN { "Reorder", "Stockout" } ),
+            "StockoutLines", CALCULATE ( COUNTROWS ( FactInventory ), FactInventory[StockStatus] = "Stockout" ),
+            "Vendor",
+                LOOKUPVALUE (
+                    DimVendor[Vendor],
+                    DimVendor[VendorKey], CALCULATE ( MAX ( DimItem[PreferredVendorKey] ) )
+                )
+        ),
+        [ReorderLines] > 0
+    ),
+    FactInventory[SnapshotDateKey] = LastSnap<<FILTERS>>
+)
+ORDER BY [StockoutLines] DESC, [ReorderLines] DESC

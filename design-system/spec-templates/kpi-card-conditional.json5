@@ -1,0 +1,147 @@
+// TEMPLATE: KPI Card (Conditional Variance Pill)
+// Adapted for the Sales Overview page (see screenshots in design-system/HANDOFF-CONTEXT.md).
+//
+// LAYOUT (one card)
+//   ┌─────────────────────────────────────┐
+//   │  TOTAL SALES                        │  ← overline label (top)
+//   │                                     │
+//   │  $48.2M                             │  ← large metric value (Bahnschrift)
+//   │                                     │
+//   │  [▲ +6.4%]  vs Budget               │  ← variance pill + caption
+//   └─────────────────────────────────────┘
+//
+// DATA BINDING
+//   metric_label : string  — dimension — e.g. "Total Sales"
+//   metric_value : number  — measure   — e.g. [Sales Total]
+//   change_value : number  — measure   — e.g. [Var Sales To Budget %]   (sign drives pill color)
+//   change_label : string  — dimension — e.g. "vs Budget"
+//
+// PRODUCTION WIRING
+//   DAX: EVALUATE ROW(
+//       "metric_label", "Total Sales",
+//       "metric_value", [Sales Total],
+//       "change_value", [Var Sales To Budget %],
+//       "change_label", "vs Budget"
+//   )
+//   Then swap `data.values` for `{ "name": "table" }`.
+//
+// PREVIEW
+//   The `data.values` block below is inline preview data so the spec renders standalone
+//   in a Vega-Lite viewer (VS Code "Vega Viewer", vega-embed, etc).
+//   Swap the single row to see negative-variance styling:
+//     { metric_label: "Units Sold", metric_value: 1240000, change_value: -0.023, change_label: "vs Last Year" }
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "description": "KPI card with overline label, large metric, and conditionally-colored variance pill.",
+
+  "data": {
+    "values": [
+      { "metric_label": "Total Sales", "metric_value": 48200000, "change_value":  0.064, "change_label": "vs Budget" }
+    ]
+  },
+
+  "width": 280,
+  "height": 110,
+  "padding": { "left": 20, "right": 20, "top": 20, "bottom": 20 },
+  "background": "white",
+
+  "layer": [
+    // 1) Overline label — small, semibold, slate
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "top",
+        "fontSize": 12,
+        "fontWeight": 600,
+        "color": "#5E6C82"
+      },
+      "encoding": {
+        "text": { "field": "metric_label", "type": "nominal" },
+        "x": { "value": 0 },
+        "y": { "value": 0 }
+      }
+    },
+
+    // 2) Large metric value (currency, short SI suffix → "$48.2M", "$312K", etc.)
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "fontSize": 30,
+        "fontWeight": 700,
+        "color": "#16202E",
+        "font": "Bahnschrift, 'Segoe UI', Arial, sans-serif"
+      },
+      "encoding": {
+        "text": { "field": "metric_value", "type": "quantitative", "format": "$,.3s" },
+        "x": { "value": 0 },
+        "y": { "value": 38 }
+      }
+    },
+
+    // 3) Variance pill — colored background rectangle (green if positive, red if negative)
+    {
+      "mark": { "type": "rect", "cornerRadius": 3 },
+      "encoding": {
+        "x":  { "value":  0 },
+        "x2": { "value": 70 },
+        "y":  { "value": 66 },
+        "y2": { "value": 86 },
+        "color": {
+          "condition": { "test": "datum.change_value < 0", "value": "#FBE6E6" },
+          "value": "#E4F1E6"
+        }
+      }
+    },
+
+    // 4) Variance text inside the pill — arrow + signed percent
+    {
+      "transform": [
+        {
+          "calculate": "(datum.change_value >= 0 ? '▲ +' : '▼ ') + format(datum.change_value, '.1%')",
+          "as": "change_text"
+        }
+      ],
+      "mark": {
+        "type": "text",
+        "align": "center",
+        "baseline": "middle",
+        "fontSize": 12,
+        "fontWeight": 600
+      },
+      "encoding": {
+        "text": { "field": "change_text", "type": "nominal" },
+        "x": { "value": 35 },
+        "y": { "value": 76 },
+        "color": {
+          "condition": { "test": "datum.change_value < 0", "value": "#C62F2F" },
+          "value": "#1E7C36"
+        }
+      }
+    },
+
+    // 5) Caption text to the right of the pill
+    {
+      "mark": {
+        "type": "text",
+        "align": "left",
+        "baseline": "middle",
+        "fontSize": 12,
+        "color": "#5E6C82"
+      },
+      "encoding": {
+        "text": { "field": "change_label", "type": "nominal" },
+        "x": { "value": 78 },
+        "y": { "value": 76 }
+      }
+    }
+  ],
+
+  "config": {
+    "view": { "stroke": "#E5EAF1", "fill": "white" },
+    "axis": { "ticks": false, "grid": false, "domain": false, "labels": false },
+    "font": "Segoe UI"
+  }
+}

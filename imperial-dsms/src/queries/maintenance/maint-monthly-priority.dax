@@ -1,0 +1,13 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimDate[MonthOfYear],
+        FactMaintenance[Priority],
+        "WorkOrders", [Work Orders],
+        "OpenWO",     [Open Work Orders]
+    ),
+    DimDate[Year] = CurrentYear<<FILTERS>>
+)
+ORDER BY DimDate[MonthOfYear], FactMaintenance[Priority]

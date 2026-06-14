@@ -1,0 +1,3499 @@
+/* @ds-bundle: {"format":3,"namespace":"DSMSDesignSystem_197d77","components":[{"name":"Panel","sourcePath":"components/chrome/Panel.jsx"},{"name":"SectionHeader","sourcePath":"components/chrome/SectionHeader.jsx"},{"name":"SidebarRail","sourcePath":"components/chrome/SidebarRail.jsx"},{"name":"TopBar","sourcePath":"components/chrome/TopBar.jsx"},{"name":"DataTable","sourcePath":"components/data/DataTable.jsx"},{"name":"DeltaIndicator","sourcePath":"components/data/DeltaIndicator.jsx"},{"name":"Gauge","sourcePath":"components/data/Gauge.jsx"},{"name":"KpiTile","sourcePath":"components/data/KpiTile.jsx"},{"name":"Sparkline","sourcePath":"components/data/Sparkline.jsx"},{"name":"StatusPill","sourcePath":"components/data/StatusPill.jsx"},{"name":"Button","sourcePath":"components/forms/Button.jsx"},{"name":"IconButton","sourcePath":"components/forms/IconButton.jsx"},{"name":"Input","sourcePath":"components/forms/Input.jsx"},{"name":"Select","sourcePath":"components/forms/Select.jsx"},{"name":"Slicer","sourcePath":"components/forms/Slicer.jsx"},{"name":"Switch","sourcePath":"components/forms/Switch.jsx"},{"name":"Icon","sourcePath":"components/foundation/Icon.jsx"}],"sourceHashes":{"components/chrome/Panel.jsx":"19c149b43f6b","components/chrome/SectionHeader.jsx":"162641103968","components/chrome/SidebarRail.jsx":"3eaeea80bda0","components/chrome/TopBar.jsx":"fb7b6a40873d","components/data/DataTable.jsx":"5fc07cfb26f8","components/data/DeltaIndicator.jsx":"e31d3c717a6d","components/data/Gauge.jsx":"e0a0fd5f8f11","components/data/KpiTile.jsx":"e9038071704c","components/data/Sparkline.jsx":"aad29f6eb980","components/data/StatusPill.jsx":"24ecd0709cab","components/forms/Button.jsx":"3289859a746e","components/forms/IconButton.jsx":"5ec50639e2f4","components/forms/Input.jsx":"d18fca02701f","components/forms/Select.jsx":"51fb783381ee","components/forms/Slicer.jsx":"31dd60bc68f0","components/forms/Switch.jsx":"328b9a2d9878","components/foundation/Icon.jsx":"bcf7ae9248a6","ui_kits/fabric-console/AppShell.jsx":"26a78f635716","ui_kits/fabric-console/BriefingScreen.jsx":"784ed699ac94","ui_kits/fabric-console/Charts.jsx":"81828e56f803","ui_kits/fabric-console/OperationsScreen.jsx":"34726495d351","ui_kits/fabric-console/SupplyScreen.jsx":"7780d88b7667","ui_kits/fabric-console/WorkforceScreen.jsx":"145a1a475c54","ui_kits/fabric-console/data.js":"773ec3f17223"},"inlinedExternals":[],"unexposedExports":[]} */
+
+(() => {
+
+const __ds_ns = (window.DSMSDesignSystem_197d77 = window.DSMSDesignSystem_197d77 || {});
+
+const __ds_scope = {};
+
+(__ds_ns.__errors = __ds_ns.__errors || []);
+
+// components/chrome/Panel.jsx
+try { (() => {
+/**
+ * Panel — the standard console card: hull surface, 1px conduit border, 4px
+ * radius, no shadow. Optional header row with an eyebrow/title and trailing
+ * actions, separated by a hairline rule.
+ */
+function Panel({
+  title,
+  eyebrow,
+  actions,
+  padded = true,
+  children,
+  style = {},
+  bodyStyle = {}
+}) {
+  const hasHeader = title || eyebrow || actions;
+  return /*#__PURE__*/React.createElement("section", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      background: "var(--ds-bg-hull)",
+      border: "1px solid var(--ds-line-conduit)",
+      borderRadius: "var(--ds-radius-md)",
+      overflow: "hidden",
+      ...style
+    }
+  }, hasHeader && /*#__PURE__*/React.createElement("header", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12,
+      padding: "12px 16px",
+      borderBottom: "1px solid var(--ds-line-conduit)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0,
+      flex: "1 1 auto"
+    }
+  }, eyebrow && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 10,
+      fontWeight: 600,
+      letterSpacing: "0.16em",
+      textTransform: "uppercase",
+      color: "var(--ds-text-muted)",
+      marginBottom: title ? 3 : 0,
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis"
+    }
+  }, eyebrow), title && /*#__PURE__*/React.createElement("h3", {
+    style: {
+      margin: 0,
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 15,
+      fontWeight: 600,
+      letterSpacing: "0.01em",
+      color: "var(--ds-text-primary)",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis"
+    }
+  }, title)), actions && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      flex: "0 0 auto"
+    }
+  }, actions)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: padded ? 16 : 0,
+      flex: 1,
+      minHeight: 0,
+      ...bodyStyle
+    }
+  }, children));
+}
+Object.assign(__ds_scope, { Panel });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/chrome/Panel.jsx", error: String((e && e.message) || e) }); }
+
+// components/chrome/SectionHeader.jsx
+try { (() => {
+/**
+ * SectionHeader — page/section heading. ALL-CAPS eyebrow above a display title,
+ * with a 1px imperial underline beneath the title only. Optional trailing actions.
+ */
+function SectionHeader({
+  eyebrow,
+  title,
+  actions,
+  size = "md",
+  // "sm" | "md" | "lg"
+  style = {}
+}) {
+  const fs = {
+    sm: 16,
+    md: 20,
+    lg: 26
+  }[size];
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "flex-end",
+      justifyContent: "space-between",
+      gap: 16,
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0,
+      flex: "1 1 auto"
+    }
+  }, eyebrow && /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: "0.16em",
+      textTransform: "uppercase",
+      color: "var(--ds-text-muted)",
+      marginBottom: 6
+    }
+  }, eyebrow), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      margin: 0,
+      display: "inline-block",
+      paddingBottom: 6,
+      borderBottom: "1px solid var(--ds-accent-imperial)",
+      fontFamily: "var(--ds-font-display)",
+      fontSize: fs,
+      fontWeight: 700,
+      letterSpacing: "-0.005em",
+      color: "var(--ds-text-primary)",
+      lineHeight: 1.1,
+      whiteSpace: "nowrap"
+    }
+  }, title)), actions && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      paddingBottom: 2
+    }
+  }, actions));
+}
+Object.assign(__ds_scope, { SectionHeader });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/chrome/SectionHeader.jsx", error: String((e && e.message) || e) }); }
+
+// components/data/DataTable.jsx
+try { (() => {
+/**
+ * DataTable — dense console table. Header on the bay surface, hairline rows,
+ * tabular numerics for numeric columns, row hover highlight. Columns may
+ * supply a `render(row)` for conditional formatting (e.g. a StatusPill).
+ */
+function DataTable({
+  columns = [],
+  // [{ key, label, align?: "left"|"right", numeric?: bool, width?, render?: (row)=>node }]
+  rows = [],
+  rowKey = "id",
+  dense = false,
+  onRowClick,
+  style = {}
+}) {
+  const [hover, setHover] = React.useState(-1);
+  const cellPad = dense ? "6px 12px" : "9px 12px";
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      border: "1px solid var(--ds-line-conduit)",
+      borderRadius: "var(--ds-radius-md)",
+      overflow: "hidden",
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("table", {
+    style: {
+      width: "100%",
+      borderCollapse: "collapse",
+      fontFamily: "var(--ds-font-body)"
+    }
+  }, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", {
+    style: {
+      background: "var(--ds-bg-bay)"
+    }
+  }, columns.map(c => /*#__PURE__*/React.createElement("th", {
+    key: c.key,
+    style: {
+      textAlign: c.align || (c.numeric ? "right" : "left"),
+      padding: "8px 12px",
+      width: c.width,
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 10.5,
+      fontWeight: 600,
+      letterSpacing: "0.12em",
+      textTransform: "uppercase",
+      color: "var(--ds-text-muted)",
+      borderBottom: "1px solid var(--ds-line-conduit)",
+      whiteSpace: "nowrap"
+    }
+  }, c.label)))), /*#__PURE__*/React.createElement("tbody", null, rows.map((row, i) => /*#__PURE__*/React.createElement("tr", {
+    key: row[rowKey] != null ? row[rowKey] : i,
+    onMouseEnter: () => setHover(i),
+    onMouseLeave: () => setHover(-1),
+    onClick: onRowClick ? () => onRowClick(row, i) : undefined,
+    style: {
+      background: hover === i ? "var(--ds-bg-bay)" : "transparent",
+      cursor: onRowClick ? "pointer" : "default",
+      transition: "background var(--ds-dur-fast) var(--ds-ease-standard)"
+    }
+  }, columns.map(c => /*#__PURE__*/React.createElement("td", {
+    key: c.key,
+    style: {
+      textAlign: c.align || (c.numeric ? "right" : "left"),
+      padding: cellPad,
+      borderBottom: i === rows.length - 1 ? "none" : "1px solid var(--ds-line-faint)",
+      fontFamily: c.numeric ? "var(--ds-font-mono)" : "var(--ds-font-body)",
+      fontVariantNumeric: c.numeric ? "tabular-nums" : "normal",
+      letterSpacing: c.numeric ? "-0.01em" : "0",
+      fontSize: 13,
+      color: c.numeric ? "var(--ds-text-primary)" : "var(--ds-text-secondary)",
+      whiteSpace: "nowrap"
+    }
+  }, c.render ? c.render(row) : row[c.key])))))));
+}
+Object.assign(__ds_scope, { DataTable });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/data/DataTable.jsx", error: String((e && e.message) || e) }); }
+
+// components/data/Gauge.jsx
+try { (() => {
+/* polar point on the gauge arc (180° sweep, left→right) */
+function pt(cx, cy, r, frac) {
+  const a = Math.PI * (1 - frac); // frac 0 → 180° (left), 1 → 0° (right)
+  return [cx + r * Math.cos(a), cy - r * Math.sin(a)];
+}
+function arc(cx, cy, r, f0, f1) {
+  const [x0, y0] = pt(cx, cy, r, f0);
+  const [x1, y1] = pt(cx, cy, r, f1);
+  const large = f1 - f0 > 0.5 ? 1 : 0;
+  return `M ${x0.toFixed(2)} ${y0.toFixed(2)} A ${r} ${r} 0 ${large} 1 ${x1.toFixed(2)} ${y1.toFixed(2)}`;
+}
+
+/**
+ * Gauge — semicircular coverage gauge. Reads as a warship dial: the value arc
+ * is signal-coloured against a track, and turns negative below `redBelow`.
+ * Built for "Subsidy Coverage %" (goes red below 70%).
+ */
+function Gauge({
+  value = 0.94,
+  // 0..1
+  redBelow = 0.7,
+  warnBelow = 0.85,
+  label = "Coverage",
+  size = 180,
+  thickness = 12,
+  style = {}
+}) {
+  const v = Math.max(0, Math.min(1, value));
+  const pad = thickness / 2 + 3; // headroom so stroke + round caps never clip
+  const cx = size / 2;
+  const r = size / 2 - thickness / 2 - pad;
+  const cy = pad + r + thickness / 2;
+  const height = cy + thickness / 2 + pad;
+  const color = v < redBelow ? "var(--ds-signal-negative)" : v < warnBelow ? "var(--ds-signal-warning)" : "var(--ds-signal-positive)";
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "inline-flex",
+      flexDirection: "column",
+      alignItems: "center",
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: size,
+    height: height,
+    viewBox: `0 0 ${size} ${height}`,
+    style: {
+      display: "block",
+      overflow: "visible"
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: arc(cx, cy, r, 0, 1),
+    fill: "none",
+    stroke: "var(--ds-bg-deck)",
+    strokeWidth: thickness,
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: arc(cx, cy, r, Math.max(0, redBelow - 0.004), redBelow + 0.004),
+    fill: "none",
+    stroke: "var(--ds-line-bright)",
+    strokeWidth: thickness + 4
+  }), /*#__PURE__*/React.createElement("path", {
+    d: arc(cx, cy, r, 0, v || 0.0001),
+    fill: "none",
+    stroke: color,
+    strokeWidth: thickness,
+    strokeLinecap: "round"
+  }), /*#__PURE__*/React.createElement("text", {
+    x: cx,
+    y: cy - 4,
+    textAnchor: "middle",
+    fill: "var(--ds-text-primary)",
+    style: {
+      fontFamily: "var(--ds-font-mono)",
+      fontSize: size * 0.22,
+      fontWeight: 600,
+      fontVariantNumeric: "tabular-nums"
+    }
+  }, Math.round(v * 100), "%")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 11,
+      fontWeight: 600,
+      letterSpacing: "0.16em",
+      textTransform: "uppercase",
+      color: "var(--ds-text-muted)",
+      marginTop: -2
+    }
+  }, label));
+}
+Object.assign(__ds_scope, { Gauge });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/data/Gauge.jsx", error: String((e && e.message) || e) }); }
+
+// components/data/Sparkline.jsx
+try { (() => {
+/**
+ * Sparkline — compact SVG trend line with subtle area fill, optional min/max
+ * dots and an end-value label. Pure SVG, no dependencies. Mirrors the DSMS
+ * Vega sparkline spec (area 18% opacity, 1.5px line, max=positive/min=negative dots).
+ */
+function Sparkline({
+  data = [],
+  // array of numbers, chronological
+  width = 200,
+  height = 48,
+  color = "var(--ds-signal-info)",
+  fillOpacity = 0.16,
+  strokeWidth = 1.5,
+  showDots = true,
+  showEndLabel = false,
+  endLabel,
+  // string override for the end label
+  zero = false,
+  // baseline at 0 vs auto-range
+  style = {}
+}) {
+  const padX = 3;
+  const padY = 5;
+  const rightPad = showEndLabel ? 40 : padX;
+  const n = data.length;
+  if (n < 2) {
+    return /*#__PURE__*/React.createElement("svg", {
+      width: width,
+      height: height,
+      style: style
+    });
+  }
+  const min = zero ? 0 : Math.min(...data);
+  const max = Math.max(...data);
+  const span = max - min || 1;
+  const innerW = width - padX - rightPad;
+  const innerH = height - padY * 2;
+  const x = i => padX + i / (n - 1) * innerW;
+  const y = v => padY + (1 - (v - min) / span) * innerH;
+  const linePath = data.map((v, i) => `${i === 0 ? "M" : "L"}${x(i).toFixed(2)},${y(v).toFixed(2)}`).join(" ");
+  const areaPath = `${linePath} L${x(n - 1).toFixed(2)},${(height - padY).toFixed(2)} L${x(0).toFixed(2)},${(height - padY).toFixed(2)} Z`;
+  const maxIdx = data.indexOf(max);
+  const minIdx = data.indexOf(min);
+  const lastVal = data[n - 1];
+  return /*#__PURE__*/React.createElement("svg", {
+    width: width,
+    height: height,
+    viewBox: `0 0 ${width} ${height}`,
+    style: {
+      display: "block",
+      overflow: "visible",
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: areaPath,
+    fill: color,
+    fillOpacity: fillOpacity,
+    stroke: "none"
+  }), /*#__PURE__*/React.createElement("path", {
+    d: linePath,
+    fill: "none",
+    stroke: color,
+    strokeWidth: strokeWidth,
+    strokeLinejoin: "round",
+    strokeLinecap: "round"
+  }), showDots && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("circle", {
+    cx: x(maxIdx),
+    cy: y(max),
+    r: 2.6,
+    fill: "var(--ds-signal-positive)",
+    stroke: "var(--ds-bg-hull)",
+    strokeWidth: 1
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: x(minIdx),
+    cy: y(min),
+    r: 2.6,
+    fill: "var(--ds-signal-negative)",
+    stroke: "var(--ds-bg-hull)",
+    strokeWidth: 1
+  })), showEndLabel && /*#__PURE__*/React.createElement("text", {
+    x: x(n - 1) + 6,
+    y: y(lastVal),
+    dominantBaseline: "middle",
+    fill: "var(--ds-text-secondary)",
+    style: {
+      fontFamily: "var(--ds-font-mono)",
+      fontSize: 10,
+      fontWeight: 600
+    }
+  }, endLabel != null ? endLabel : Math.round(lastVal).toLocaleString()));
+}
+Object.assign(__ds_scope, { Sparkline });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/data/Sparkline.jsx", error: String((e && e.message) || e) }); }
+
+// components/data/StatusPill.jsx
+try { (() => {
+/**
+ * StatusPill — compact status / risk tag. Used for vendor Risk Rating,
+ * work-order status, stock status. Soft tint by default; `solid` for the
+ * loudest critical states, `outline` for quiet ones.
+ */
+function StatusPill({
+  children,
+  status = "neutral",
+  // "positive" | "negative" | "warning" | "info" | "neutral"
+  variant = "soft",
+  // "soft" | "solid" | "outline"
+  dot = true,
+  size = "md",
+  // "sm" | "md"
+  style = {}
+}) {
+  const map = {
+    positive: {
+      fg: "var(--ds-signal-positive)",
+      dim: "var(--ds-signal-positive-dim)"
+    },
+    negative: {
+      fg: "var(--ds-signal-negative)",
+      dim: "var(--ds-signal-negative-dim)"
+    },
+    warning: {
+      fg: "var(--ds-signal-warning)",
+      dim: "var(--ds-signal-warning-dim)"
+    },
+    info: {
+      fg: "var(--ds-signal-info)",
+      dim: "var(--ds-signal-info-dim)"
+    },
+    neutral: {
+      fg: "var(--ds-text-secondary)",
+      dim: "var(--ds-bg-bay)"
+    }
+  };
+  const c = map[status] || map.neutral;
+  const s = size === "sm" ? {
+    h: 18,
+    px: 6,
+    fs: 10,
+    gap: 4,
+    d: 5
+  } : {
+    h: 22,
+    px: 8,
+    fs: 11,
+    gap: 5,
+    d: 6
+  };
+  let bg = c.dim;
+  let fg = c.fg;
+  let border = "transparent";
+  if (variant === "solid") {
+    bg = c.fg;
+    fg = status === "warning" ? "#1A1206" : "var(--ds-text-on-accent)";
+  } else if (variant === "outline") {
+    bg = "transparent";
+    border = "color-mix(in srgb, " + "currentColor 40%, transparent)";
+  }
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: s.gap,
+      height: s.h,
+      padding: `0 ${s.px}px`,
+      background: bg,
+      color: fg,
+      border: variant === "outline" ? `1px solid ${c.fg}` : `1px solid ${border}`,
+      borderRadius: "var(--ds-radius-xs)",
+      fontFamily: "var(--ds-font-display)",
+      fontSize: s.fs,
+      fontWeight: 600,
+      letterSpacing: "0.08em",
+      textTransform: "uppercase",
+      whiteSpace: "nowrap",
+      ...style
+    }
+  }, dot && /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: s.d,
+      height: s.d,
+      borderRadius: "999px",
+      background: variant === "solid" ? fg : c.fg,
+      flex: "0 0 auto"
+    }
+  }), children);
+}
+Object.assign(__ds_scope, { StatusPill });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/data/StatusPill.jsx", error: String((e && e.message) || e) }); }
+
+// components/forms/Slicer.jsx
+try { (() => {
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/**
+ * Slicer — single-select segmented control, the DSMS take on a Power BI / Fabric
+ * slicer. A hairline-bordered track of segments; the active one takes the imperial
+ * wash + a 2px accent underline. Use for year/range selection in the top bar.
+ */
+function Slicer({
+  options = [],
+  // [{ value, label }] or [string]
+  value,
+  // controlled selected value
+  defaultValue,
+  size = "md",
+  // "sm" | "md"
+  onChange,
+  style = {},
+  ...rest
+}) {
+  const norm = options.map(o => typeof o === "string" ? {
+    value: o,
+    label: o
+  } : o);
+  const isControlled = value !== undefined;
+  const [internal, setInternal] = React.useState(defaultValue !== undefined ? defaultValue : norm[0] && norm[0].value);
+  const selected = isControlled ? value : internal;
+  const h = {
+    sm: 28,
+    md: 34
+  }[size];
+  const fs = {
+    sm: 11.5,
+    md: 12.5
+  }[size];
+  const select = v => {
+    if (!isControlled) setInternal(v);
+    onChange && onChange(v);
+  };
+  return /*#__PURE__*/React.createElement("div", _extends({
+    role: "radiogroup",
+    style: {
+      display: "inline-flex",
+      alignItems: "stretch",
+      height: h,
+      padding: 2,
+      gap: 2,
+      background: "var(--ds-bg-deck)",
+      border: "1px solid var(--ds-line-conduit)",
+      borderRadius: "var(--ds-radius-xs)",
+      ...style
+    }
+  }, rest), norm.map(o => {
+    const on = o.value === selected;
+    return /*#__PURE__*/React.createElement(Segment, {
+      key: o.value,
+      on: on,
+      fs: fs,
+      label: o.label,
+      onClick: () => select(o.value)
+    });
+  }));
+}
+function Segment({
+  on,
+  fs,
+  label,
+  onClick
+}) {
+  const [hover, setHover] = React.useState(false);
+  return /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    role: "radio",
+    "aria-checked": on,
+    onClick: onClick,
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    style: {
+      position: "relative",
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "0 12px",
+      background: on ? "var(--ds-accent-imperial-dim)" : hover ? "var(--ds-bg-bay)" : "transparent",
+      border: "none",
+      borderRadius: "var(--ds-radius-xs)",
+      cursor: "pointer",
+      color: on ? "var(--ds-text-primary)" : "var(--ds-text-muted)",
+      fontFamily: "var(--ds-font-display)",
+      fontSize: fs,
+      fontWeight: 600,
+      letterSpacing: "0.08em",
+      textTransform: "uppercase",
+      whiteSpace: "nowrap",
+      transition: "background var(--ds-dur-fast) var(--ds-ease-standard), color var(--ds-dur-fast) var(--ds-ease-standard)"
+    }
+  }, label, on && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      left: 8,
+      right: 8,
+      bottom: 2,
+      height: 2,
+      background: "var(--ds-accent-imperial)",
+      borderRadius: 1
+    }
+  }));
+}
+Object.assign(__ds_scope, { Slicer });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/forms/Slicer.jsx", error: String((e && e.message) || e) }); }
+
+// components/forms/Switch.jsx
+try { (() => {
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/**
+ * Switch — toggle control. Square-ish track (2px radius) in keeping with the
+ * austere chrome; imperial red when on. Used for view options and filters.
+ */
+function Switch({
+  checked,
+  defaultChecked = false,
+  disabled = false,
+  label,
+  onChange,
+  style = {},
+  ...rest
+}) {
+  const isControlled = checked !== undefined;
+  const [internal, setInternal] = React.useState(defaultChecked);
+  const on = isControlled ? checked : internal;
+  const toggle = () => {
+    if (disabled) return;
+    const next = !on;
+    if (!isControlled) setInternal(next);
+    onChange && onChange(next);
+  };
+  return /*#__PURE__*/React.createElement("label", _extends({
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 10,
+      cursor: disabled ? "not-allowed" : "pointer",
+      opacity: disabled ? 0.5 : 1,
+      userSelect: "none",
+      ...style
+    }
+  }, rest), /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    role: "switch",
+    "aria-checked": on,
+    disabled: disabled,
+    onClick: toggle,
+    style: {
+      position: "relative",
+      width: 38,
+      height: 20,
+      padding: 0,
+      flex: "0 0 auto",
+      background: on ? "var(--ds-accent-imperial)" : "var(--ds-bg-deck)",
+      border: `1px solid ${on ? "var(--ds-accent-imperial)" : "var(--ds-line-bright)"}`,
+      borderRadius: "var(--ds-radius-xs)",
+      cursor: disabled ? "not-allowed" : "pointer",
+      transition: "background var(--ds-dur-normal) var(--ds-ease-standard), border-color var(--ds-dur-normal) var(--ds-ease-standard)"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      top: 2,
+      left: on ? 20 : 2,
+      width: 14,
+      height: 14,
+      background: on ? "var(--ds-text-on-accent)" : "var(--ds-text-secondary)",
+      borderRadius: "1px",
+      transition: "left var(--ds-dur-normal) var(--ds-ease-out)"
+    }
+  })), label && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-body)",
+      fontSize: 13,
+      color: "var(--ds-text-secondary)"
+    }
+  }, label));
+}
+Object.assign(__ds_scope, { Switch });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/forms/Switch.jsx", error: String((e && e.message) || e) }); }
+
+// components/foundation/Icon.jsx
+try { (() => {
+/* kebab-case lucide name -> PascalCase key used by the UMD global */
+function toPascal(name) {
+  return String(name).split(/[-_]/).filter(Boolean).map(s => s.charAt(0).toUpperCase() + s.slice(1)).join("");
+}
+
+/* lucide UMD attrs are kebab-case; React needs camelCase for a few */
+function camelAttrs(attrs) {
+  const out = {};
+  for (const k in attrs) {
+    const ck = k.replace(/-([a-z])/g, (_, c) => c.toUpperCase());
+    out[ck] = attrs[k];
+  }
+  return out;
+}
+
+/**
+ * Icon — schematic stroke glyph from the Lucide set (geometric, 2px stroke),
+ * recoloured via `currentColor`. Renders inline SVG from the Lucide UMD global
+ * (`window.lucide`), which must be loaded on the page:
+ *   <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.js"></script>
+ *
+ * @example <Icon name="activity" size={18} />
+ */
+function Icon({
+  name = "circle",
+  size = 16,
+  strokeWidth = 1.75,
+  style = {},
+  className
+}) {
+  const lucide = typeof window !== "undefined" ? window.lucide : null;
+  const pascal = toPascal(name);
+  let nodes = null;
+  if (lucide) {
+    const def = lucide.icons && lucide.icons[pascal] || lucide[pascal];
+    // def may be the children array, or [tag, attrs, children]
+    if (Array.isArray(def)) {
+      nodes = Array.isArray(def[0]) ? def : def[2];
+    }
+  }
+  return /*#__PURE__*/React.createElement("svg", {
+    xmlns: "http://www.w3.org/2000/svg",
+    width: size,
+    height: size,
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: strokeWidth,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+    role: "img",
+    "aria-label": name,
+    className: className,
+    style: {
+      flex: "0 0 auto",
+      display: "inline-block",
+      ...style
+    }
+  }, nodes && nodes.map(([tag, attrs], i) => React.createElement(tag, {
+    key: i,
+    ...camelAttrs(attrs || {})
+  })));
+}
+Object.assign(__ds_scope, { Icon });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/foundation/Icon.jsx", error: String((e && e.message) || e) }); }
+
+// components/chrome/SidebarRail.jsx
+try { (() => {
+/**
+ * SidebarRail — the persistent left navigation. Imperial seal mark at top,
+ * a page list with an accent-stripe active state, and a system-status pill at
+ * the bottom. Collapses to an icon-only rail.
+ */
+function SidebarRail({
+  items = [],
+  // [{ id, label, icon }]
+  active,
+  onSelect,
+  collapsed = false,
+  statusLabel = "Subsidy Coverage",
+  statusValue = "94%",
+  statusTone = "positive",
+  // "positive" | "warning" | "negative"
+  style = {}
+}) {
+  const width = collapsed ? 60 : 232;
+  const toneColor = {
+    positive: "var(--ds-signal-positive)",
+    warning: "var(--ds-signal-warning)",
+    negative: "var(--ds-signal-negative)"
+  }[statusTone];
+  return /*#__PURE__*/React.createElement("nav", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      width,
+      flex: `0 0 ${width}px`,
+      height: "100%",
+      background: "var(--ds-bg-hull)",
+      borderRight: "1px solid var(--ds-line-conduit)",
+      ...style
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      height: 56,
+      padding: collapsed ? "0" : "0 16px",
+      justifyContent: collapsed ? "center" : "flex-start",
+      borderBottom: "1px solid var(--ds-line-conduit)"
+    }
+  }, /*#__PURE__*/React.createElement(Seal, {
+    size: 28
+  }), !collapsed && /*#__PURE__*/React.createElement("div", {
+    style: {
+      lineHeight: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 17,
+      fontWeight: 700,
+      letterSpacing: "0.14em",
+      color: "var(--ds-text-primary)"
+    }
+  }, "DSMS"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 8.5,
+      fontWeight: 600,
+      letterSpacing: "0.22em",
+      color: "var(--ds-text-faint)",
+      marginTop: 3
+    }
+  }, "OPERATIONS CONSOLE"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      padding: collapsed ? "8px 8px" : "8px 8px",
+      overflowY: "auto"
+    }
+  }, items.map(it => {
+    const on = it.id === active;
+    return /*#__PURE__*/React.createElement(NavItem, {
+      key: it.id,
+      item: it,
+      active: on,
+      collapsed: collapsed,
+      onClick: () => onSelect && onSelect(it.id)
+    });
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: collapsed ? 8 : 12,
+      borderTop: "1px solid var(--ds-line-conduit)"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      justifyContent: collapsed ? "center" : "flex-start",
+      padding: collapsed ? "8px 0" : "8px 10px",
+      background: "var(--ds-bg-deck)",
+      border: "1px solid var(--ds-line-conduit)",
+      borderRadius: "var(--ds-radius-xs)"
+    },
+    title: `${statusLabel} ${statusValue}`
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      width: 7,
+      height: 7,
+      borderRadius: 999,
+      background: toneColor,
+      flex: "0 0 auto",
+      boxShadow: `0 0 8px ${toneColor}`
+    }
+  }), !collapsed && /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0,
+      display: "flex",
+      flexDirection: "column",
+      gap: 2
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 9,
+      fontWeight: 600,
+      letterSpacing: "0.14em",
+      textTransform: "uppercase",
+      color: "var(--ds-text-muted)",
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis"
+    }
+  }, statusLabel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-mono)",
+      fontSize: 14,
+      fontWeight: 600,
+      color: toneColor,
+      fontVariantNumeric: "tabular-nums",
+      lineHeight: 1.2
+    }
+  }, statusValue)))));
+}
+function NavItem({
+  item,
+  active,
+  collapsed,
+  onClick
+}) {
+  const [hover, setHover] = React.useState(false);
+  return /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: onClick,
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    title: item.label,
+    style: {
+      position: "relative",
+      display: "flex",
+      alignItems: "center",
+      gap: 11,
+      width: "100%",
+      height: 38,
+      padding: collapsed ? 0 : "0 12px",
+      justifyContent: collapsed ? "center" : "flex-start",
+      marginBottom: 2,
+      background: active ? "var(--ds-accent-imperial-dim)" : hover ? "var(--ds-bg-bay)" : "transparent",
+      border: "none",
+      borderRadius: "var(--ds-radius-xs)",
+      cursor: "pointer",
+      color: active ? "var(--ds-text-primary)" : "var(--ds-text-secondary)",
+      transition: "background var(--ds-dur-fast) var(--ds-ease-standard)"
+    }
+  }, active && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      left: 0,
+      top: 7,
+      bottom: 7,
+      width: 2,
+      background: "var(--ds-accent-imperial)",
+      borderRadius: 1
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: active ? "var(--ds-accent-imperial-hi)" : "inherit",
+      display: "flex"
+    }
+  }, /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: item.icon,
+    size: 18
+  })), !collapsed && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-body)",
+      fontSize: 13,
+      fontWeight: active ? 600 : 500,
+      letterSpacing: "0.01em",
+      whiteSpace: "nowrap"
+    }
+  }, item.label));
+}
+
+/* Inline seal mark (matches assets/dsms-seal.svg) */
+function Seal({
+  size = 28
+}) {
+  return /*#__PURE__*/React.createElement("svg", {
+    width: size,
+    height: size,
+    viewBox: "0 0 48 48",
+    fill: "none",
+    style: {
+      flex: "0 0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M24 2 L43 13 L43 35 L24 46 L5 35 L5 13 Z",
+    stroke: "var(--ds-accent-imperial)",
+    strokeWidth: "1.6",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "24",
+    r: "13",
+    stroke: "var(--ds-line-bright)",
+    strokeWidth: "1",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "24",
+    r: "4.6",
+    stroke: "var(--ds-accent-imperial)",
+    strokeWidth: "1.6",
+    fill: "none"
+  }), /*#__PURE__*/React.createElement("circle", {
+    cx: "24",
+    cy: "24",
+    r: "1.7",
+    fill: "var(--ds-accent-imperial)"
+  }));
+}
+Object.assign(__ds_scope, { SidebarRail });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/chrome/SidebarRail.jsx", error: String((e && e.message) || e) }); }
+
+// components/chrome/TopBar.jsx
+try { (() => {
+/**
+ * TopBar — persistent page header: the page title, a "Filed under" breadcrumb,
+ * and a slot on the right for the date-range selector and other controls.
+ */
+function TopBar({
+  title,
+  breadcrumb,
+  // string or array of strings — "Filed under" path
+  children,
+  // right-aligned controls
+  onToggleRail,
+  style = {}
+}) {
+  const crumbs = Array.isArray(breadcrumb) ? breadcrumb : breadcrumb ? [breadcrumb] : [];
+  return /*#__PURE__*/React.createElement("header", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 16,
+      height: 56,
+      flex: "0 0 56px",
+      padding: "0 20px",
+      background: "var(--ds-bg-hull)",
+      borderBottom: "1px solid var(--ds-line-conduit)",
+      ...style
+    }
+  }, onToggleRail && /*#__PURE__*/React.createElement("button", {
+    type: "button",
+    onClick: onToggleRail,
+    "aria-label": "Toggle navigation",
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: 30,
+      height: 30,
+      background: "transparent",
+      border: "none",
+      borderRadius: "var(--ds-radius-xs)",
+      color: "var(--ds-text-muted)",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: "panel-left",
+    size: 18
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 0
+    }
+  }, /*#__PURE__*/React.createElement("h1", {
+    style: {
+      margin: 0,
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 19,
+      fontWeight: 700,
+      letterSpacing: "0.01em",
+      color: "var(--ds-text-primary)",
+      lineHeight: 1.1,
+      whiteSpace: "nowrap"
+    }
+  }, title), crumbs.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      marginTop: 2
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-body)",
+      fontSize: 10.5,
+      color: "var(--ds-text-faint)",
+      textTransform: "uppercase",
+      letterSpacing: "0.08em"
+    }
+  }, "Filed under"), crumbs.map((c, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: i
+  }, i > 0 && /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: "chevron-right",
+    size: 11,
+    style: {
+      color: "var(--ds-text-faint)"
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-body)",
+      fontSize: 11,
+      color: "var(--ds-text-muted)"
+    }
+  }, c))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 10,
+      flex: "0 0 auto"
+    }
+  }, children));
+}
+Object.assign(__ds_scope, { TopBar });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/chrome/TopBar.jsx", error: String((e && e.message) || e) }); }
+
+// components/data/DeltaIndicator.jsx
+try { (() => {
+/**
+ * DeltaIndicator — signed period-over-period change with a directional arrow,
+ * coloured by signal. Set `invert` for metrics where down is good (e.g. expenses,
+ * combat losses) so the colour reflects desirability, not direction.
+ */
+function DeltaIndicator({
+  value = 0,
+  // e.g. 0.064 for +6.4% (fraction) or a raw number
+  format = "percent",
+  // "percent" | "number" | "none"
+  invert = false,
+  size = "md",
+  // "sm" | "md"
+  showArrow = true,
+  style = {}
+}) {
+  const up = value >= 0;
+  const good = invert ? !up : up;
+  const color = value === 0 ? "var(--ds-text-muted)" : good ? "var(--ds-signal-positive)" : "var(--ds-signal-negative)";
+  let text;
+  if (format === "percent") {
+    text = `${up ? "+" : "−"}${Math.abs(value * 100).toFixed(1)}%`;
+  } else if (format === "number") {
+    text = `${up ? "+" : "−"}${Math.abs(value).toLocaleString()}`;
+  } else {
+    text = `${up ? "+" : "−"}${Math.abs(value)}`;
+  }
+  const fs = size === "sm" ? 11 : size === "lg" ? 15 : 12.5;
+  const is = size === "sm" ? 12 : size === "lg" ? 17 : 14;
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 3,
+      color,
+      fontFamily: "var(--ds-font-mono)",
+      fontVariantNumeric: "tabular-nums",
+      fontSize: fs,
+      fontWeight: 600,
+      letterSpacing: "-0.01em",
+      ...style
+    }
+  }, showArrow && /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: up ? "arrow-up-right" : "arrow-down-right",
+    size: is,
+    strokeWidth: 2.25
+  }), text);
+}
+Object.assign(__ds_scope, { DeltaIndicator });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/data/DeltaIndicator.jsx", error: String((e && e.message) || e) }); }
+
+// components/data/KpiTile.jsx
+try { (() => {
+/**
+ * KpiTile — the signature briefing tile: an ALL-CAPS eyebrow label, a large
+ * mono value, a YoY delta, and an optional 12-month sparkline. Composes
+ * DeltaIndicator + Sparkline. Use in the KPI strip across the top of a page.
+ */
+function KpiTile({
+  label,
+  value,
+  // preformatted string, e.g. "₡ 1.28B"
+  unit,
+  // optional small unit suffix
+  delta,
+  // number, e.g. 0.064 (fraction) — omit to hide
+  deltaLabel = "YoY",
+  deltaFormat = "percent",
+  invertDelta = false,
+  sparkData,
+  // array of numbers — omit to hide
+  sparkColor = "var(--ds-signal-info)",
+  accent = false,
+  // imperial accent stripe on the left edge
+  style = {}
+}) {
+  // Accent stripe matches the variance (delta) colour.
+  const up = (delta || 0) >= 0;
+  const good = invertDelta ? !up : up;
+  const stripeColor = delta == null || delta === 0 ? "var(--ds-accent-imperial)" : good ? "var(--ds-signal-positive)" : "var(--ds-signal-negative)";
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      gap: 10,
+      background: "var(--ds-bg-hull)",
+      border: "1px solid var(--ds-line-conduit)",
+      borderRadius: "var(--ds-radius-md)",
+      padding: "14px 16px 14px",
+      overflow: "hidden",
+      ...style
+    }
+  }, accent && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      left: 0,
+      top: 0,
+      bottom: 0,
+      width: 2,
+      background: stripeColor
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: "var(--ds-font-display)",
+      fontSize: 13,
+      fontWeight: 600,
+      letterSpacing: "0.16em",
+      textTransform: "uppercase",
+      color: "var(--ds-text-secondary)"
+    }
+  }, label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "baseline",
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-mono)",
+      fontVariantNumeric: "tabular-nums",
+      fontSize: 30,
+      fontWeight: 600,
+      letterSpacing: "-0.02em",
+      color: "var(--ds-text-primary)",
+      lineHeight: 1
+    }
+  }, value), unit && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-mono)",
+      fontSize: 13,
+      color: "var(--ds-text-muted)"
+    }
+  }, unit)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      gap: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      flex: "0 0 auto"
+    }
+  }, delta != null && /*#__PURE__*/React.createElement(__ds_scope.DeltaIndicator, {
+    value: delta,
+    format: deltaFormat,
+    invert: invertDelta,
+    size: "lg"
+  }), delta != null && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: "var(--ds-font-body)",
+      fontSize: 13,
+      fontWeight: 500,
+      color: "var(--ds-text-secondary)"
+    }
+  }, deltaLabel)), sparkData && sparkData.length > 1 && /*#__PURE__*/React.createElement(__ds_scope.Sparkline, {
+    data: sparkData,
+    width: 180,
+    height: 36,
+    color: sparkColor,
+    showDots: false,
+    style: {
+      flex: "0 0 50%",
+      maxWidth: "50%"
+    }
+  })));
+}
+Object.assign(__ds_scope, { KpiTile });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/data/KpiTile.jsx", error: String((e && e.message) || e) }); }
+
+// components/forms/Button.jsx
+try { (() => {
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/**
+ * Button — primary action control for the DSMS console.
+ * Austere: 2px radius, flat fills, hairline borders, no drop shadow.
+ */
+function Button({
+  children,
+  variant = "secondary",
+  // "primary" | "secondary" | "ghost" | "danger"
+  size = "md",
+  // "sm" | "md"
+  icon,
+  // optional lucide name, leading
+  iconTrailing,
+  // optional lucide name, trailing
+  disabled = false,
+  block = false,
+  type = "button",
+  onClick,
+  style = {},
+  ...rest
+}) {
+  const [hover, setHover] = React.useState(false);
+  const [active, setActive] = React.useState(false);
+  const sizes = {
+    sm: {
+      h: 28,
+      px: 10,
+      font: 12,
+      gap: 6,
+      icon: 14
+    },
+    md: {
+      h: 34,
+      px: 14,
+      font: 13,
+      gap: 7,
+      icon: 16
+    }
+  }[size];
+  const palettes = {
+    primary: {
+      bg: "var(--ds-accent-imperial)",
+      bgHover: "var(--ds-accent-imperial-hi)",
+      bgActive: "var(--ds-accent-imperial-lo)",
+      fg: "var(--ds-text-on-accent)",
+      border: "transparent"
+    },
+    danger: {
+      bg: "var(--ds-accent-imperial)",
+      bgHover: "var(--ds-accent-imperial-hi)",
+      bgActive: "var(--ds-accent-imperial-lo)",
+      fg: "var(--ds-text-on-accent)",
+      border: "transparent"
+    },
+    secondary: {
+      bg: "var(--ds-bg-bay)",
+      bgHover: "var(--ds-bg-deck)",
+      bgActive: "var(--ds-bg-hull)",
+      fg: "var(--ds-text-primary)",
+      border: "var(--ds-line-conduit)",
+      borderHover: "var(--ds-line-bright)"
+    },
+    ghost: {
+      bg: "transparent",
+      bgHover: "var(--ds-bg-bay)",
+      bgActive: "var(--ds-bg-hull)",
+      fg: "var(--ds-text-secondary)",
+      border: "transparent"
+    }
+  };
+  const p = palettes[variant] || palettes.secondary;
+  const bg = disabled ? "var(--ds-bg-hull)" : active ? p.bgActive : hover ? p.bgHover : p.bg;
+  const borderColor = disabled ? "var(--ds-line-faint)" : hover && p.borderHover ? p.borderHover : p.border;
+  return /*#__PURE__*/React.createElement("button", _extends({
+    type: type,
+    disabled: disabled,
+    onClick: onClick,
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => {
+      setHover(false);
+      setActive(false);
+    },
+    onMouseDown: () => setActive(true),
+    onMouseUp: () => setActive(false),
+    style: {
+      display: block ? "flex" : "inline-flex",
+      width: block ? "100%" : undefined,
+      alignItems: "center",
+      justifyContent: "center",
+      gap: sizes.gap,
+      height: sizes.h,
+      padding: `0 ${sizes.px}px`,
+      fontFamily: "var(--ds-font-display)",
+      fontSize: sizes.font,
+      fontWeight: 600,
+      letterSpacing: "0.06em",
+      textTransform: "uppercase",
+      color: disabled ? "var(--ds-text-faint)" : p.fg,
+      background: bg,
+      border: `1px solid ${borderColor}`,
+      borderRadius: "var(--ds-radius-xs)",
+      cursor: disabled ? "not-allowed" : "pointer",
+      transition: "background var(--ds-dur-fast) var(--ds-ease-standard), border-color var(--ds-dur-fast) var(--ds-ease-standard)",
+      whiteSpace: "nowrap",
+      userSelect: "none",
+      ...style
+    }
+  }, rest), icon && /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: icon,
+    size: sizes.icon
+  }), children, iconTrailing && /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: iconTrailing,
+    size: sizes.icon
+  }));
+}
+Object.assign(__ds_scope, { Button });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/forms/Button.jsx", error: String((e && e.message) || e) }); }
+
+// components/forms/IconButton.jsx
+try { (() => {
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/**
+ * IconButton — square icon-only control. Used in toolbars, table rows,
+ * and the collapsed rail. Supports an `active` state with the imperial wash.
+ */
+function IconButton({
+  icon = "circle",
+  size = "md",
+  // "sm" | "md"
+  variant = "ghost",
+  // "ghost" | "solid"
+  active = false,
+  disabled = false,
+  title,
+  onClick,
+  style = {},
+  ...rest
+}) {
+  const [hover, setHover] = React.useState(false);
+  const dim = {
+    sm: 28,
+    md: 34
+  }[size];
+  const iconSize = {
+    sm: 15,
+    md: 17
+  }[size];
+  let bg = "transparent";
+  let fg = "var(--ds-text-secondary)";
+  let border = "transparent";
+  if (variant === "solid") {
+    bg = "var(--ds-bg-bay)";
+    border = "var(--ds-line-conduit)";
+  }
+  if (hover && !disabled) {
+    bg = "var(--ds-bg-bay)";
+    fg = "var(--ds-text-primary)";
+  }
+  if (active) {
+    bg = "var(--ds-accent-imperial-dim)";
+    fg = "var(--ds-accent-imperial-hi)";
+    border = "transparent";
+  }
+  if (disabled) {
+    fg = "var(--ds-text-faint)";
+    bg = "transparent";
+  }
+  return /*#__PURE__*/React.createElement("button", _extends({
+    type: "button",
+    title: title,
+    "aria-label": title || icon,
+    "aria-pressed": active,
+    disabled: disabled,
+    onClick: onClick,
+    onMouseEnter: () => setHover(true),
+    onMouseLeave: () => setHover(false),
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      justifyContent: "center",
+      width: dim,
+      height: dim,
+      color: fg,
+      background: bg,
+      border: `1px solid ${border}`,
+      borderRadius: "var(--ds-radius-xs)",
+      cursor: disabled ? "not-allowed" : "pointer",
+      transition: "background var(--ds-dur-fast) var(--ds-ease-standard), color var(--ds-dur-fast) var(--ds-ease-standard)",
+      position: "relative",
+      ...style
+    }
+  }, rest), active && /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      left: 0,
+      top: 5,
+      bottom: 5,
+      width: 2,
+      background: "var(--ds-accent-imperial)",
+      borderRadius: 1
+    }
+  }), /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: icon,
+    size: iconSize
+  }));
+}
+Object.assign(__ds_scope, { IconButton });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/forms/IconButton.jsx", error: String((e && e.message) || e) }); }
+
+// components/forms/Input.jsx
+try { (() => {
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/**
+ * Input — single-line text field for the console. Input well surface,
+ * hairline border, 2px imperial focus inset. Optional leading icon.
+ */
+function Input({
+  value,
+  defaultValue,
+  placeholder,
+  icon,
+  // optional leading lucide name
+  type = "text",
+  size = "md",
+  // "sm" | "md"
+  disabled = false,
+  invalid = false,
+  numeric = false,
+  // mono + tabular figures
+  onChange,
+  style = {},
+  ...rest
+}) {
+  const [focus, setFocus] = React.useState(false);
+  const h = {
+    sm: 30,
+    md: 36
+  }[size];
+  const borderColor = invalid ? "var(--ds-signal-negative)" : focus ? "var(--ds-accent-imperial)" : "var(--ds-line-conduit)";
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      height: h,
+      padding: "0 10px",
+      background: disabled ? "var(--ds-bg-hull)" : "var(--ds-bg-deck)",
+      border: `1px solid ${borderColor}`,
+      boxShadow: focus ? "inset 0 0 0 1px var(--ds-accent-imperial)" : "none",
+      borderRadius: "var(--ds-radius-xs)",
+      transition: "border-color var(--ds-dur-fast) var(--ds-ease-standard), box-shadow var(--ds-dur-fast) var(--ds-ease-standard)",
+      opacity: disabled ? 0.55 : 1,
+      ...style
+    }
+  }, icon && /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: focus ? "var(--ds-text-secondary)" : "var(--ds-text-muted)",
+      display: "flex"
+    }
+  }, /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: icon,
+    size: 15
+  })), /*#__PURE__*/React.createElement("input", _extends({
+    type: type,
+    value: value,
+    defaultValue: defaultValue,
+    placeholder: placeholder,
+    disabled: disabled,
+    onChange: onChange,
+    onFocus: () => setFocus(true),
+    onBlur: () => setFocus(false),
+    style: {
+      flex: 1,
+      minWidth: 0,
+      height: "100%",
+      border: "none",
+      outline: "none",
+      background: "transparent",
+      color: "var(--ds-text-primary)",
+      fontFamily: numeric ? "var(--ds-font-mono)" : "var(--ds-font-body)",
+      fontVariantNumeric: numeric ? "tabular-nums" : "normal",
+      fontSize: size === "sm" ? 12 : 13,
+      letterSpacing: numeric ? "-0.01em" : "0"
+    }
+  }, rest)));
+}
+Object.assign(__ds_scope, { Input });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/forms/Input.jsx", error: String((e && e.message) || e) }); }
+
+// components/forms/Select.jsx
+try { (() => {
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+/**
+ * Select — native dropdown styled for the console. Used heavily for the
+ * date-range selector and filter controls in the top bar.
+ */
+function Select({
+  value,
+  defaultValue,
+  options = [],
+  // [{ value, label }] or [string]
+  size = "md",
+  // "sm" | "md"
+  icon,
+  // optional leading lucide name
+  disabled = false,
+  onChange,
+  style = {},
+  ...rest
+}) {
+  const [focus, setFocus] = React.useState(false);
+  const h = {
+    sm: 30,
+    md: 36
+  }[size];
+  const norm = options.map(o => typeof o === "string" ? {
+    value: o,
+    label: o
+  } : o);
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 8,
+      height: h,
+      padding: "0 8px 0 10px",
+      background: disabled ? "var(--ds-bg-hull)" : "var(--ds-bg-deck)",
+      border: `1px solid ${focus ? "var(--ds-accent-imperial)" : "var(--ds-line-conduit)"}`,
+      boxShadow: focus ? "inset 0 0 0 1px var(--ds-accent-imperial)" : "none",
+      borderRadius: "var(--ds-radius-xs)",
+      transition: "border-color var(--ds-dur-fast) var(--ds-ease-standard)",
+      opacity: disabled ? 0.55 : 1,
+      ...style
+    }
+  }, icon && /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: "var(--ds-text-muted)",
+      display: "flex"
+    }
+  }, /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: icon,
+    size: 15
+  })), /*#__PURE__*/React.createElement("select", _extends({
+    value: value,
+    defaultValue: defaultValue,
+    disabled: disabled,
+    onChange: onChange,
+    onFocus: () => setFocus(true),
+    onBlur: () => setFocus(false),
+    style: {
+      appearance: "none",
+      WebkitAppearance: "none",
+      border: "none",
+      outline: "none",
+      background: "transparent",
+      color: "var(--ds-text-primary)",
+      fontFamily: "var(--ds-font-body)",
+      fontSize: size === "sm" ? 12 : 13,
+      paddingRight: 18,
+      cursor: disabled ? "not-allowed" : "pointer",
+      height: "100%"
+    }
+  }, rest), norm.map(o => /*#__PURE__*/React.createElement("option", {
+    key: o.value,
+    value: o.value,
+    style: {
+      background: "var(--ds-bg-bay)",
+      color: "var(--ds-text-primary)"
+    }
+  }, o.label))), /*#__PURE__*/React.createElement("span", {
+    style: {
+      position: "absolute",
+      right: 8,
+      color: "var(--ds-text-muted)",
+      pointerEvents: "none",
+      display: "flex"
+    }
+  }, /*#__PURE__*/React.createElement(__ds_scope.Icon, {
+    name: "chevron-down",
+    size: 15
+  })));
+}
+Object.assign(__ds_scope, { Select });
+})(); } catch (e) { __ds_ns.__errors.push({ path: "components/forms/Select.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/AppShell.jsx
+try { (() => {
+/* AppShell — composes the rail, top bar and the active screen into the console. */
+(function () {
+  const {
+    SidebarRail,
+    TopBar,
+    Slicer,
+    Button,
+    IconButton
+  } = window.DSMSDesignSystem_197d77;
+  const S = window.DSMSScreens;
+  const PAGES = [{
+    id: "briefing",
+    label: "Executive Briefing",
+    icon: "layout-dashboard",
+    title: "Imperial Executive Briefing",
+    crumb: ["Finance", "P&L"],
+    Screen: () => S.BriefingScreen
+  }, {
+    id: "ops",
+    label: "Operations Command",
+    icon: "git-branch",
+    title: "Operations Command",
+    crumb: ["Procurement", "Vendors"],
+    Screen: () => S.OperationsScreen
+  }, {
+    id: "supply",
+    label: "Supply Chain",
+    icon: "boxes",
+    title: "Supply Chain Status",
+    crumb: ["Logistics", "Inventory"],
+    Screen: () => S.SupplyScreen
+  }, {
+    id: "workforce",
+    label: "Workforce",
+    icon: "users",
+    title: "Workforce & Personnel",
+    crumb: ["Personnel", "Headcount"],
+    Screen: () => S.WorkforceScreen
+  }, {
+    id: "maint",
+    label: "Maintenance",
+    icon: "wrench",
+    title: "Maintenance & Reliability",
+    crumb: ["Operations", "Work Orders"]
+  }];
+  function AppShell() {
+    const [active, setActive] = React.useState("briefing");
+    const [collapsed, setCollapsed] = React.useState(false);
+    const page = PAGES.find(p => p.id === active);
+    const Screen = page.Screen ? page.Screen() : null;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        height: "100vh",
+        width: "100%",
+        background: "var(--ds-bg-void)",
+        color: "var(--ds-text-secondary)",
+        fontFamily: "var(--ds-font-body)"
+      }
+    }, /*#__PURE__*/React.createElement(SidebarRail, {
+      items: PAGES,
+      active: active,
+      onSelect: setActive,
+      collapsed: collapsed,
+      statusLabel: "Subsidy Coverage",
+      statusValue: "94%",
+      statusTone: "positive"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1,
+        display: "flex",
+        flexDirection: "column",
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement(TopBar, {
+      title: page.title,
+      breadcrumb: page.crumb,
+      onToggleRail: () => setCollapsed(c => !c)
+    }, /*#__PURE__*/React.createElement(Slicer, {
+      size: "sm",
+      defaultValue: "2022",
+      options: [{
+        value: "2019",
+        label: "2019"
+      }, {
+        value: "2020",
+        label: "2020"
+      }, {
+        value: "2021",
+        label: "2021"
+      }, {
+        value: "2022",
+        label: "2022"
+      }]
+    }), /*#__PURE__*/React.createElement(IconButton, {
+      icon: "bell",
+      title: "Alerts"
+    }), /*#__PURE__*/React.createElement(Button, {
+      variant: "secondary",
+      size: "sm",
+      icon: "download"
+    }, "Export")), /*#__PURE__*/React.createElement("main", {
+      style: {
+        flex: 1,
+        overflow: "auto",
+        padding: 24,
+        backgroundColor: "var(--ds-bg-void)",
+        backgroundImage: "var(--ds-texture-grid)",
+        backgroundSize: "var(--ds-texture-grid-size)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        maxWidth: 1280,
+        margin: "0 auto"
+      }
+    }, Screen ? /*#__PURE__*/React.createElement(Screen, null) : /*#__PURE__*/React.createElement(Placeholder, {
+      title: page.title
+    })))));
+  }
+  function Placeholder({
+    title
+  }) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: 400,
+        gap: 10,
+        color: "var(--ds-text-muted)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "var(--ds-font-display)",
+        fontSize: 14,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase"
+      }
+    }, title), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 12,
+        color: "var(--ds-text-faint)"
+      }
+    }, "Page reserved \u2014 not part of this UI-kit pass."));
+  }
+  window.DSMSApp = AppShell;
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/AppShell.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/BriefingScreen.jsx
+try { (() => {
+/* Executive Briefing (P&L) — the screen a Grand Moff reads first. */
+(function () {
+  const {
+    Panel,
+    KpiTile,
+    SectionHeader,
+    Gauge
+  } = window.DSMSDesignSystem_197d77;
+  const {
+    LineCompare,
+    Donut,
+    Legend
+  } = window.DSMSCharts;
+  const D = window.DSMSData;
+  function BriefingScreen() {
+    const f = D.finance;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 18
+      }
+    }, /*#__PURE__*/React.createElement(SectionHeader, {
+      eyebrow: "Financial Posture \xB7 Ending 0 BBY",
+      title: "Trailing Twelve Months"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "repeat(3, 1fr)",
+        gap: 12
+      }
+    }, f.kpis.map(k => /*#__PURE__*/React.createElement(KpiTile, {
+      key: k.label,
+      label: k.label,
+      value: k.value,
+      delta: k.delta,
+      invertDelta: !!k.invert,
+      accent: true,
+      sparkData: k.spark,
+      sparkColor: k.color
+    }))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 300px",
+        gap: 14,
+        alignItems: "stretch"
+      }
+    }, /*#__PURE__*/React.createElement(Panel, {
+      title: "Income vs Expenses",
+      eyebrow: "6-Year Ledger",
+      actions: /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          gap: 14,
+          alignItems: "center"
+        }
+      }, /*#__PURE__*/React.createElement(Lg, {
+        color: "var(--ds-signal-info)",
+        label: "Income"
+      }), /*#__PURE__*/React.createElement(Lg, {
+        color: "var(--ds-signal-warning)",
+        label: "Expenses"
+      }), /*#__PURE__*/React.createElement(Lg, {
+        color: "var(--ds-signal-positive)",
+        label: "Net Surplus",
+        square: true
+      }))
+    }, /*#__PURE__*/React.createElement(LineCompare, {
+      labels: D.months,
+      surplus: f.surplus,
+      markerIndex: 11,
+      markerLabel: "BATTLE OF YAVIN",
+      series: [{
+        name: "Income",
+        data: f.income,
+        color: "var(--ds-signal-info)"
+      }, {
+        name: "Expenses",
+        data: f.expenses,
+        color: "var(--ds-signal-warning)"
+      }]
+    })), /*#__PURE__*/React.createElement(Panel, {
+      title: "Subsidy Coverage",
+      eyebrow: "Imperial Treasury"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100%",
+        gap: 14
+      }
+    }, /*#__PURE__*/React.createElement(Gauge, {
+      value: 0.94,
+      redBelow: 0.7,
+      warnBelow: 0.85,
+      label: "Of Total Expenses",
+      size: 190
+    }), /*#__PURE__*/React.createElement("p", {
+      style: {
+        margin: 0,
+        fontSize: 12,
+        color: "var(--ds-text-muted)",
+        textAlign: "center",
+        lineHeight: 1.5,
+        maxWidth: 220
+      }
+    }, "Treasury subsidy covers ", /*#__PURE__*/React.createElement("b", {
+      style: {
+        color: "var(--ds-text-secondary)"
+      }
+    }, "\u20A1 8.55B"), " of ", /*#__PURE__*/React.createElement("b", {
+      style: {
+        color: "var(--ds-text-secondary)"
+      }
+    }, "\u20A1 9.10B"), " in total expenses.")))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: 14
+      }
+    }, /*#__PURE__*/React.createElement(Panel, {
+      title: "Expense Mix",
+      eyebrow: "By Account Category"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 28
+      }
+    }, /*#__PURE__*/React.createElement(Donut, {
+      segments: f.expenseMix,
+      centerValue: "\u20A1 9.1B",
+      centerLabel: "Total"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement(Legend, {
+      segments: f.expenseMix,
+      format: D.fmtCredits
+    })))), /*#__PURE__*/React.createElement(Panel, {
+      title: "Operating Posture",
+      eyebrow: "Net Position"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 14
+      }
+    }, /*#__PURE__*/React.createElement(Stat, {
+      label: "Operating Margin",
+      value: "12.3%",
+      tone: "positive",
+      note: "+0.9 pts YoY"
+    }), /*#__PURE__*/React.createElement(Stat, {
+      label: "Net Surplus",
+      value: "\u20A1 1.28B",
+      tone: "positive",
+      note: "+6.4% YoY"
+    }), /*#__PURE__*/React.createElement(Stat, {
+      label: "Expense Growth",
+      value: "6.1%",
+      tone: "warning",
+      note: "Outpacing income in Q4"
+    }), /*#__PURE__*/React.createElement(Stat, {
+      label: "Days Cash on Hand",
+      value: "214",
+      tone: "neutral",
+      note: "Imperial reserve"
+    })))));
+  }
+  function Lg({
+    color,
+    label,
+    square
+  }) {
+    return /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: square ? 9 : 12,
+        height: square ? 9 : 3,
+        borderRadius: 1,
+        background: color,
+        opacity: square ? 0.4 : 1
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: "var(--ds-text-muted)"
+      }
+    }, label));
+  }
+  function Stat({
+    label,
+    value,
+    tone,
+    note
+  }) {
+    const c = {
+      positive: "var(--ds-signal-positive)",
+      warning: "var(--ds-signal-warning)",
+      negative: "var(--ds-signal-negative)",
+      neutral: "var(--ds-text-primary)"
+    }[tone];
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "baseline",
+        justifyContent: "space-between",
+        gap: 12,
+        paddingBottom: 12,
+        borderBottom: "1px solid var(--ds-line-faint)"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        minWidth: 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "var(--ds-font-display)",
+        fontSize: 12,
+        fontWeight: 600,
+        letterSpacing: "0.12em",
+        textTransform: "uppercase",
+        color: "var(--ds-text-secondary)",
+        whiteSpace: "nowrap"
+      }
+    }, label), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 11.5,
+        color: "var(--ds-text-muted)",
+        marginTop: 3
+      }
+    }, note)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 22,
+        fontWeight: 600,
+        color: c,
+        fontVariantNumeric: "tabular-nums"
+      }
+    }, value));
+  }
+  window.DSMSScreens = window.DSMSScreens || {};
+  window.DSMSScreens.BriefingScreen = BriefingScreen;
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/BriefingScreen.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/Charts.jsx
+try { (() => {
+/* DSMS Fabric Console — presentational SVG charts (kit internals, brand-styled).
+   Exposed on window.DSMSCharts. Cosmetic recreations, not data-bound. */
+(function () {
+  const {
+    useState
+  } = React;
+  const AXIS = "var(--ds-text-muted)";
+  const GRID = "var(--ds-line-faint)";
+
+  /* Horizontal bar list */
+  function HBars({
+    data,
+    format,
+    color = "var(--ds-data-1)",
+    height = 26,
+    gap = 8
+  }) {
+    const max = Math.max(...data.map(d => d.value));
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap
+      }
+    }, data.map((d, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "grid",
+        gridTemplateColumns: "170px 1fr 92px",
+        alignItems: "center",
+        gap: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12.5,
+        color: "var(--ds-text-secondary)",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }
+    }, d.label || d.group || d.dept || d.role), /*#__PURE__*/React.createElement("div", {
+      style: {
+        height,
+        background: "var(--ds-bg-deck)",
+        borderRadius: 1,
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: `${d.value / max * 100}%`,
+        height: "100%",
+        background: d.color || color,
+        opacity: 0.9
+      }
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontVariantNumeric: "tabular-nums",
+        fontSize: 12.5,
+        color: "var(--ds-text-primary)",
+        textAlign: "right"
+      }
+    }, format ? format(d.value) : d.value.toLocaleString()))));
+  }
+
+  /* Multi-series line chart with axes, optional vertical marker */
+  function LineCompare({
+    series,
+    labels,
+    height = 230,
+    markerIndex,
+    markerLabel,
+    surplus,
+    yFormat
+  }) {
+    const [hover, setHover] = useState(-1);
+    const padL = 52,
+      padR = 16,
+      padT = 14,
+      padB = 26;
+    const W = 760,
+      H = height;
+    const innerW = W - padL - padR,
+      innerH = H - padT - padB;
+    const all = series.flatMap(s => s.data);
+    const maxV = Math.max(...all) * 1.08;
+    const n = labels.length;
+    const x = i => padL + i / (n - 1) * innerW;
+    const y = v => padT + (1 - v / maxV) * innerH;
+    const ticks = 4;
+    const fmtY = yFormat || (v => (v / 1e9).toFixed(1) + "B");
+    return /*#__PURE__*/React.createElement("svg", {
+      viewBox: `0 0 ${W} ${H}`,
+      width: "100%",
+      height: H,
+      style: {
+        display: "block",
+        overflow: "visible"
+      },
+      onMouseLeave: () => setHover(-1)
+    }, Array.from({
+      length: ticks + 1
+    }).map((_, t) => {
+      const v = maxV / ticks * t;
+      return /*#__PURE__*/React.createElement("g", {
+        key: t
+      }, /*#__PURE__*/React.createElement("line", {
+        x1: padL,
+        x2: W - padR,
+        y1: y(v),
+        y2: y(v),
+        stroke: GRID,
+        strokeWidth: "1"
+      }), /*#__PURE__*/React.createElement("text", {
+        x: padL - 8,
+        y: y(v) + 3,
+        textAnchor: "end",
+        fill: AXIS,
+        style: {
+          fontFamily: "var(--ds-font-mono)",
+          fontSize: 10
+        }
+      }, fmtY(v)));
+    }), surplus && surplus.map((v, i) => /*#__PURE__*/React.createElement("rect", {
+      key: i,
+      x: x(i) - 7,
+      y: y(v),
+      width: 14,
+      height: y(0) - y(v),
+      fill: "var(--ds-signal-positive)",
+      opacity: "0.1"
+    })), markerIndex != null && /*#__PURE__*/React.createElement("g", null, /*#__PURE__*/React.createElement("line", {
+      x1: x(markerIndex),
+      x2: x(markerIndex),
+      y1: padT,
+      y2: H - padB,
+      stroke: "var(--ds-accent-imperial)",
+      strokeWidth: "1.5",
+      strokeDasharray: "3 3"
+    }), /*#__PURE__*/React.createElement("text", {
+      x: x(markerIndex) - 6,
+      y: padT + 10,
+      textAnchor: "end",
+      fill: "var(--ds-accent-imperial-hi)",
+      style: {
+        fontFamily: "var(--ds-font-display)",
+        fontSize: 9,
+        fontWeight: 600,
+        letterSpacing: "0.1em"
+      }
+    }, markerLabel)), series.map((s, si) => {
+      const d = s.data.map((v, i) => `${i === 0 ? "M" : "L"}${x(i)},${y(v)}`).join(" ");
+      return /*#__PURE__*/React.createElement("path", {
+        key: si,
+        d: d,
+        fill: "none",
+        stroke: s.color,
+        strokeWidth: "2",
+        strokeLinejoin: "round"
+      });
+    }), labels.map((lb, i) => /*#__PURE__*/React.createElement("g", {
+      key: i,
+      onMouseEnter: () => setHover(i)
+    }, /*#__PURE__*/React.createElement("rect", {
+      x: x(i) - innerW / (2 * (n - 1)),
+      y: padT,
+      width: innerW / (n - 1),
+      height: innerH,
+      fill: "transparent"
+    }), /*#__PURE__*/React.createElement("text", {
+      x: x(i),
+      y: H - 8,
+      textAnchor: "middle",
+      fill: AXIS,
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 10
+      }
+    }, lb), hover === i && /*#__PURE__*/React.createElement("line", {
+      x1: x(i),
+      x2: x(i),
+      y1: padT,
+      y2: H - padB,
+      stroke: "var(--ds-line-bright)",
+      strokeWidth: "1"
+    }), hover === i && series.map((s, si) => /*#__PURE__*/React.createElement("circle", {
+      key: si,
+      cx: x(i),
+      cy: y(s.data[i]),
+      r: "3.5",
+      fill: s.color,
+      stroke: "var(--ds-bg-hull)",
+      strokeWidth: "1.5"
+    })))));
+  }
+
+  /* Donut chart */
+  function Donut({
+    segments,
+    size = 168,
+    thickness = 26,
+    centerLabel,
+    centerValue
+  }) {
+    const total = segments.reduce((a, s) => a + s.value, 0);
+    const r = (size - thickness) / 2;
+    const c = size / 2;
+    const circ = 2 * Math.PI * r;
+    let offset = 0;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "relative",
+        width: size,
+        height: size
+      }
+    }, /*#__PURE__*/React.createElement("svg", {
+      width: size,
+      height: size,
+      viewBox: `0 0 ${size} ${size}`,
+      style: {
+        transform: "rotate(-90deg)"
+      }
+    }, segments.map((s, i) => {
+      const frac = s.value / total;
+      const dash = frac * circ;
+      const el = /*#__PURE__*/React.createElement("circle", {
+        key: i,
+        cx: c,
+        cy: c,
+        r: r,
+        fill: "none",
+        stroke: s.color,
+        strokeWidth: thickness,
+        strokeDasharray: `${dash} ${circ - dash}`,
+        strokeDashoffset: -offset
+      });
+      offset += dash;
+      return el;
+    })), centerValue && /*#__PURE__*/React.createElement("div", {
+      style: {
+        position: "absolute",
+        inset: 0,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 22,
+        fontWeight: 600,
+        color: "var(--ds-text-primary)",
+        fontVariantNumeric: "tabular-nums"
+      }
+    }, centerValue), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-display)",
+        fontSize: 9,
+        fontWeight: 600,
+        letterSpacing: "0.16em",
+        textTransform: "uppercase",
+        color: "var(--ds-text-muted)"
+      }
+    }, centerLabel)));
+  }
+  function Legend({
+    segments,
+    format
+  }) {
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 8
+      }
+    }, segments.map((s, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 9,
+        height: 9,
+        borderRadius: 1,
+        background: s.color,
+        flex: "0 0 auto"
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12.5,
+        color: "var(--ds-text-secondary)",
+        flex: 1,
+        whiteSpace: "nowrap"
+      }
+    }, s.cat || s.label), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 12.5,
+        color: "var(--ds-text-primary)",
+        fontVariantNumeric: "tabular-nums"
+      }
+    }, format ? format(s.value) : s.value))));
+  }
+
+  /* Stacked horizontal bars */
+  function StackedBars({
+    rows,
+    keys
+  }) {
+    const totals = rows.map(r => keys.reduce((a, k) => a + (r[k.key] || 0), 0));
+    const max = Math.max(...totals);
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10
+      }
+    }, rows.map((r, i) => /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: "grid",
+        gridTemplateColumns: "110px 1fr 56px",
+        alignItems: "center",
+        gap: 12
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 12.5,
+        color: "var(--ds-text-secondary)",
+        whiteSpace: "nowrap"
+      }
+    }, r.cat), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        height: 22,
+        width: `${totals[i] / max * 100}%`,
+        borderRadius: 1,
+        overflow: "hidden",
+        background: "var(--ds-bg-deck)"
+      }
+    }, keys.map((k, ki) => {
+      const v = r[k.key] || 0;
+      return v > 0 ? /*#__PURE__*/React.createElement("div", {
+        key: ki,
+        style: {
+          width: `${v / totals[i] * 100}%`,
+          background: k.color
+        },
+        title: `${k.label}: ${v}`
+      }) : null;
+    })), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 12,
+        color: "var(--ds-text-primary)",
+        textAlign: "right",
+        fontVariantNumeric: "tabular-nums"
+      }
+    }, totals[i].toLocaleString()))));
+  }
+  window.DSMSCharts = {
+    HBars,
+    LineCompare,
+    Donut,
+    Legend,
+    StackedBars
+  };
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/Charts.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/OperationsScreen.jsx
+try { (() => {
+/* Operations Command — spend by division, vendors, risk matrix, pending ledger. */
+(function () {
+  const {
+    Panel,
+    SectionHeader,
+    DataTable,
+    StatusPill,
+    Button
+  } = window.DSMSDesignSystem_197d77;
+  const {
+    HBars
+  } = window.DSMSCharts;
+  const D = window.DSMSData;
+  function RiskMatrix({
+    vendors
+  }) {
+    const W = 360,
+      H = 230,
+      pad = 34;
+    const riskScore = {
+      Nominal: 1,
+      Elevated: 2,
+      Critical: 3
+    };
+    const spendVals = vendors.map(v => parseFloat(v.spend.replace(/,/g, "")));
+    const maxSpend = Math.max(...spendVals);
+    const x = s => pad + s / 3.4 * (W - pad * 2);
+    const y = sp => H - pad - sp / maxSpend * (H - pad * 2);
+    return /*#__PURE__*/React.createElement("svg", {
+      viewBox: `0 0 ${W} ${H}`,
+      width: "100%",
+      height: H
+    }, /*#__PURE__*/React.createElement("line", {
+      x1: pad,
+      y1: H - pad,
+      x2: W - pad,
+      y2: H - pad,
+      stroke: "var(--ds-line-conduit)"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: pad,
+      y1: pad,
+      x2: pad,
+      y2: H - pad,
+      stroke: "var(--ds-line-conduit)"
+    }), /*#__PURE__*/React.createElement("line", {
+      x1: x(2),
+      y1: pad,
+      x2: x(2),
+      y2: H - pad,
+      stroke: "var(--ds-line-faint)",
+      strokeDasharray: "3 3"
+    }), /*#__PURE__*/React.createElement("text", {
+      x: W - pad,
+      y: H - pad + 16,
+      textAnchor: "end",
+      fill: "var(--ds-text-faint)",
+      style: {
+        fontSize: 10,
+        fontFamily: "var(--ds-font-mono)"
+      }
+    }, "RISK \u2192"), /*#__PURE__*/React.createElement("text", {
+      x: pad - 6,
+      y: pad + 2,
+      textAnchor: "end",
+      fill: "var(--ds-text-faint)",
+      style: {
+        fontSize: 10,
+        fontFamily: "var(--ds-font-mono)"
+      }
+    }, "\u20A1"), vendors.map((v, i) => {
+      const c = v.rs === "negative" ? "var(--ds-signal-negative)" : v.rs === "warning" ? "var(--ds-signal-warning)" : "var(--ds-signal-positive)";
+      const sp = parseFloat(v.spend.replace(/,/g, ""));
+      return /*#__PURE__*/React.createElement("g", {
+        key: i
+      }, /*#__PURE__*/React.createElement("circle", {
+        cx: x(riskScore[v.risk]),
+        cy: y(sp),
+        r: Math.max(6, sp / maxSpend * 18),
+        fill: c,
+        fillOpacity: "0.22",
+        stroke: c,
+        strokeWidth: "1.5"
+      }));
+    }));
+  }
+  function OperationsScreen() {
+    const o = D.operations;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 18
+      }
+    }, /*#__PURE__*/React.createElement(SectionHeader, {
+      eyebrow: "Procurement & Vendors",
+      title: "Operations Command"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 360px",
+        gap: 14
+      }
+    }, /*#__PURE__*/React.createElement(Panel, {
+      title: "Spend by Division Group",
+      eyebrow: "Trailing 12 Months"
+    }, /*#__PURE__*/React.createElement(HBars, {
+      data: o.divisionSpend,
+      format: D.fmtCredits,
+      color: "var(--ds-data-2)"
+    })), /*#__PURE__*/React.createElement(Panel, {
+      title: "Vendor Risk Matrix",
+      eyebrow: "Risk \xD7 Spend"
+    }, /*#__PURE__*/React.createElement(RiskMatrix, {
+      vendors: o.vendors
+    }))), /*#__PURE__*/React.createElement(Panel, {
+      title: "Top Vendors",
+      eyebrow: "By Total Spend",
+      padded: false,
+      actions: /*#__PURE__*/React.createElement(Button, {
+        size: "sm",
+        variant: "ghost",
+        iconTrailing: "chevron-down"
+      }, "All Tiers")
+    }, /*#__PURE__*/React.createElement(DataTable, {
+      rowKey: "vendor",
+      columns: [{
+        key: "vendor",
+        label: "Vendor"
+      }, {
+        key: "type",
+        label: "Type"
+      }, {
+        key: "world",
+        label: "Home World"
+      }, {
+        key: "tier",
+        label: "Tier",
+        align: "center"
+      }, {
+        key: "risk",
+        label: "Risk Rating",
+        render: r => /*#__PURE__*/React.createElement(StatusPill, {
+          status: r.rs,
+          size: "sm"
+        }, r.risk)
+      }, {
+        key: "spend",
+        label: "Total Spend ₡",
+        numeric: true
+      }],
+      rows: o.vendors
+    })), /*#__PURE__*/React.createElement(Panel, {
+      title: "Pending & Disputed Ledger",
+      eyebrow: `${o.pending.count} Open Postings`
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10
+      }
+    }, o.pending.top.map(p => /*#__PURE__*/React.createElement("div", {
+      key: p.id,
+      style: {
+        display: "grid",
+        gridTemplateColumns: "120px 1fr 120px 110px",
+        alignItems: "center",
+        gap: 14,
+        padding: "8px 10px",
+        background: "var(--ds-bg-deck)",
+        borderRadius: 2,
+        border: "1px solid var(--ds-line-faint)"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 12,
+        color: "var(--ds-text-secondary)"
+      }
+    }, p.id), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 13,
+        color: "var(--ds-text-primary)"
+      }
+    }, p.vendor), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontFamily: "var(--ds-font-mono)",
+        fontSize: 13,
+        color: "var(--ds-text-primary)",
+        textAlign: "right",
+        fontVariantNumeric: "tabular-nums"
+      }
+    }, "\u20A1 ", p.amount), /*#__PURE__*/React.createElement("div", {
+      style: {
+        justifySelf: "end"
+      }
+    }, /*#__PURE__*/React.createElement(StatusPill, {
+      status: p.rs,
+      size: "sm"
+    }, p.status)))))));
+  }
+  window.DSMSScreens = window.DSMSScreens || {};
+  window.DSMSScreens.OperationsScreen = OperationsScreen;
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/OperationsScreen.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/SupplyScreen.jsx
+try { (() => {
+/* Supply Chain Status — inventory value, category mix, stockout heat-strip, reorder watchlist. */
+(function () {
+  const {
+    Panel,
+    SectionHeader,
+    DataTable,
+    StatusPill,
+    KpiTile
+  } = window.DSMSDesignSystem_197d77;
+  const {
+    StackedBars
+  } = window.DSMSCharts;
+  const D = window.DSMSData;
+  const STOCK_KEYS = [{
+    key: "central",
+    label: "Central Depot",
+    color: "var(--ds-signal-info)"
+  }, {
+    key: "forward",
+    label: "Forward Store",
+    color: "var(--ds-signal-positive)"
+  }, {
+    key: "magazine",
+    label: "Magazine",
+    color: "var(--ds-signal-warning)"
+  }, {
+    key: "cold",
+    label: "Cold Storage",
+    color: "var(--ds-data-3)"
+  }];
+
+  /* Stockouts heat-strip: items × weeks */
+  function HeatStrip() {
+    const items = ["Turbolaser Coolant", "TIE Solar Array", "Reactor Plating", "Bacta Fluid", "Blaster Gas"];
+    const weeks = 16;
+    // deterministic pseudo pattern
+    const cell = (r, c) => {
+      const v = (r * 7 + c * 3) % 11;
+      if (v === 0 || r === 0 && c > 11 || r === 4 && c > 13) return "stockout";
+      if (v < 3) return "low";
+      return "ok";
+    };
+    const color = {
+      stockout: "var(--ds-signal-negative)",
+      low: "var(--ds-signal-warning)",
+      ok: "var(--ds-bg-deck)"
+    };
+    return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 5
+      }
+    }, items.map((it, r) => /*#__PURE__*/React.createElement("div", {
+      key: r,
+      style: {
+        display: "grid",
+        gridTemplateColumns: "140px 1fr",
+        alignItems: "center",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11.5,
+        color: "var(--ds-text-secondary)",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }
+    }, it), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: `repeat(${weeks}, 1fr)`,
+        gap: 3
+      }
+    }, Array.from({
+      length: weeks
+    }).map((_, c) => {
+      const s = cell(r, c);
+      return /*#__PURE__*/React.createElement("div", {
+        key: c,
+        title: `Week ${c + 1}: ${s}`,
+        style: {
+          height: 16,
+          borderRadius: 1,
+          background: color[s],
+          opacity: s === "ok" ? 0.6 : 0.9
+        }
+      });
+    }))))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 16,
+        marginTop: 14,
+        paddingLeft: 150
+      }
+    }, [["stockout", "Stockout"], ["low", "Low"], ["ok", "In Stock"]].map(([k, l]) => /*#__PURE__*/React.createElement("span", {
+      key: k,
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        fontSize: 11,
+        color: "var(--ds-text-muted)"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 10,
+        height: 10,
+        borderRadius: 1,
+        background: color[k],
+        opacity: k === "ok" ? 0.6 : 0.9
+      }
+    }), l))));
+  }
+  function SupplyScreen() {
+    const s = D.supply;
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 18
+      }
+    }, /*#__PURE__*/React.createElement(SectionHeader, {
+      eyebrow: "Inventory & Logistics",
+      title: "Supply Chain Status"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "300px 1fr",
+        gap: 14,
+        alignItems: "stretch"
+      }
+    }, /*#__PURE__*/React.createElement(KpiTile, {
+      label: "Inventory Value",
+      value: s.inventoryValue,
+      delta: 0.052,
+      sparkData: s.inventorySpark,
+      sparkColor: "var(--ds-signal-info)",
+      accent: true,
+      style: {
+        justifyContent: "center"
+      }
+    }), /*#__PURE__*/React.createElement(Panel, {
+      title: "Inventory by Category",
+      eyebrow: "Units by Location Type"
+    }, /*#__PURE__*/React.createElement(StackedBars, {
+      rows: s.byCategory,
+      keys: STOCK_KEYS
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 16,
+        marginTop: 14
+      }
+    }, STOCK_KEYS.map(k => /*#__PURE__*/React.createElement("span", {
+      key: k.key,
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        fontSize: 11,
+        color: "var(--ds-text-muted)"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: 9,
+        height: 9,
+        borderRadius: 1,
+        background: k.color
+      }
+    }), k.label))))), /*#__PURE__*/React.createElement(Panel, {
+      title: "Stockouts Heat-Strip",
+      eyebrow: "Items \xD7 Last 16 Weeks"
+    }, /*#__PURE__*/React.createElement(HeatStrip, null)), /*#__PURE__*/React.createElement(Panel, {
+      title: "Reorder Watchlist",
+      eyebrow: "At or Below Reorder Point",
+      padded: false
+    }, /*#__PURE__*/React.createElement(DataTable, {
+      rowKey: "item",
+      columns: [{
+        key: "item",
+        label: "Item"
+      }, {
+        key: "onHand",
+        label: "On Hand",
+        numeric: true
+      }, {
+        key: "onOrder",
+        label: "On Order",
+        numeric: true
+      }, {
+        key: "lead",
+        label: "Lead (d)",
+        numeric: true
+      }, {
+        key: "days",
+        label: "Days to Stockout",
+        numeric: true,
+        render: r => /*#__PURE__*/React.createElement("span", {
+          style: {
+            color: r.days <= 5 ? "var(--ds-signal-negative)" : r.days <= 10 ? "var(--ds-signal-warning)" : "var(--ds-text-primary)",
+            fontFamily: "var(--ds-font-mono)",
+            fontVariantNumeric: "tabular-nums",
+            fontWeight: 600
+          }
+        }, r.days)
+      }, {
+        key: "vendor",
+        label: "Preferred Vendor"
+      }, {
+        key: "status",
+        label: "Status",
+        render: r => /*#__PURE__*/React.createElement(StatusPill, {
+          status: r.rs,
+          size: "sm"
+        }, r.status)
+      }],
+      rows: s.reorder
+    })));
+  }
+  window.DSMSScreens = window.DSMSScreens || {};
+  window.DSMSScreens.SupplyScreen = SupplyScreen;
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/SupplyScreen.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/WorkforceScreen.jsx
+try { (() => {
+/* Workforce & Personnel — headcount, roles, attrition vs combat losses, droids vs organics. */
+(function () {
+  const {
+    Panel,
+    SectionHeader,
+    KpiTile,
+    StatusPill
+  } = window.DSMSDesignSystem_197d77;
+  const {
+    HBars,
+    LineCompare,
+    Donut,
+    Legend
+  } = window.DSMSCharts;
+  const D = window.DSMSData;
+  function WorkforceScreen() {
+    const w = D.workforce;
+    const roleData = w.byRole.map(r => ({
+      label: r.role,
+      value: r.count,
+      color: r.combat ? "var(--ds-data-5)" : "var(--ds-data-2)"
+    }));
+    const droidSeg = [{
+      cat: "Service Droids",
+      value: w.droidShare,
+      color: "var(--ds-data-1)"
+    }, {
+      cat: "Organic Personnel",
+      value: 1 - w.droidShare,
+      color: "var(--ds-data-4)"
+    }];
+    return /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 18
+      }
+    }, /*#__PURE__*/React.createElement(SectionHeader, {
+      eyebrow: "Personnel & Headcount",
+      title: "Workforce"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "300px 1fr",
+        gap: 14
+      }
+    }, /*#__PURE__*/React.createElement(KpiTile, {
+      label: "Total Headcount",
+      value: w.headcount,
+      delta: 0.038,
+      sparkData: w.headcountSpark,
+      sparkColor: "var(--ds-signal-positive)",
+      accent: true,
+      style: {
+        justifyContent: "center"
+      }
+    }), /*#__PURE__*/React.createElement(Panel, {
+      title: "Headcount by Role",
+      eyebrow: "Active Assignments"
+    }, /*#__PURE__*/React.createElement(HBars, {
+      data: roleData,
+      format: n => (n / 1000).toFixed(0) + "K"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 16,
+        marginTop: 12
+      }
+    }, /*#__PURE__*/React.createElement(Lg, {
+      color: "var(--ds-data-5)",
+      label: "Combat"
+    }), /*#__PURE__*/React.createElement(Lg, {
+      color: "var(--ds-data-2)",
+      label: "Non-combat"
+    })))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "grid",
+        gridTemplateColumns: "1fr 320px",
+        gap: 14
+      }
+    }, /*#__PURE__*/React.createElement(Panel, {
+      title: "Attrition & Combat Losses",
+      eyebrow: "% of Headcount \xB7 Monthly",
+      actions: /*#__PURE__*/React.createElement("div", {
+        style: {
+          display: "flex",
+          gap: 14
+        }
+      }, /*#__PURE__*/React.createElement(Lg, {
+        color: "var(--ds-signal-warning)",
+        label: "Attrition",
+        line: true
+      }), /*#__PURE__*/React.createElement(Lg, {
+        color: "var(--ds-signal-negative)",
+        label: "Combat Losses",
+        line: true
+      }))
+    }, /*#__PURE__*/React.createElement(LineCompare, {
+      labels: D.months,
+      height: 210,
+      markerIndex: 11,
+      markerLabel: "BATTLE OF YAVIN",
+      yFormat: v => v.toFixed(1) + "%",
+      series: [{
+        name: "Attrition",
+        data: w.attrition,
+        color: "var(--ds-signal-warning)"
+      }, {
+        name: "Combat Losses",
+        data: w.combatLosses,
+        color: "var(--ds-signal-negative)"
+      }]
+    })), /*#__PURE__*/React.createElement(Panel, {
+      title: "Droids vs Organics",
+      eyebrow: "Workforce Composition"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 16
+      }
+    }, /*#__PURE__*/React.createElement(Donut, {
+      segments: droidSeg,
+      centerValue: "23.5%",
+      centerLabel: "Droids"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: "100%"
+      }
+    }, /*#__PURE__*/React.createElement(Legend, {
+      segments: droidSeg,
+      format: v => (v * 100).toFixed(1) + "%"
+    }))))), /*#__PURE__*/React.createElement(Panel, {
+      title: "Payroll Cost by Department",
+      eyebrow: "Trailing 12 Months"
+    }, /*#__PURE__*/React.createElement(HBars, {
+      color: "var(--ds-data-3)",
+      format: D.fmtCredits,
+      data: [{
+        label: "Combat Systems",
+        value: 1.42e9
+      }, {
+        label: "Engineering & Power",
+        value: 0.98e9
+      }, {
+        label: "Flight Operations",
+        value: 0.74e9
+      }, {
+        label: "Security & Detention",
+        value: 0.41e9
+      }, {
+        label: "Habitation & Life Support",
+        value: 0.19e9
+      }]
+    })));
+  }
+  function Lg({
+    color,
+    label,
+    line
+  }) {
+    return /*#__PURE__*/React.createElement("span", {
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        width: line ? 12 : 9,
+        height: line ? 3 : 9,
+        borderRadius: 1,
+        background: color
+      }
+    }), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: "var(--ds-text-muted)"
+      }
+    }, label));
+  }
+  window.DSMSScreens = window.DSMSScreens || {};
+  window.DSMSScreens.WorkforceScreen = WorkforceScreen;
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/WorkforceScreen.jsx", error: String((e && e.message) || e) }); }
+
+// ui_kits/fabric-console/data.js
+try { (() => {
+/* DSMS Fabric Console — mock datasets (0 BBY, trailing 12 months).
+   Numbers are illustrative Imperial credits (₡). Exposed on window.DSMSData. */
+(function () {
+  const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const income = [812, 824, 833, 851, 860, 872, 889, 901, 918, 942, 980, 1041].map(n => n * 1e6);
+  const expenses = [690, 712, 735, 741, 760, 802, 798, 833, 881, 905, 962, 990].map(n => n * 1e6);
+  const surplus = income.map((v, i) => v - expenses[i]);
+  const fmtCredits = n => {
+    const a = Math.abs(n);
+    if (a >= 1e9) return "₡ " + (n / 1e9).toFixed(2) + "B";
+    if (a >= 1e6) return "₡ " + (n / 1e6).toFixed(0) + "M";
+    if (a >= 1e3) return "₡ " + (n / 1e3).toFixed(0) + "K";
+    return "₡ " + n;
+  };
+  window.DSMSData = {
+    months,
+    fmtCredits,
+    finance: {
+      income,
+      expenses,
+      surplus,
+      kpis: [{
+        label: "Total Income",
+        value: "₡ 10.40B",
+        delta: 0.082,
+        spark: income.map(v => v / 1e6)
+      }, {
+        label: "Total Expenses",
+        value: "₡ 9.10B",
+        delta: 0.061,
+        invert: true,
+        spark: expenses.map(v => v / 1e6),
+        color: "var(--ds-signal-warning)"
+      }, {
+        label: "Net Surplus",
+        value: "₡ 1.28B",
+        delta: 0.064,
+        accent: true,
+        spark: surplus.map(v => v / 1e6),
+        color: "var(--ds-signal-positive)"
+      }, {
+        label: "Imperial Subsidy",
+        value: "₡ 8.55B",
+        delta: 0.011,
+        spark: income.map(v => v / 1e6 * 0.82),
+        color: "var(--ds-signal-info)"
+      }, {
+        label: "Subsidy Coverage",
+        value: "94%",
+        delta: -0.018,
+        invert: false,
+        spark: [97, 96, 96, 95, 95, 95, 94, 94, 94, 93, 94, 94]
+      }, {
+        label: "Operating Margin",
+        value: "12.3%",
+        delta: 0.009,
+        spark: surplus.map((v, i) => v / income[i] * 100)
+      }],
+      expenseMix: [{
+        cat: "Personnel",
+        value: 3.74e9,
+        color: "var(--ds-data-1)"
+      }, {
+        cat: "Operations",
+        value: 2.61e9,
+        color: "var(--ds-data-2)"
+      }, {
+        cat: "Capital & Construction",
+        value: 1.98e9,
+        color: "var(--ds-data-5)"
+      }, {
+        cat: "Overhead",
+        value: 0.77e9,
+        color: "var(--ds-data-3)"
+      }]
+    },
+    operations: {
+      divisionSpend: [{
+        group: "Combat Systems",
+        value: 2.84e9
+      }, {
+        group: "Engineering & Power",
+        value: 2.21e9
+      }, {
+        group: "Flight Operations",
+        value: 1.46e9
+      }, {
+        group: "Security & Detention",
+        value: 0.98e9
+      }, {
+        group: "Habitation & Life Support",
+        value: 0.74e9
+      }, {
+        group: "Logistics & Supply",
+        value: 0.52e9
+      }, {
+        group: "Command & Administration",
+        value: 0.35e9
+      }],
+      vendors: [{
+        vendor: "Sienar Fleet Systems",
+        type: "Prime",
+        world: "Lianna",
+        tier: "I",
+        risk: "Critical",
+        rs: "negative",
+        spend: "412,900,114"
+      }, {
+        vendor: "Kuat Drive Yards",
+        type: "Prime",
+        world: "Kuat",
+        tier: "I",
+        risk: "Elevated",
+        rs: "warning",
+        spend: "388,210,556"
+      }, {
+        vendor: "Imperial Munitions",
+        type: "Sub",
+        world: "Coruscant",
+        tier: "II",
+        risk: "Nominal",
+        rs: "positive",
+        spend: "201,774,300"
+      }, {
+        vendor: "Corellia Mining Guild",
+        type: "Sub",
+        world: "Corellia",
+        tier: "II",
+        risk: "Elevated",
+        rs: "warning",
+        spend: "164,330,901"
+      }, {
+        vendor: "Taim & Bak Ordnance",
+        type: "Sub",
+        world: "Naboo",
+        tier: "III",
+        risk: "Nominal",
+        rs: "positive",
+        spend: "98,210,447"
+      }, {
+        vendor: "Cygnus Spaceworks",
+        type: "Prime",
+        world: "Bespin",
+        tier: "II",
+        risk: "Critical",
+        rs: "negative",
+        spend: "76,884,210"
+      }],
+      pending: {
+        count: 47,
+        top: [{
+          id: "LDG-88142",
+          vendor: "Sienar Fleet Systems",
+          amount: "44,210,008",
+          status: "Disputed",
+          rs: "negative"
+        }, {
+          id: "LDG-88090",
+          vendor: "Kuat Drive Yards",
+          amount: "31,775,400",
+          status: "Pending",
+          rs: "warning"
+        }, {
+          id: "LDG-87994",
+          vendor: "Cygnus Spaceworks",
+          amount: "12,004,118",
+          status: "Disputed",
+          rs: "negative"
+        }]
+      }
+    },
+    supply: {
+      inventoryValue: "₡ 2.41B",
+      inventorySpark: [2.1, 2.15, 2.2, 2.18, 2.25, 2.3, 2.28, 2.33, 2.36, 2.38, 2.4, 2.41],
+      byCategory: [{
+        cat: "Munition",
+        central: 640,
+        forward: 210,
+        magazine: 480,
+        cold: 0
+      }, {
+        cat: "Fuel",
+        central: 520,
+        forward: 180,
+        magazine: 0,
+        cold: 0
+      }, {
+        cat: "Spare Part",
+        central: 410,
+        forward: 260,
+        magazine: 0,
+        cold: 0
+      }, {
+        cat: "Consumable",
+        central: 300,
+        forward: 190,
+        magazine: 0,
+        cold: 220
+      }, {
+        cat: "Droid Part",
+        central: 240,
+        forward: 90,
+        magazine: 0,
+        cold: 0
+      }, {
+        cat: "Medical",
+        central: 120,
+        forward: 60,
+        magazine: 0,
+        cold: 180
+      }],
+      reorder: [{
+        item: "Turbolaser Coolant Cell",
+        onHand: 142,
+        onOrder: 600,
+        lead: 14,
+        days: 6,
+        vendor: "Sienar Fleet Systems",
+        status: "Stockout",
+        rs: "negative"
+      }, {
+        item: "TIE Solar Panel Array",
+        onHand: 310,
+        onOrder: 0,
+        lead: 21,
+        days: 9,
+        vendor: "Cygnus Spaceworks",
+        status: "Reorder",
+        rs: "warning"
+      }, {
+        item: "Reactor Shield Plating",
+        onHand: 88,
+        onOrder: 240,
+        lead: 30,
+        days: 11,
+        vendor: "Kuat Drive Yards",
+        status: "Reorder",
+        rs: "warning"
+      }, {
+        item: "Bacta Tank Fluid (40L)",
+        onHand: 540,
+        onOrder: 0,
+        lead: 9,
+        days: 18,
+        vendor: "Corellia Mining Guild",
+        status: "OK",
+        rs: "positive"
+      }, {
+        item: "Blaster Gas Canister",
+        onHand: 12,
+        onOrder: 1000,
+        lead: 7,
+        days: 3,
+        vendor: "Taim & Bak Ordnance",
+        status: "Stockout",
+        rs: "negative"
+      }]
+    },
+    workforce: {
+      headcount: "1.71M",
+      headcountSpark: [1.42, 1.46, 1.5, 1.53, 1.56, 1.59, 1.62, 1.64, 1.66, 1.68, 1.7, 1.71],
+      byRole: [{
+        role: "Stormtrooper",
+        count: 612000,
+        combat: true
+      }, {
+        role: "Service Droid",
+        count: 401000,
+        combat: false
+      }, {
+        role: "Reactor Technician",
+        count: 188000,
+        combat: false
+      }, {
+        role: "TIE Pilot",
+        count: 96000,
+        combat: true
+      }, {
+        role: "Gunner",
+        count: 84000,
+        combat: true
+      }, {
+        role: "ISB Agent",
+        count: 41000,
+        combat: true
+      }],
+      attrition: [3.1, 3.0, 3.2, 3.4, 3.3, 3.6, 3.5, 3.8, 4.0, 4.2, 4.6, 5.4],
+      combatLosses: [0.4, 0.3, 0.5, 0.6, 0.5, 0.7, 0.8, 0.9, 1.1, 1.4, 2.0, 3.9],
+      droidShare: 0.235
+    },
+    maintenance: {
+      openWO: 1284,
+      criticalWO: 37,
+      backlog: {
+        low: [120, 124, 118, 130, 126, 122, 128, 134, 131, 129, 136, 140],
+        medium: [88, 92, 95, 90, 96, 99, 101, 98, 104, 108, 112, 118],
+        high: [40, 42, 45, 44, 48, 50, 52, 49, 55, 60, 66, 74],
+        crit: [6, 5, 7, 8, 7, 9, 10, 11, 14, 18, 26, 37]
+      },
+      downtime: [{
+        dept: "Reactor Core",
+        hrs: 884
+      }, {
+        dept: "Superlaser Assembly",
+        hrs: 712
+      }, {
+        dept: "Hangar Bay 327",
+        hrs: 466
+      }, {
+        dept: "Tractor Beam Array",
+        hrs: 358
+      }, {
+        dept: "Detention Block AA-23",
+        hrs: 214
+      }, {
+        dept: "Waste Compaction",
+        hrs: 142
+      }],
+      recent: [{
+        id: "WO-44821",
+        opened: "0 BBY · Dec",
+        dept: "Reactor Core",
+        item: "Coolant Manifold",
+        downtime: "42h",
+        cost: "8,210,400",
+        status: "Critical",
+        rs: "negative"
+      }, {
+        id: "WO-44810",
+        opened: "0 BBY · Dec",
+        dept: "Superlaser",
+        item: "Focus Lens Coupling",
+        downtime: "31h",
+        cost: "12,004,118",
+        status: "Critical",
+        rs: "negative"
+      }, {
+        id: "WO-44788",
+        opened: "0 BBY · Nov",
+        dept: "Hangar 327",
+        item: "Magnetic Field Door",
+        downtime: "18h",
+        cost: "2,440,900",
+        status: "In Repair",
+        rs: "warning"
+      }, {
+        id: "WO-44755",
+        opened: "0 BBY · Nov",
+        dept: "Tractor Beam",
+        item: "Generator Coupling",
+        downtime: "9h",
+        cost: "990,200",
+        status: "Closed",
+        rs: "positive"
+      }]
+    }
+  };
+})();
+})(); } catch (e) { __ds_ns.__errors.push({ path: "ui_kits/fabric-console/data.js", error: String((e && e.message) || e) }); }
+
+__ds_ns.Panel = __ds_scope.Panel;
+
+__ds_ns.SectionHeader = __ds_scope.SectionHeader;
+
+__ds_ns.SidebarRail = __ds_scope.SidebarRail;
+
+__ds_ns.TopBar = __ds_scope.TopBar;
+
+__ds_ns.DataTable = __ds_scope.DataTable;
+
+__ds_ns.DeltaIndicator = __ds_scope.DeltaIndicator;
+
+__ds_ns.Gauge = __ds_scope.Gauge;
+
+__ds_ns.KpiTile = __ds_scope.KpiTile;
+
+__ds_ns.Sparkline = __ds_scope.Sparkline;
+
+__ds_ns.StatusPill = __ds_scope.StatusPill;
+
+__ds_ns.Button = __ds_scope.Button;
+
+__ds_ns.IconButton = __ds_scope.IconButton;
+
+__ds_ns.Input = __ds_scope.Input;
+
+__ds_ns.Select = __ds_scope.Select;
+
+__ds_ns.Slicer = __ds_scope.Slicer;
+
+__ds_ns.Switch = __ds_scope.Switch;
+
+__ds_ns.Icon = __ds_scope.Icon;
+
+})();

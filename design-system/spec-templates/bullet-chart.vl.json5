@@ -1,0 +1,85 @@
+// TEMPLATE: Bullet Chart
+// Based on: https://vega.github.io/vega-lite/examples/facet_bullet.html
+// Adapted for Fabric Apps: flat DAX column names, data: { name: "table" }, container sizing
+//
+// DATA BINDING
+// product       : string  — dimension — e.g. Product[Product]
+// sales_total   : number  — measure   — e.g. [Sales Total]       (actual performance bar, narrow + dark)
+// sales_ly      : number  — measure   — e.g. [Sales LY]          (comparative bar, wide + light)
+// budget_total  : number  — measure   — e.g. [Budget Total]      (target tick marker)
+// range_max     : number  — measure   — e.g. [X Axis Max Value]  (outermost grey band = axis max)
+//
+// HOW IT WORKS
+// Three grey bands establish qualitative zones (outer=poor, mid=ok, inner=good).
+// Here they are derived from range_max: outer=100%, mid=75%, inner=50%.
+// Adjust these percentages to match your design's band thresholds.
+// The narrow steelblue bar is the actual (sales_total).
+// The wide lightsteelblue bar is the comparative (sales_ly).
+// The tick is the target (budget_total).
+//
+// PRODUCTION WIRING
+// DAX query should return one row per product member.
+// Connect via: useSemanticModelQuery → toDataTable → VegaVisual data prop
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v6.json",
+  "data": { "name": "table" },
+  "facet": {
+    "row": {
+      "field": "product",
+      "type": "ordinal",
+      "header": { "labelAngle": 0, "title": "", "labelAlign": "left" }
+    }
+  },
+  "spacing": 10,
+  "spec": {
+    "width": "container",
+    "height": 20,
+    "encoding": {
+      "x": {
+        "type": "quantitative",
+        "scale": { "nice": false },
+        "title": null
+      }
+    },
+    "layer": [
+      // Outer qualitative band (poor zone) — 100% of range_max
+      {
+        "mark": { "type": "bar", "color": "#eee" },
+        "encoding": { "x": { "field": "range_max" } }
+      },
+      // Middle qualitative band (satisfactory zone) — 75% of range_max
+      {
+        "transform": [{ "calculate": "datum.range_max * 0.75", "as": "range_mid" }],
+        "mark": { "type": "bar", "color": "#ddd" },
+        "encoding": { "x": { "field": "range_mid" } }
+      },
+      // Inner qualitative band (good zone) — 50% of range_max
+      {
+        "transform": [{ "calculate": "datum.range_max * 0.50", "as": "range_inner" }],
+        "mark": { "type": "bar", "color": "#ccc" },
+        "encoding": { "x": { "field": "range_inner" } }
+      },
+      // Comparative measure bar (wide, light) — sales last year
+      {
+        "mark": { "type": "bar", "color": "lightsteelblue", "size": 10 },
+        "encoding": { "x": { "field": "sales_ly" } }
+      },
+      // Actual performance bar (narrow, dark) — sales total
+      {
+        "mark": { "type": "bar", "color": "steelblue", "size": 6 },
+        "encoding": { "x": { "field": "sales_total" } }
+      },
+      // Target tick marker — budget
+      {
+        "mark": { "type": "tick", "color": "black" },
+        "encoding": { "x": { "field": "budget_total" } }
+      }
+    ]
+  },
+  "resolve": { "scale": { "x": "independent" } },
+  "config": {
+    "tick": { "thickness": 2 },
+    "scale": { "barBandPaddingInner": 0 },
+    "view": { "stroke": null }
+  }
+}

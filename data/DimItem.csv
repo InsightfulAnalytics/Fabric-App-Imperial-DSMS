@@ -1,0 +1,42 @@
+ItemKey,Item,ItemCategory,UnitOfMeasure,UnitCostCredits,Perishable,LeadTimeDays,PreferredVendorKey
+0,Not Applicable,-,-,0,-,0,0
+1,Ration Packs,Consumable,Crate,180,Yes,7,17
+2,Water Reserves,Consumable,Drum,90,No,5,16
+3,Oxygen Scrubber Cartridges,Consumable,Each,640,No,10,16
+4,Air Filter Units,Consumable,Each,420,No,12,16
+5,Caf Supplies,Consumable,Crate,75,Yes,6,17
+6,Medical Bacta,Consumable,Liter,1200,Yes,14,17
+7,Stimpacks,Consumable,Pack,320,Yes,9,17
+8,Synthflesh Dressings,Consumable,Pack,140,Yes,9,16
+9,Cleaning Solvent,Consumable,Drum,60,No,6,17
+10,Compactor Lubricant,Consumable,Drum,110,No,8,17
+11,Turbolaser Gas Canisters,Munition,Canister,4800,No,16,4
+12,Ion Cannon Cells,Munition,Each,3100,No,16,4
+13,Concussion Missiles,Munition,Each,9500,No,21,4
+14,Proton Torpedoes,Munition,Each,12400,No,21,4
+15,Blaster Power Packs (E-11),Munition,Pack,240,No,10,4
+16,Thermal Detonators,Munition,Each,1900,No,18,4
+17,TIE Solar Collector Panels,Spare Part,Each,7300,No,20,1
+18,TIE Ion Engine Units,Spare Part,Each,18600,No,25,13
+19,Repulsorlift Coils,Spare Part,Each,5400,No,18,14
+20,Servo Motors,Spare Part,Each,860,No,12,18
+21,Hydrospanners,Spare Part,Each,140,No,8,11
+22,Power Couplings,Spare Part,Each,980,No,12,18
+23,Capacitor Banks,Spare Part,Each,6200,No,18,14
+24,Tractor Beam Emitters,Spare Part,Each,44000,No,30,18
+25,Sensor Arrays,Spare Part,Each,21500,No,24,20
+26,Comlink Units,Spare Part,Each,310,No,9,12
+27,Durasteel Plating Sheets,Spare Part,Sheet,2700,No,20,15
+28,Transparisteel Viewports,Spare Part,Sheet,8900,No,22,14
+29,Cabling Spools,Spare Part,Spool,430,No,10,9
+30,Fusion Cutters,Spare Part,Each,520,No,9,11
+31,Hypermatter Fuel Rods,Fuel,Each,96000,No,28,8
+32,Reactor Coolant Drums,Fuel,Drum,3400,No,16,18
+33,Tibanna Gas Cylinders,Fuel,Canister,5900,No,18,19
+34,Coaxium Vials,Fuel,Each,72000,Yes,26,19
+35,Droid Restraining Bolts,Droid Part,Each,45,No,7,6
+36,Droid Memory Cores,Droid Part,Each,2300,No,15,6
+37,Droid Servo Arms,Droid Part,Each,1100,No,13,5
+38,Motivator Units,Droid Part,Each,1650,No,14,6
+39,Bacta Tanks,Medical,Each,58000,No,30,16
+40,Surgical Droid Parts,Medical,Each,3900,No,20,5

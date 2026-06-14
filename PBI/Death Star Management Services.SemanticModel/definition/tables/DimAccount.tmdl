@@ -1,0 +1,76 @@
+table DimAccount
+	lineageTag: a1000001-0000-0000-0000-000000000001
+
+	column AccountKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a1000001-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: AccountKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Account
+		dataType: string
+		lineageTag: a1000001-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: Account
+
+		annotation SummarizationSetBy = Automatic
+
+	column AccountCategory
+		dataType: string
+		lineageTag: a1000001-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: AccountCategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column AccountType
+		dataType: string
+		lineageTag: a1000001-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: AccountType
+
+		annotation SummarizationSetBy = Automatic
+
+	column NaturalSign
+		dataType: int64
+		formatString: 0
+		lineageTag: a1000001-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: NaturalSign
+
+		annotation SummarizationSetBy = Automatic
+
+	column ImperialSubsidy
+		dataType: string
+		lineageTag: a1000001-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: ImperialSubsidy
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimAccount = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\DimAccount.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"AccountKey", Int64.Type},
+				        {"Account", type text},
+				        {"AccountCategory", type text},
+				        {"AccountType", type text},
+				        {"NaturalSign", Int64.Type},
+				        {"ImperialSubsidy", type text}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

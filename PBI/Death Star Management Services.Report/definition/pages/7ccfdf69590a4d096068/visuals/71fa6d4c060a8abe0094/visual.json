@@ -1,0 +1,84 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "71fa6d4c060a8abe0094",
+  "position": {
+    "x": 358.47647498132932,
+    "y": 43.9731142643764,
+    "z": 1,
+    "height": 180.67214339058998,
+    "width": 547.7520537714712,
+    "tabOrder": 1
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Operating Margin %"
+                }
+              },
+              "queryRef": "Measure Table.Operating Margin %",
+              "nativeQueryRef": "Operating Margin %"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Subsidy Income"
+                }
+              },
+              "queryRef": "Measure Table.Subsidy Income",
+              "nativeQueryRef": "Subsidy Income"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Total Income"
+                }
+              },
+              "queryRef": "Measure Table.Total Income",
+              "nativeQueryRef": "Total Income"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "f6556a2b4ca1420dd025",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Measure Table"
+              }
+            },
+            "Property": "Operating Margin %"
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

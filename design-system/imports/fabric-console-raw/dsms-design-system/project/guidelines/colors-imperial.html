@@ -1,0 +1,24 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Imperial Accent" subtitle="Reserved for signal — active, focus, primary CTA" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); }
+  .wrap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 16px; }
+  .chip { height: 60px; border-radius: var(--ds-radius-md); margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.04); }
+  .name { font-size: 12px; color: var(--ds-text-primary); font-weight: 600; }
+  .hex { font-family: var(--ds-font-mono); font-size: 11px; color: var(--ds-text-muted); }
+  .tok { font-family: var(--ds-font-mono); font-size: 10px; color: var(--ds-text-faint); margin-top: 2px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div><div class="chip" style="background:var(--ds-accent-imperial)"></div><div class="name">Imperial</div><div class="hex">#C8102E</div><div class="tok">--ds-accent-imperial</div></div>
+  <div><div class="chip" style="background:var(--ds-accent-imperial-hi)"></div><div class="name">Hover</div><div class="hex">#E12342</div><div class="tok">--…-imperial-hi</div></div>
+  <div><div class="chip" style="background:var(--ds-accent-imperial-lo)"></div><div class="name">Pressed</div><div class="hex">#8E0B20</div><div class="tok">--…-imperial-lo</div></div>
+  <div><div class="chip" style="background:var(--ds-accent-imperial-dim);border:1px solid var(--ds-line-conduit)"></div><div class="name">Wash</div><div class="hex">14% tint</div><div class="tok">--…-imperial-dim</div></div>
+</div>
+</body>
+</html>

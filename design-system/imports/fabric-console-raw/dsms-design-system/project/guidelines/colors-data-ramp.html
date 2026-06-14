@@ -1,0 +1,37 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Data Ramp" subtitle="Categorical chart ramp — schematic cyan → cool grey → imperial red" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); }
+  .pad { padding: 18px; }
+  .ramp { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-radius: var(--ds-radius-md); overflow: hidden; border: 1px solid var(--ds-line-conduit); }
+  .seg { height: 64px; }
+  .labels { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin-top: 8px; }
+  .lab { font-family: var(--ds-font-mono); font-size: 10px; color: var(--ds-text-muted); text-align: center; }
+  .lab b { display:block; color: var(--ds-text-secondary); font-size: 11px; }
+</style>
+</head>
+<body>
+<div class="pad">
+  <div class="ramp">
+    <div class="seg" style="background:var(--ds-data-1)"></div>
+    <div class="seg" style="background:var(--ds-data-2)"></div>
+    <div class="seg" style="background:var(--ds-data-3)"></div>
+    <div class="seg" style="background:var(--ds-data-4)"></div>
+    <div class="seg" style="background:var(--ds-data-5)"></div>
+    <div class="seg" style="background:var(--ds-data-6)"></div>
+  </div>
+  <div class="labels">
+    <div class="lab"><b>data-1</b>#5BC8F5</div>
+    <div class="lab"><b>data-2</b>#7FB0D8</div>
+    <div class="lab"><b>data-3</b>#9AA7BC</div>
+    <div class="lab"><b>data-4</b>#B79AA0</div>
+    <div class="lab"><b>data-5</b>#D6685E</div>
+    <div class="lab"><b>data-6</b>#C8102E</div>
+  </div>
+</div>
+</body>
+</html>

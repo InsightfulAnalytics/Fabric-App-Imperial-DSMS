@@ -1,0 +1,75 @@
+table DimVendor
+	lineageTag: a1000003-0000-0000-0000-000000000001
+
+	column VendorKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a1000003-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: VendorKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Vendor
+		dataType: string
+		lineageTag: a1000003-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: Vendor
+
+		annotation SummarizationSetBy = Automatic
+
+	column VendorType
+		dataType: string
+		lineageTag: a1000003-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: VendorType
+
+		annotation SummarizationSetBy = Automatic
+
+	column HomeWorld
+		dataType: string
+		lineageTag: a1000003-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: HomeWorld
+
+		annotation SummarizationSetBy = Automatic
+
+	column ContractTier
+		dataType: string
+		lineageTag: a1000003-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: ContractTier
+
+		annotation SummarizationSetBy = Automatic
+
+	column RiskRating
+		dataType: string
+		lineageTag: a1000003-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: RiskRating
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimVendor = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\DimVendor.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"VendorKey", Int64.Type},
+				        {"Vendor", type text},
+				        {"VendorType", type text},
+				        {"HomeWorld", type text},
+				        {"ContractTier", type text},
+				        {"RiskRating", type text}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

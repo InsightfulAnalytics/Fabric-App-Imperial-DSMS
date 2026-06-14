@@ -1,0 +1,19 @@
+RoleKey,Role,RoleType,PayGrade,BaseMonthlyPayCredits,IsCombat
+1,Senior Command,Officer,O-9,42000,No
+2,Fleet Officer,Officer,O-7,28000,No
+3,Commander,Officer,O-5,19000,No
+4,Lieutenant,Officer,O-3,12500,No
+5,Stormtrooper,Trooper,E-3,4200,Yes
+6,TIE Pilot,Trooper,E-4,5600,Yes
+7,Gunner,Enlisted,E-4,5100,Yes
+8,Sensor / Comms Operator,Enlisted,E-3,4400,No
+9,Reactor Technician,Technician,T-4,7800,No
+10,Maintenance Technician,Technician,T-3,6400,No
+11,Medical Officer,Specialist,S-4,9200,No
+12,Mess Crew,Support,C-2,3100,No
+13,Sanitation Crew,Support,C-1,2800,No
+14,Detention Officer,Enlisted,E-3,4600,No
+15,ISB Agent,Specialist,S-5,11500,No
+16,Service Droid,Droid,D-1,600,No
+17,Protocol Droid,Droid,D-2,900,No
+18,Civilian Contractor,Contractor,X-1,8500,No

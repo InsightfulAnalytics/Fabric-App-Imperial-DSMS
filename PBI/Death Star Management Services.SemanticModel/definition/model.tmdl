@@ -1,0 +1,41 @@
+model Model
+	culture: en-AU
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-AU
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup Others
+
+	annotation PBI_QueryGroupOrder = 2
+
+queryGroup Model
+
+	annotation PBI_QueryGroupOrder = 1
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["DimDate","DimAccount","DimDepartment","DimVendor","DimItem","DimLocation","DimRole","FactLedger","FactInventory","FactHeadcount","FactMaintenance","FactBudget","Measure Table","Year_Variable","TodayDate","FunctionDateTable","FactBudgetHeadcount"]
+
+annotation __TEdtr = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DimDate
+ref table 'Measure Table'
+ref table DimAccount
+ref table DimDepartment
+ref table DimVendor
+ref table DimItem
+ref table DimLocation
+ref table DimRole
+ref table FactLedger
+ref table FactInventory
+ref table FactHeadcount
+ref table FactMaintenance
+ref table FactBudget
+ref table FactBudgetHeadcount
+
+ref cultureInfo en-AU
+

@@ -1,0 +1,11 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimRole[RoleType],
+        "PayrollValue", [Payroll Cost]
+    ),
+    DimDate[Year] = CurrentYear<<FILTERS>>
+)
+ORDER BY [PayrollValue] DESC

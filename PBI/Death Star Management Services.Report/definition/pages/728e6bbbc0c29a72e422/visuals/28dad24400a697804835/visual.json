@@ -1,0 +1,165 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "28dad24400a697804835",
+  "position": {
+    "x": 48.454258675078869,
+    "y": 46.435331230283914,
+    "z": 0,
+    "height": 1156.8454258675079,
+    "width": 2140.0630914826497,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimDepartment"
+                    }
+                  },
+                  "Property": "Department"
+                }
+              },
+              "queryRef": "DimDepartment.Department",
+              "nativeQueryRef": "Department"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimRole"
+                    }
+                  },
+                  "Property": "Role"
+                }
+              },
+              "queryRef": "DimRole.Role",
+              "nativeQueryRef": "Role"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimRole"
+                    }
+                  },
+                  "Property": "PayGrade"
+                }
+              },
+              "queryRef": "DimRole.PayGrade",
+              "nativeQueryRef": "PayGrade"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimRole"
+                    }
+                  },
+                  "Property": "RoleType"
+                }
+              },
+              "queryRef": "DimRole.RoleType",
+              "nativeQueryRef": "RoleType"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimRole"
+                    }
+                  },
+                  "Property": "IsCombat"
+                }
+              },
+              "queryRef": "DimRole.IsCombat",
+              "nativeQueryRef": "IsCombat"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactHeadcount"
+                        }
+                      },
+                      "Property": "Hires"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(FactHeadcount.Hires)",
+              "nativeQueryRef": "Sum of Hires"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FactHeadcount"
+                    }
+                  },
+                  "Property": "AverageMonthlyPayCredits"
+                }
+              },
+              "queryRef": "FactHeadcount.AverageMonthlyPayCredits",
+              "nativeQueryRef": "AverageMonthlyPayCredits"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactHeadcount"
+                        }
+                      },
+                      "Property": "Headcount"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(FactHeadcount.Headcount)",
+              "nativeQueryRef": "Sum of Headcount"
+            },
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "FactHeadcount"
+                        }
+                      },
+                      "Property": "PayrollCostCredits"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(FactHeadcount.PayrollCostCredits)",
+              "nativeQueryRef": "Sum of PayrollCostCredits"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

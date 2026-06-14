@@ -1,0 +1,76 @@
+relationship c1000000-0000-0000-0000-000000000001
+	fromColumn: FactLedger.DateKey
+	toColumn: DimDate.DateInt
+
+relationship c1000000-0000-0000-0000-000000000002
+	fromColumn: FactLedger.DepartmentKey
+	toColumn: DimDepartment.DepartmentKey
+
+relationship c1000000-0000-0000-0000-000000000003
+	fromColumn: FactLedger.AccountKey
+	toColumn: DimAccount.AccountKey
+
+relationship c1000000-0000-0000-0000-000000000004
+	fromColumn: FactLedger.VendorKey
+	toColumn: DimVendor.VendorKey
+
+relationship c1000000-0000-0000-0000-000000000005
+	fromColumn: FactInventory.SnapshotDateKey
+	toColumn: DimDate.DateInt
+
+relationship c1000000-0000-0000-0000-000000000006
+	fromColumn: FactInventory.ItemKey
+	toColumn: DimItem.ItemKey
+
+relationship c1000000-0000-0000-0000-000000000007
+	fromColumn: FactInventory.LocationKey
+	toColumn: DimLocation.LocationKey
+
+relationship c1000000-0000-0000-0000-000000000008
+	fromColumn: FactHeadcount.MonthDateKey
+	toColumn: DimDate.DateInt
+
+relationship c1000000-0000-0000-0000-000000000009
+	fromColumn: FactHeadcount.DepartmentKey
+	toColumn: DimDepartment.DepartmentKey
+
+relationship c1000000-0000-0000-0000-00000000000a
+	fromColumn: FactHeadcount.RoleKey
+	toColumn: DimRole.RoleKey
+
+relationship c1000000-0000-0000-0000-00000000000b
+	fromColumn: FactMaintenance.OpenedDateKey
+	toColumn: DimDate.DateInt
+
+relationship c1000000-0000-0000-0000-00000000000d
+	fromColumn: FactMaintenance.DepartmentKey
+	toColumn: DimDepartment.DepartmentKey
+
+relationship c1000000-0000-0000-0000-00000000000e
+	fromColumn: FactMaintenance.LocationKey
+	toColumn: DimLocation.LocationKey
+
+relationship c1000000-0000-0000-0000-00000000000f
+	fromColumn: FactMaintenance.ItemKey
+	toColumn: DimItem.ItemKey
+
+relationship c1000000-0000-0000-0000-000000000010
+	fromColumn: FactBudget.MonthDateKey
+	toColumn: DimDate.DateInt
+
+relationship c1000000-0000-0000-0000-000000000011
+	fromColumn: FactBudget.DepartmentKey
+	toColumn: DimDepartment.DepartmentKey
+
+relationship c1000000-0000-0000-0000-000000000012
+	fromColumn: FactBudgetHeadcount.MonthDateKey
+	toColumn: DimDate.DateInt
+
+relationship c1000000-0000-0000-0000-000000000013
+	fromColumn: FactBudgetHeadcount.DepartmentKey
+	toColumn: DimDepartment.DepartmentKey
+
+relationship c1000000-0000-0000-0000-000000000014
+	fromColumn: FactBudgetHeadcount.RoleKey
+	toColumn: DimRole.RoleKey
+

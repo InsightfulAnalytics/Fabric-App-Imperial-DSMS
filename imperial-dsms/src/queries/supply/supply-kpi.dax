@@ -1,0 +1,15 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR PriorYear   = CurrentYear - 1
+RETURN
+CALCULATETABLE (
+ROW (
+    "InventoryValueCY",
+        VAR s = CALCULATE ( MAX ( FactInventory[SnapshotDateKey] ), DimDate[Year] = CurrentYear )
+        RETURN CALCULATE ( SUM ( FactInventory[InventoryValueCredits] ), FactInventory[SnapshotDateKey] = s ),
+    "InventoryValuePY",
+        VAR s = CALCULATE ( MAX ( FactInventory[SnapshotDateKey] ), DimDate[Year] = PriorYear )
+        RETURN CALCULATE ( SUM ( FactInventory[InventoryValueCredits] ), FactInventory[SnapshotDateKey] = s ),
+    "StockoutLinesCY", CALCULATE ( [Stockout Lines], DimDate[Year] = CurrentYear )
+)<<FILTERS>>
+)

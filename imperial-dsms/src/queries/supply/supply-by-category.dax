@@ -1,0 +1,15 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+VAR LastSnap =
+    CALCULATE ( MAX ( FactInventory[SnapshotDateKey] ), DimDate[Year] = CurrentYear )
+RETURN
+CALCULATETABLE (
+    SUMMARIZECOLUMNS (
+        DimItem[ItemCategory],
+        DimLocation[LocationType],
+        "Units", SUM ( FactInventory[OnHandQty] )
+    ),
+    FactInventory[SnapshotDateKey] = LastSnap,
+    DimItem[ItemCategory] <> "-"<<FILTERS>>
+)
+ORDER BY DimItem[ItemCategory]

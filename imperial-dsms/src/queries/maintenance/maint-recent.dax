@@ -1,0 +1,21 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+TOPN (
+    8,
+    CALCULATETABLE (
+        SUMMARIZECOLUMNS (
+            FactMaintenance[WorkOrderID],
+            FactMaintenance[OpenedDateKey],
+            FactMaintenance[Priority],
+            FactMaintenance[Status],
+            DimDepartment[Department],
+            DimItem[Item],
+            "DowntimeHrs", [Total Downtime Hrs],
+            "RepairCost",  [Repair Cost]
+        ),
+        DimDate[Year] = CurrentYear<<FILTERS>>
+    ),
+    FactMaintenance[OpenedDateKey], DESC
+)
+ORDER BY FactMaintenance[OpenedDateKey] DESC

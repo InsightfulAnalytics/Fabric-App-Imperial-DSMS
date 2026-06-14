@@ -1,0 +1,16 @@
+EVALUATE
+VAR CurrentYear = <<YEAR>>
+RETURN
+TOPN (
+    8,
+    CALCULATETABLE (
+        SUMMARIZECOLUMNS (
+            DimRole[Role],
+            DimRole[IsCombat],
+            "Headcount", [Total Headcount]
+        ),
+        DimDate[Year] = CurrentYear<<FILTERS>>
+    ),
+    [Headcount], DESC
+)
+ORDER BY [Headcount] DESC

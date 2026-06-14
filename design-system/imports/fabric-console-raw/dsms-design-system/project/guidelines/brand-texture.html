@@ -1,0 +1,19 @@
+<!-- @dsCard group="Brand" viewport="700x150" name="Background Textures" subtitle="Grid & scanline at ≤3% opacity over the void" -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; font-family: var(--ds-font-body); background: var(--ds-bg-void); padding: 16px; display:grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .tile { height: 110px; border: 1px solid var(--ds-line-conduit); border-radius: var(--ds-radius-md); position: relative; overflow:hidden; }
+  .grid { background-color: var(--ds-bg-void); background-image: var(--ds-texture-grid); background-size: var(--ds-texture-grid-size); }
+  .scan { background-color: var(--ds-bg-void); background-image: var(--ds-texture-scanline); }
+  .cap { position:absolute; left:10px; bottom:8px; font-family: var(--ds-font-mono); font-size: 10px; color: var(--ds-text-muted); }
+</style>
+</head>
+<body>
+  <div class="tile grid"><span class="cap">--ds-texture-grid · 32px</span></div>
+  <div class="tile scan"><span class="cap">--ds-texture-scanline · 3px</span></div>
+</body>
+</html>
