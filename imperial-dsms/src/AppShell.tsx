@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Boxes, GitBranch, LayoutDashboard, Users, Wrench } from "lucide-react";
+import { useState, type ReactNode } from "react";
+import { Boxes, GitBranch, LayoutDashboard, LayoutGrid, Users, Wrench } from "lucide-react";
 import {
   SidebarRail,
   TopBar,
@@ -12,6 +12,7 @@ import {
   type RailItem,
   type SlicerSelection,
 } from "@/components/ds";
+import { OverviewPage, type OverviewReport } from "@/pages/OverviewPage";
 import { BriefingPage } from "@/pages/BriefingPage";
 import { OperationsPage } from "@/pages/OperationsPage";
 import { SupplyPage } from "@/pages/SupplyPage";
@@ -44,13 +45,25 @@ interface PageDef {
   eyebrow: string;
   /** Show "Fiscal Year · YYYY" beside the title in the top bar. */
   showYearInTitle?: boolean;
-  render: (ctx: PageContext) => JSX.Element;
+  /** Report-library card shown on the Overview landing. Omit for the Overview page itself. */
+  card?: Omit<OverviewReport, "id" | "Icon" | "domain" | "title">;
+  /** Page body. Omitted for the Overview landing, which AppShell renders directly. */
+  render?: (ctx: PageContext) => ReactNode;
 }
 
 const YEARS = [2019, 2020, 2021, 2022, 2023, 2024];
 const DEFAULT_YEAR = 2024;
 
 const PAGES: PageDef[] = [
+  {
+    id: "overview",
+    label: "Overview",
+    Icon: LayoutGrid,
+    title: "Console Overview",
+    crumb: ["Operations", "Library"],
+    eyebrow: "Operations · Library",
+    // No card (it's the index itself), no year-in-title, no render — AppShell renders the landing.
+  },
   {
     id: "briefing",
     label: "Executive Briefing",
@@ -59,6 +72,12 @@ const PAGES: PageDef[] = [
     crumb: [],
     eyebrow: "Finance · P&L",
     showYearInTitle: true,
+    card: {
+      blurb:
+        "Consolidated financial posture for station command. Trailing-twelve-month surplus, income against expenditure, and the headcount balance — with departmental budget variance at a glance.",
+      inside: ["Net Subsidy Balance", "Headcount Balance", "Variance Scatter", "Combat-Loss Replenishment"],
+      metric: { label: "Net Surplus", value: "₡ 1.28B", tone: "positive" },
+    },
     render: ({ year, filters }) => <BriefingPage year={year} filters={filters} />,
   },
   {
@@ -69,6 +88,12 @@ const PAGES: PageDef[] = [
     crumb: [],
     eyebrow: "Procurement · Vendors",
     showYearInTitle: true,
+    card: {
+      blurb:
+        "Procurement and vendor oversight. Division-group spend, vendor risk exposure scored against contract value, and the open pending-and-disputed ledger.",
+      inside: ["Spend by Division Group", "Vendor Risk Matrix", "Top Vendors", "Pending & Disputed Ledger"],
+      metric: { label: "Open Postings", value: "47", tone: "warning" },
+    },
     render: ({ year, filters }) => <OperationsPage year={year} filters={filters} />,
   },
   {
@@ -79,6 +104,12 @@ const PAGES: PageDef[] = [
     crumb: [],
     eyebrow: "Logistics · Inventory",
     showYearInTitle: true,
+    card: {
+      blurb:
+        "Inventory position and replenishment risk. Stock by category and location type, sixteen-week stockout exposure, and the at-or-below reorder watchlist.",
+      inside: ["Inventory by Category", "Stockouts Heat-Strip", "Reorder Watchlist"],
+      metric: { label: "Inventory Value", value: "₡ 3.41B", tone: "info" },
+    },
     render: ({ year, filters }) => <SupplyPage year={year} filters={filters} />,
   },
   {
@@ -89,6 +120,12 @@ const PAGES: PageDef[] = [
     crumb: [],
     eyebrow: "Personnel · Headcount",
     showYearInTitle: true,
+    card: {
+      blurb:
+        "Personnel strength and attrition. Headcount by role, droid-to-organic composition, and attrition tracked against combat losses through the Battle of Yavin.",
+      inside: ["Headcount by Role", "Attrition & Combat Losses", "Droids vs Organics", "Payroll by Department"],
+      metric: { label: "Complement", value: "1.71M", tone: "positive" },
+    },
     render: ({ year, filters }) => <WorkforcePage year={year} filters={filters} />,
   },
   {
@@ -99,6 +136,12 @@ const PAGES: PageDef[] = [
     crumb: [],
     eyebrow: "Operations · Work Orders",
     showYearInTitle: true,
+    card: {
+      blurb:
+        "Reliability and work-order throughput. Open backlog by priority, downtime by system, and station availability against the 95% threshold.",
+      inside: ["Backlog by Priority", "Downtime by System", "Station Availability", "Recent Work Orders"],
+      metric: { label: "Availability", value: "97.6%", tone: "warning" },
+    },
     render: ({ year, filters }) => <MaintenancePage year={year} filters={filters} />,
   },
 ];
@@ -108,7 +151,12 @@ export function AppShell() {
   const { session } = useAuth();
   const email = session?.user?.email ?? null;
   const allowedIds = allowedPageIds(email, PAGES.map((p) => p.id));
-  const visiblePages = PAGES.filter((p) => allowedIds.includes(p.id));
+  // The Overview index is shown to anyone with at least one granted content page —
+  // even single-page (restricted) users land on the library first.
+  const hasContent = PAGES.some((p) => p.id !== "overview" && allowedIds.includes(p.id));
+  const visiblePages = PAGES.filter(
+    (p) => allowedIds.includes(p.id) || (p.id === "overview" && hasContent),
+  );
 
   const [active, setActive] = useState<string>(visiblePages[0]?.id ?? "");
   // Both side panes start collapsed — maximum canvas on first paint.
@@ -127,10 +175,22 @@ export function AppShell() {
   }
 
   const page = visiblePages.find((p) => p.id === active) ?? visiblePages[0];
+  const isOverview = page.id === "overview";
   const railItems: RailItem[] = visiblePages.map((p) => ({ id: p.id, label: p.label, Icon: p.Icon }));
   const detCount = selectionCount(selection);
 
   const basicFilters = deriveBasicFilters(basicSel);
+
+  // Report-library cards — only pages the user can actually open (excludes the Overview index).
+  const overviewReports: OverviewReport[] = visiblePages
+    .filter((p) => p.card)
+    .map((p) => ({
+      id: p.id,
+      Icon: p.Icon,
+      domain: p.eyebrow,
+      title: p.title,
+      ...p.card!,
+    }));
 
   return (
     <div
@@ -161,34 +221,39 @@ export function AppShell() {
           meta={page.showYearInTitle ? `Fiscal Year · ${year}` : undefined}
           onToggleRail={() => setCollapsed((c) => !c)}
         >
-          <Button
-            variant="secondary"
-            size="sm"
-            icon="list-filter"
-            onClick={() => setTakeover(true)}
-            style={{
-              // Match the year Slicer (size="sm"): 28px track, 11.5px segment text.
-              height: 28,
-              fontSize: 11.5,
-              letterSpacing: "0.08em",
-              ...(detCount
-                ? {
-                    background: "var(--ds-signal-info-dim)",
-                    borderColor: "transparent",
-                    color: "var(--ds-text-primary)",
-                    boxShadow: "inset 0 -2px 0 var(--ds-signal-info)",
-                  }
-                : {}),
-            }}
-          >
-            {detCount > 0 ? `Detailed Filters · ${detCount}` : "Detailed Filters"}
-          </Button>
-          <Slicer
-            size="sm"
-            value={String(year)}
-            onChange={(v) => setYear(Number(v))}
-            options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
-          />
+          {/* The Overview index has no data of its own — hide the year + filter controls. */}
+          {!isOverview && (
+            <>
+              <Button
+                variant="secondary"
+                size="sm"
+                icon="list-filter"
+                onClick={() => setTakeover(true)}
+                style={{
+                  // Match the year Slicer (size="sm"): 28px track, 11.5px segment text.
+                  height: 28,
+                  fontSize: 11.5,
+                  letterSpacing: "0.08em",
+                  ...(detCount
+                    ? {
+                        background: "var(--ds-signal-info-dim)",
+                        borderColor: "transparent",
+                        color: "var(--ds-text-primary)",
+                        boxShadow: "inset 0 -2px 0 var(--ds-signal-info)",
+                      }
+                    : {}),
+                }}
+              >
+                {detCount > 0 ? `Detailed Filters · ${detCount}` : "Detailed Filters"}
+              </Button>
+              <Slicer
+                size="sm"
+                value={String(year)}
+                onChange={(v) => setYear(Number(v))}
+                options={YEARS.map((y) => ({ value: String(y), label: String(y) }))}
+              />
+            </>
+          )}
         </TopBar>
         <main
           style={{
@@ -201,24 +266,31 @@ export function AppShell() {
           }}
         >
           <div style={{ maxWidth: 1280, margin: "0 auto" }}>
-            {page.render({ year, filters: basicFilters })}
+            {isOverview ? (
+              <OverviewPage reports={overviewReports} onNavigate={setActive} />
+            ) : (
+              page.render?.({ year, filters: basicFilters })
+            )}
           </div>
         </main>
       </div>
 
-      <SlicerPane
-        basics={BASIC_SLICES}
-        basicValues={basicSel}
-        onBasicChange={(label, value) => setBasicSel((s) => ({ ...s, [label]: value }))}
-        categories={DETAILED_SLICES}
-        selection={selection}
-        onSelectionChange={setSelection}
-        collapsed={paneCollapsed}
-        onCollapsedChange={setPaneCollapsed}
-        onOpenAll={() => setTakeover(true)}
-      />
+      {/* Filter pane is unavailable on the Overview index — it has no underlying query. */}
+      {!isOverview && (
+        <SlicerPane
+          basics={BASIC_SLICES}
+          basicValues={basicSel}
+          onBasicChange={(label, value) => setBasicSel((s) => ({ ...s, [label]: value }))}
+          categories={DETAILED_SLICES}
+          selection={selection}
+          onSelectionChange={setSelection}
+          collapsed={paneCollapsed}
+          onCollapsedChange={setPaneCollapsed}
+          onOpenAll={() => setTakeover(true)}
+        />
+      )}
 
-      {takeover && (
+      {takeover && !isOverview && (
         <FiltersTakeover
           categories={DETAILED_SLICES}
           selection={selection}
