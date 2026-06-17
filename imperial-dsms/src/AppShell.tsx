@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from "react";
-import { Boxes, GitBranch, LayoutDashboard, LayoutGrid, SlidersHorizontal, Users, Wrench } from "lucide-react";
+import { Boxes, GitBranch, LayoutDashboard, ScanLine, SlidersHorizontal, Users, Wrench } from "lucide-react";
 import {
   SidebarRail,
   TopBar,
@@ -63,7 +63,7 @@ const PAGES: PageDef[] = [
   {
     id: "overview",
     label: "Overview",
-    Icon: LayoutGrid,
+    Icon: ScanLine,
     title: "Console Overview",
     crumb: ["Operations", "Library"],
     eyebrow: "Operations · Library",
