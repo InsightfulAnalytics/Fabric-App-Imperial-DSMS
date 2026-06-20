@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Scatter plot · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+.axis-title{fill:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Scatter plot</h1>
+  <p class="sub">Budget vs combat losses per division · two quantitative axes</p>
+  <svg id="chart" viewBox="0 0 820 440"></svg>
+</div>
+<script>
+const data=d3.range(40).map(()=>({x:Math.random()*100,y:Math.random()*100}));
+
+const W=820,H=440,margin={top:16,right:24,bottom:48,left:54};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const x=d3.scaleLinear().domain([0,100]).range([0,innerW]);
+const y=d3.scaleLinear().domain([0,100]).range([innerH,0]);
+
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x));
+g.append("g").call(d3.axisLeft(y));
+g.append("text").attr("class","axis-title").attr("x",innerW/2).attr("y",innerH+38).attr("text-anchor","middle").text("Budget (M credits)");
+g.append("text").attr("class","axis-title").attr("transform","rotate(-90)").attr("x",-innerH/2).attr("y",-40).attr("text-anchor","middle").text("Combat losses (K)");
+
+g.selectAll("circle").data(data).join("circle")
+  .attr("cx",d=>x(d.x)).attr("cy",d=>y(d.y)).attr("r",5)
+  .attr("fill","var(--c1)").attr("opacity",0.7).attr("stroke","var(--bg)").attr("stroke-width",1);
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+FactionKey,Faction,FactionType,ThreatLevel,HomeRegion
+0,No Hostiles,None,None,-
+1,Rebel Alliance,Insurgency,Severe,Outer Rim
+2,Saw's Partisans,Extremist Cell,High,Mid Rim
+3,Separatist Holdouts,Remnant,Low,Outer Rim
+4,Pirate Syndicates,Piracy,Moderate,Outer Rim
+5,Local Insurgents,Insurgency,Moderate,Various
+6,Smuggling Networks,Criminal,Low,Outer Rim
+7,Hutt Cartel Raiders,Criminal,Low,Hutt Space

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "txtdefnote00a0006",
+  "position": {
+    "x": 30,
+    "y": 282,
+    "z": 5,
+    "height": 180,
+    "width": 924
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Survivorship trap: the station repelled 126 of 127 attacks (99%). The failure hides in the tail — Critical-severity attacks repel at only 96%, and the single breach (Battle of Yavin, Meridian Trench trench-run) is the one that ended the station. Never read “Attacks Repelled %” without “Critical Attacks Repelled %” beside it.",
+                    "textStyle": {
+                      "fontSize": "15pt",
+                      "color": "#444444"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

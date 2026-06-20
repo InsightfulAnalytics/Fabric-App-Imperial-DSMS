@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "barbudget000000000a0003",
   "position": {
-    "x": 320,
-    "y": 20,
+    "x": 480,
+    "y": 30,
     "z": 2,
-    "height": 80,
-    "width": 940
+    "height": 120,
+    "width": 1410
   },
   "visual": {
     "visualType": "card",

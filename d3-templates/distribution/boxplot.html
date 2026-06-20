@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Box plot · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+.whisker{stroke:var(--muted);stroke-width:1.5}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Box-and-whisker plot</h1>
+  <p class="sub">Maintenance downtime distribution by division · quartiles + whiskers</p>
+  <svg id="chart" viewBox="0 0 820 440"></svg>
+</div>
+<script>
+const groups=["Garrison","Turbolasers","TIE Ops","Ion Cannon","Superlaser"];
+const raw=groups.map(name=>({
+  name,
+  values:d3.range(40).map(()=>Math.random()*60+Math.random()*40)
+}));
+
+const stats=raw.map(g=>{
+  const s=g.values.slice().sort(d3.ascending);
+  const q1=d3.quantile(s,0.25),med=d3.quantile(s,0.5),q3=d3.quantile(s,0.75);
+  const iqr=q3-q1;
+  return {name:g.name,q1,med,q3,lo:Math.max(d3.min(s),q1-1.5*iqr),hi:Math.min(d3.max(s),q3+1.5*iqr)};
+});
+
+const W=820,H=440,margin={top:16,right:24,bottom:40,left:48};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const x=d3.scaleBand().domain(groups).range([0,innerW]).padding(0.5);
+const y=d3.scaleLinear().domain([0,100]).nice().range([innerH,0]);
+
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x));
+g.append("g").call(d3.axisLeft(y).ticks(5));
+
+const bw=x.bandwidth();
+stats.forEach(s=>{
+  const cx=x(s.name)+bw/2;
+  g.append("line").attr("class","whisker").attr("x1",cx).attr("x2",cx).attr("y1",y(s.lo)).attr("y2",y(s.hi));
+  g.append("line").attr("class","whisker").attr("x1",cx-bw/4).attr("x2",cx+bw/4).attr("y1",y(s.lo)).attr("y2",y(s.lo));
+  g.append("line").attr("class","whisker").attr("x1",cx-bw/4).attr("x2",cx+bw/4).attr("y1",y(s.hi)).attr("y2",y(s.hi));
+  g.append("rect").attr("x",x(s.name)).attr("y",y(s.q3)).attr("width",bw).attr("height",y(s.q1)-y(s.q3))
+    .attr("fill","var(--c1)").attr("fill-opacity",0.6).attr("stroke","var(--c1)");
+  g.append("line").attr("x1",x(s.name)).attr("x2",x(s.name)+bw).attr("y1",y(s.med)).attr("y2",y(s.med))
+    .attr("stroke","var(--c5)").attr("stroke-width",2);
+});
+</script>
+</body>
+</html>

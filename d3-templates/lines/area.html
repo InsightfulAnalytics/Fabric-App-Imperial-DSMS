@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Area chart · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Area chart with gradient</h1>
+  <p class="sub">Reactor output over time · filled area + line</p>
+  <svg id="chart" viewBox="0 0 820 420"></svg>
+</div>
+<script>
+const data=d3.range(24).map(i=>({date:new Date(2024,0,1+i*15),value:60+Math.sin(i/3)*18+i}));
+
+const W=820,H=420,margin={top:16,right:24,bottom:36,left:48};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+
+const defs=svg.append("defs");
+const grad=defs.append("linearGradient").attr("id","ag").attr("x1","0").attr("x2","0").attr("y1","0").attr("y2","1");
+grad.append("stop").attr("offset","0%").attr("stop-color","var(--c1)").attr("stop-opacity",0.7);
+grad.append("stop").attr("offset","100%").attr("stop-color","var(--c1)").attr("stop-opacity",0.05);
+
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+const x=d3.scaleTime().domain(d3.extent(data,d=>d.date)).range([0,innerW]);
+const y=d3.scaleLinear().domain([0,d3.max(data,d=>d.value)]).nice().range([innerH,0]);
+
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x).ticks(6).tickFormat(d3.timeFormat("%b")));
+g.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+"%"));
+
+const area=d3.area().x(d=>x(d.date)).y0(innerH).y1(d=>y(d.value)).curve(d3.curveMonotoneX);
+const line=d3.line().x(d=>x(d.date)).y(d=>y(d.value)).curve(d3.curveMonotoneX);
+g.append("path").datum(data).attr("fill","url(#ag)").attr("d",area);
+g.append("path").datum(data).attr("fill","none").attr("stroke","var(--c1)").attr("stroke-width",2.5).attr("d",line);
+</script>
+</body>
+</html>

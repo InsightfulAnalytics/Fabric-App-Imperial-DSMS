@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Heatmap · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:10px}
+.domain,.tick line{stroke:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Heatmap</h1>
+  <p class="sub">Incidents by division &times; month · colour encodes value</p>
+  <svg id="chart" viewBox="0 0 820 420"></svg>
+</div>
+<script>
+const rows=["Garrison","Turbolasers","TIE Ops","Ion Cannon","Superlaser","Detention"];
+const cols=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const data=[];rows.forEach(r=>cols.forEach(c=>data.push({row:r,col:c,value:Math.round(Math.random()*100)})));
+
+const W=820,H=420,margin={top:20,right:70,bottom:20,left:90};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const x=d3.scaleBand().domain(cols).range([0,innerW]).padding(0.05);
+const y=d3.scaleBand().domain(rows).range([0,innerH]).padding(0.05);
+const color=d3.scaleSequential(d3.interpolateYlOrRd).domain([0,100]);
+
+g.append("g").call(d3.axisTop(x).tickSize(0));
+g.append("g").call(d3.axisLeft(y).tickSize(0));
+
+g.selectAll("rect").data(data).join("rect")
+  .attr("x",d=>x(d.col)).attr("y",d=>y(d.row))
+  .attr("width",x.bandwidth()).attr("height",y.bandwidth())
+  .attr("rx",2).attr("fill",d=>color(d.value))
+  .append("title").text(d=>`${d.row} · ${d.col}: ${d.value}`);
+
+// legend
+const lx=innerW+18, lh=innerH;
+const lg=g.append("g").attr("transform",`translate(${lx},0)`);
+const ls=d3.scaleLinear().domain([0,100]).range([lh,0]);
+const defs=svg.append("defs");const grad=defs.append("linearGradient").attr("id","hg").attr("x1","0").attr("y1","1").attr("x2","0").attr("y2","0");
+d3.range(0,1.01,0.1).forEach(t=>grad.append("stop").attr("offset",t*100+"%").attr("stop-color",color(t*100)));
+lg.append("rect").attr("width",14).attr("height",lh).attr("fill","url(#hg)").attr("rx",2);
+lg.append("g").attr("transform","translate(14,0)").call(d3.axisRight(ls).ticks(5));
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gauge · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(560px,96vw)}
+svg{width:100%;height:auto;display:block}
+.val{fill:var(--text);font-size:42px;font-weight:700}
+.lab{fill:var(--muted);font-size:12px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Gauge / arc meter</h1>
+  <p class="sub">Single KPI against a 0&ndash;100 range · arc fill</p>
+  <svg id="chart" viewBox="0 0 520 320"></svg>
+</div>
+<script>
+const value=72, min=0, max=100;
+
+const W=520,H=320,cx=W/2,cy=H-40,R=180,thick=30;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${cx},${cy})`);
+
+const a=d3.scaleLinear().domain([min,max]).range([-Math.PI/2,Math.PI/2]);
+const bg=d3.arc().innerRadius(R-thick).outerRadius(R).startAngle(-Math.PI/2).endAngle(Math.PI/2);
+const fg=d3.arc().innerRadius(R-thick).outerRadius(R).startAngle(-Math.PI/2).endAngle(a(value));
+
+g.append("path").attr("d",bg).attr("fill","var(--line)");
+g.append("path").attr("d",fg).attr("fill",value>=66?"var(--pos)":value>=33?"var(--c5)":"var(--neg)");
+
+// ticks
+d3.range(min,max+1,20).forEach(t=>{
+  const ang=a(t);const x1=Math.cos(ang)*(R+6),y1=Math.sin(ang)*(R+6);
+  g.append("text").attr("x",x1).attr("y",y1).attr("class","lab").attr("text-anchor","middle").attr("dy","0.35em").text(t);
+});
+
+g.append("text").attr("class","val").attr("text-anchor","middle").attr("y",-10).text(value+"%");
+g.append("text").attr("class","lab").attr("text-anchor","middle").attr("y",14).text("STATION READINESS");
+</script>
+</body>
+</html>

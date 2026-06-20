@@ -92,7 +92,7 @@ table FactHeadcount
 		queryGroup: Model
 		source =
 				let
-				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\FactHeadcount.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\FactHeadcount.csv"), [Delimiter=",", Columns=9, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
 				        {"MonthDateKey", Int64.Type},

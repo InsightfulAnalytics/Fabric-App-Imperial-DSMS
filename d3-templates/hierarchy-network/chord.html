@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chord diagram · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(640px,96vw)}
+svg{width:100%;height:auto;display:block}
+.grp-label{fill:var(--text);font-size:11px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Chord diagram</h1>
+  <p class="sub">Resource transfers between divisions · ribbons = flow</p>
+  <svg id="chart" viewBox="0 0 600 600"></svg>
+</div>
+<script>
+const names=["Garrison","Weapons","Flight","Reactor","Logistics"];
+const palette=["var(--c1)","var(--c5)","var(--c3)","var(--c2)","var(--c6)"];
+// flow matrix (symmetric-ish)
+const matrix=[
+  [0, 40, 20, 10, 30],
+  [40, 0, 15, 35, 20],
+  [20, 15, 0, 25, 30],
+  [10, 35, 25, 0, 15],
+  [30, 20, 30, 15, 0],
+];
+
+const W=600,H=600,outer=Math.min(W,H)*0.5-60,inner=outer-18;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${W/2},${H/2})`);
+const color=d3.scaleOrdinal().domain(d3.range(names.length)).range(palette);
+
+const chords=d3.chord().padAngle(0.05).sortSubgroups(d3.descending)(matrix);
+const arc=d3.arc().innerRadius(inner).outerRadius(outer);
+const ribbon=d3.ribbon().radius(inner);
+
+g.append("g").attr("fill-opacity",0.7).selectAll("path").data(chords).join("path")
+  .attr("d",ribbon).attr("fill",d=>color(d.source.index)).attr("stroke","var(--bg)");
+
+const group=g.append("g").selectAll("g").data(chords.groups).join("g");
+group.append("path").attr("d",arc).attr("fill",d=>color(d.index)).attr("stroke","var(--bg)");
+group.append("text").each(d=>{d.angle=(d.startAngle+d.endAngle)/2;}).attr("class","grp-label")
+  .attr("dy","0.35em")
+  .attr("transform",d=>`rotate(${d.angle*180/Math.PI-90}) translate(${outer+8}) ${d.angle>Math.PI?"rotate(180)":""}`)
+  .attr("text-anchor",d=>d.angle>Math.PI?"end":null)
+  .text(d=>names[d.index]);
+</script>
+</body>
+</html>

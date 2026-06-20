@@ -1,0 +1,56 @@
+/// Field parameter: toggles the displayed exchange ratio between the propaganda
+/// headline (Alderaan-inflated) and the honest tactical figure. Drop on a slicer.
+table 'Exchange Ratio View'
+	lineageTag: d4000000-0000-0000-0000-000000000001
+
+	column 'Exchange Ratio View'
+		dataType: string
+		lineageTag: d4000000-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Exchange Ratio View Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Exchange Ratio View Fields'
+		dataType: string
+		isHidden
+		lineageTag: d4000000-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Exchange Ratio View Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Exchange Ratio View Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: d4000000-0000-0000-0000-000000000004
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Exchange Ratio View' = calculated
+		mode: import
+		source =
+				{
+				    ("Headline (incl. Superlaser)", NAMEOF('Measure Table'[Combat Exchange Ratio]), 0),
+				    ("Tactical (excl. Superlaser)", NAMEOF('Measure Table'[Combat Exchange Ratio (Tactical)]), 1)
+				}
+
+	annotation PBI_NavigationStepName = Navigation
+

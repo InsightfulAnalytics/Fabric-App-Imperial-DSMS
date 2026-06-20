@@ -1,0 +1,6 @@
+ConditionKey,Condition,Posture,AlertColor,SeverityRank,Description
+1,Condition Green,Standby,Green,1,Routine operations; no credible threat
+2,Condition Blue,Elevated,Blue,2,Increased patrol tempo; minor activity
+3,Condition Yellow,High Alert,Yellow,3,Confirmed hostile activity in sector
+4,Condition Red,Battle Stations,Red,4,Engagement imminent or underway
+5,Condition Black,Under Direct Attack,Black,5,Station under direct attack

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Histogram · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Histogram</h1>
+  <p class="sub">Distribution of trooper readiness scores · binned counts</p>
+  <svg id="chart" viewBox="0 0 820 420"></svg>
+</div>
+<script>
+// Approx normal distribution via central limit
+const values=d3.range(600).map(()=>{let s=0;for(let i=0;i<6;i++)s+=Math.random();return (s/6)*100;});
+
+const W=820,H=420,margin={top:16,right:24,bottom:40,left:48};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const x=d3.scaleLinear().domain([0,100]).range([0,innerW]);
+const bins=d3.bin().domain(x.domain()).thresholds(24)(values);
+const y=d3.scaleLinear().domain([0,d3.max(bins,d=>d.length)]).nice().range([innerH,0]);
+
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x));
+g.append("g").call(d3.axisLeft(y).ticks(5));
+
+g.selectAll("rect").data(bins).join("rect")
+  .attr("x",d=>x(d.x0)+1).attr("y",d=>y(d.length))
+  .attr("width",d=>Math.max(0,x(d.x1)-x(d.x0)-1)).attr("height",d=>innerH-y(d.length))
+  .attr("fill","var(--c1)").attr("rx",1);
+</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>D3 Chart Library · DSMS</title>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--panel2:#1c2230;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c5:#ffc20e;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;padding:32px}
+header{max-width:1100px;margin:0 auto 28px}
+h1{font-size:22px;margin:0 0 6px;letter-spacing:.02em}
+h1 .y{color:var(--c5)}
+p.lead{color:var(--muted);font-size:13px;margin:0;max-width:680px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto}
+section{margin:26px 0}
+h2{font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 12px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+a.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;text-decoration:none;color:var(--text);transition:border-color .15s,transform .15s,background .15s}
+a.card:hover{border-color:var(--c1);background:var(--panel2);transform:translateY(-2px)}
+a.card .name{font-size:14px;font-weight:600}
+a.card .desc{font-size:11px;color:var(--muted);margin-top:4px;line-height:1.4}
+footer{max-width:1100px;margin:32px auto 0;color:var(--muted);font-size:11px;border-top:1px solid var(--line);padding-top:14px;line-height:1.6}
+code{background:var(--panel2);padding:1px 5px;border-radius:4px;font-size:11px}
+</style>
+</head>
+<body>
+<header>
+  <h1>D3 Chart <span class="y">Library</span></h1>
+  <p class="lead">33 self-contained D3 v7 reference charts, themed to the DSMS app (dark + brand palette, Death Star data). Each file is standalone &mdash; open it directly in a browser, or copy it into <code>mockups/</code> as a starting point. See <code>../CHARTING.md</code> for when to reach for D3 vs Vega-Lite vs hand-rolled SVG.</p>
+</header>
+<div class="wrap">
+
+  <section><h2>Bars &amp; ranking</h2><div class="grid">
+    <a class="card" href="bars/bar.html"><div class="name">Bar chart</div><div class="desc">Single-series categorical bars</div></a>
+    <a class="card" href="bars/bar-horizontal.html"><div class="name">Horizontal bar</div><div class="desc">Ranked bars + value labels</div></a>
+    <a class="card" href="bars/bar-grouped.html"><div class="name">Grouped bar</div><div class="desc">Actual vs budget, clustered</div></a>
+    <a class="card" href="bars/bar-stacked.html"><div class="name">Stacked bar</div><div class="desc">Component breakdown</div></a>
+    <a class="card" href="bars/bar-diverging.html"><div class="name">Diverging bar</div><div class="desc">+/- variance from zero</div></a>
+    <a class="card" href="bars/lollipop.html"><div class="name">Lollipop</div><div class="desc">Stem + dot, a leaner bar</div></a>
+  </div></section>
+
+  <section><h2>Lines &amp; areas</h2><div class="grid">
+    <a class="card" href="lines/line.html"><div class="name">Line chart</div><div class="desc">Single time series + grid</div></a>
+    <a class="card" href="lines/line-multi.html"><div class="name">Multi-series line</div><div class="desc">Several lines + legend</div></a>
+    <a class="card" href="lines/area.html"><div class="name">Area chart</div><div class="desc">Gradient-filled area</div></a>
+    <a class="card" href="lines/area-stacked.html"><div class="name">Stacked area</div><div class="desc">Composition over time</div></a>
+    <a class="card" href="lines/streamgraph.html"><div class="name">Streamgraph</div><div class="desc">Wiggle-offset stacks</div></a>
+    <a class="card" href="lines/slope.html"><div class="name">Slope chart</div><div class="desc">Before/after by category</div></a>
+  </div></section>
+
+  <section><h2>Distribution</h2><div class="grid">
+    <a class="card" href="distribution/scatter.html"><div class="name">Scatter plot</div><div class="desc">Two quantitative axes</div></a>
+    <a class="card" href="distribution/bubble.html"><div class="name">Bubble chart</div><div class="desc">x, y, size + colour</div></a>
+    <a class="card" href="distribution/histogram.html"><div class="name">Histogram</div><div class="desc">Binned frequency</div></a>
+    <a class="card" href="distribution/boxplot.html"><div class="name">Box plot</div><div class="desc">Quartiles + whiskers</div></a>
+  </div></section>
+
+  <section><h2>Part-to-whole &amp; hierarchy</h2><div class="grid">
+    <a class="card" href="part-to-whole/pie.html"><div class="name">Pie chart</div><div class="desc">Share of total</div></a>
+    <a class="card" href="part-to-whole/donut.html"><div class="name">Donut + KPI</div><div class="desc">Ring with centre value</div></a>
+    <a class="card" href="part-to-whole/treemap.html"><div class="name">Treemap</div><div class="desc">Nested area encoding</div></a>
+    <a class="card" href="part-to-whole/sunburst.html"><div class="name">Sunburst</div><div class="desc">Radial hierarchy</div></a>
+    <a class="card" href="part-to-whole/icicle.html"><div class="name">Icicle</div><div class="desc">Rectangular hierarchy</div></a>
+    <a class="card" href="part-to-whole/waterfall.html"><div class="name">Waterfall</div><div class="desc">Running total steps</div></a>
+  </div></section>
+
+  <section><h2>Networks &amp; relationships</h2><div class="grid">
+    <a class="card" href="hierarchy-network/tree.html"><div class="name">Tree diagram</div><div class="desc">Node-link hierarchy</div></a>
+    <a class="card" href="hierarchy-network/force-network.html"><div class="name">Force network</div><div class="desc">Draggable physics graph</div></a>
+    <a class="card" href="hierarchy-network/chord.html"><div class="name">Chord diagram</div><div class="desc">Flows between entities</div></a>
+    <a class="card" href="hierarchy-network/sankey.html"><div class="name">Sankey</div><div class="desc">Flow magnitude (plugin)</div></a>
+  </div></section>
+
+  <section><h2>Radial</h2><div class="grid">
+    <a class="card" href="radial/radial-bar.html"><div class="name">Radial bar</div><div class="desc">Bars wrapped to a circle</div></a>
+    <a class="card" href="radial/radar.html"><div class="name">Radar / spider</div><div class="desc">Multi-axis profile</div></a>
+    <a class="card" href="radial/gauge.html"><div class="name">Gauge</div><div class="desc">Single KPI arc meter</div></a>
+  </div></section>
+
+  <section><h2>Matrix &amp; maps</h2><div class="grid">
+    <a class="card" href="matrix/heatmap.html"><div class="name">Heatmap</div><div class="desc">Category &times; category colour</div></a>
+    <a class="card" href="matrix/calendar.html"><div class="name">Calendar heatmap</div><div class="desc">Daily values over a year</div></a>
+    <a class="card" href="maps/choropleth.html"><div class="name">Choropleth map</div><div class="desc">Region colour (CDN atlas)</div></a>
+    <a class="card" href="maps/bubble-map.html"><div class="name">Bubble map</div><div class="desc">Proportional symbols (CDN atlas)</div></a>
+  </div></section>
+
+</div>
+<footer>
+  D3 v7 via CDN. Charts use the DSMS brand palette (corporate blue / signal yellow) on a dark canvas.
+  Sankey needs the <code>d3-sankey</code> plugin; maps fetch a <code>world-atlas</code> TopoJSON &mdash; both load from a CDN and need internet.
+  Built from the <code>d3-viz</code> skill (<code>.claude/skills/d3-viz</code>).
+</footer>
+</body>
+</html>

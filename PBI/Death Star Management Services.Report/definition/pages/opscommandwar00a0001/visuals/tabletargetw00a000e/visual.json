@@ -1,0 +1,278 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "tabletargetw00a000e",
+  "position": {
+    "x": 1266,
+    "y": 639,
+    "z": 13,
+    "height": 423,
+    "width": 624
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimPlanet"
+                    }
+                  },
+                  "Property": "Planet"
+                }
+              },
+              "queryRef": "DimPlanet.Planet",
+              "nativeQueryRef": "Planet"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "DimPlanet"
+                    }
+                  },
+                  "Property": "Allegiance"
+                }
+              },
+              "queryRef": "DimPlanet.Allegiance",
+              "nativeQueryRef": "Allegiance"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Engagements"
+                }
+              },
+              "queryRef": "Measure Table.Engagements",
+              "nativeQueryRef": "Engagements"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Engagements Won"
+                }
+              },
+              "queryRef": "Measure Table.Engagements Won",
+              "nativeQueryRef": "Won"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Engagements Lost"
+                }
+              },
+              "queryRef": "Measure Table.Engagements Lost",
+              "nativeQueryRef": "Lost"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Enemy Losses"
+                }
+              },
+              "queryRef": "Measure Table.Enemy Losses",
+              "nativeQueryRef": "Enemy Losses"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Measure Table"
+                    }
+                  },
+                  "Property": "Planets Destroyed"
+                }
+              },
+              "queryRef": "Measure Table.Planets Destroyed",
+              "nativeQueryRef": "Destroyed"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Measure Table"
+                  }
+                },
+                "Property": "Engagements Won"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "60.7014896295246D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Engagements"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "77.68656716417911D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Engagements Won"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "65.83579145323874D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Engagements Lost"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "76.5522242893645D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Enemy Losses"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "73.68661180252246D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Measure Table.Planets Destroyed"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "filter_excl_deepspace_tbl",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "DimPlanet"
+              }
+            },
+            "Property": "PlanetKey"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "DimPlanet",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "Not": {
+                  "Expression": {
+                    "In": {
+                      "Expressions": [
+                        {
+                          "Column": {
+                            "Expression": {
+                              "SourceRef": {
+                                "Source": "p"
+                              }
+                            },
+                            "Property": "PlanetKey"
+                          }
+                        }
+                      ],
+                      "Values": [
+                        [
+                          {
+                            "Literal": {
+                              "Value": "0L"
+                            }
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

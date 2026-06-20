@@ -1,0 +1,206 @@
+table FactEngagement
+	lineageTag: b2000001-0000-0000-0000-000000000001
+
+	column EngagementID
+		dataType: string
+		isHidden
+		lineageTag: b2000001-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: EngagementID
+
+		annotation SummarizationSetBy = Automatic
+
+	column EventDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: EventDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column PlannedDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: PlannedDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column StartDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: StartDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column EndDateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: EndDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column DepartmentKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: DepartmentKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column PlanetKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000008
+		summarizeBy: none
+		sourceColumn: PlanetKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column FactionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-000000000009
+		summarizeBy: none
+		sourceColumn: FactionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column EngagementTypeKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000001-0000-0000-0000-00000000000a
+		summarizeBy: none
+		sourceColumn: EngagementTypeKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Status
+		dataType: string
+		lineageTag: b2000001-0000-0000-0000-00000000000b
+		summarizeBy: none
+		sourceColumn: Status
+
+		annotation SummarizationSetBy = Automatic
+
+	column FriendlyLosses
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2000001-0000-0000-0000-00000000000c
+		summarizeBy: sum
+		sourceColumn: FriendlyLosses
+
+		annotation SummarizationSetBy = Automatic
+
+	column EnemyLosses
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2000001-0000-0000-0000-00000000000d
+		summarizeBy: sum
+		sourceColumn: EnemyLosses
+
+		annotation SummarizationSetBy = Automatic
+
+	column FriendlyCraftLost
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2000001-0000-0000-0000-00000000000e
+		summarizeBy: sum
+		sourceColumn: FriendlyCraftLost
+
+		annotation SummarizationSetBy = Automatic
+
+	column EnemyCraftLost
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2000001-0000-0000-0000-00000000000f
+		summarizeBy: sum
+		sourceColumn: EnemyCraftLost
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrdnanceExpended
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2000001-0000-0000-0000-000000000010
+		summarizeBy: sum
+		sourceColumn: OrdnanceExpended
+
+		annotation SummarizationSetBy = Automatic
+
+	column DurationHours
+		dataType: double
+		lineageTag: b2000001-0000-0000-0000-000000000011
+		summarizeBy: sum
+		sourceColumn: DurationHours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column SuperlaserStrike
+		dataType: string
+		lineageTag: b2000001-0000-0000-0000-000000000012
+		summarizeBy: none
+		sourceColumn: SuperlaserStrike
+
+		annotation SummarizationSetBy = Automatic
+
+	column PlanetDestroyed
+		dataType: string
+		lineageTag: b2000001-0000-0000-0000-000000000013
+		summarizeBy: none
+		sourceColumn: PlanetDestroyed
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactEngagement = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\FactEngagement.csv"), [Delimiter=",", Columns=18, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ReplaceBlankDates = Table.ReplaceValue(PromoteHeaders, "", null, Replacer.ReplaceValue, {"PlannedDateKey", "StartDateKey", "EndDateKey"}),
+				    ChangeTypes = Table.TransformColumnTypes(ReplaceBlankDates, {
+				        {"EngagementID", type text},
+				        {"EventDateKey", Int64.Type},
+				        {"PlannedDateKey", Int64.Type},
+				        {"StartDateKey", Int64.Type},
+				        {"EndDateKey", Int64.Type},
+				        {"DepartmentKey", Int64.Type},
+				        {"PlanetKey", Int64.Type},
+				        {"FactionKey", Int64.Type},
+				        {"EngagementTypeKey", Int64.Type},
+				        {"Status", type text},
+				        {"FriendlyLosses", Int64.Type},
+				        {"EnemyLosses", Int64.Type},
+				        {"FriendlyCraftLost", Int64.Type},
+				        {"EnemyCraftLost", Int64.Type},
+				        {"OrdnanceExpended", Int64.Type},
+				        {"DurationHours", type number},
+				        {"SuperlaserStrike", type text},
+				        {"PlanetDestroyed", type text}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Force-directed network · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block;cursor:grab}
+.node-label{fill:var(--text);font-size:10px;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Force-directed network</h1>
+  <p class="sub">Division dependencies · drag nodes · physics simulation</p>
+  <svg id="chart" viewBox="0 0 820 520"></svg>
+</div>
+<script>
+const nodes=[
+  {id:"Command",g:0},{id:"Garrison",g:1},{id:"Turbolasers",g:1},{id:"TIE Ops",g:2},
+  {id:"Ion Cannon",g:1},{id:"Superlaser",g:1},{id:"Detention",g:0},{id:"Reactor",g:2},
+  {id:"Logistics",g:0},{id:"Hangar",g:2},
+];
+const links=[
+  {source:"Command",target:"Garrison"},{source:"Command",target:"Detention"},{source:"Command",target:"Logistics"},
+  {source:"Garrison",target:"Turbolasers"},{source:"Reactor",target:"Superlaser"},{source:"Reactor",target:"Ion Cannon"},
+  {source:"Reactor",target:"Turbolasers"},{source:"TIE Ops",target:"Hangar"},{source:"Logistics",target:"Hangar"},
+  {source:"Command",target:"TIE Ops"},{source:"Logistics",target:"Reactor"},
+];
+const palette=["var(--c1)","var(--c5)","var(--c3)"];
+
+const W=820,H=520;
+const svg=d3.select("#chart");
+const link=svg.append("g").attr("stroke","var(--line)").attr("stroke-width",1.5)
+  .selectAll("line").data(links).join("line");
+const node=svg.append("g").selectAll("g").data(nodes).join("g");
+node.append("circle").attr("r",10).attr("fill",d=>palette[d.g]).attr("stroke","var(--bg)").attr("stroke-width",2);
+node.append("text").attr("class","node-label").attr("x",13).attr("dy","0.32em").text(d=>d.id);
+
+const sim=d3.forceSimulation(nodes)
+  .force("link",d3.forceLink(links).id(d=>d.id).distance(90))
+  .force("charge",d3.forceManyBody().strength(-320))
+  .force("center",d3.forceCenter(W/2,H/2))
+  .on("tick",()=>{
+    link.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y).attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+    node.attr("transform",d=>`translate(${d.x},${d.y})`);
+  });
+
+node.call(d3.drag()
+  .on("start",(e,d)=>{if(!e.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y;})
+  .on("drag",(e,d)=>{d.fx=e.x;d.fy=e.y;})
+  .on("end",(e,d)=>{if(!e.active)sim.alphaTarget(0);d.fx=null;d.fy=null;}));
+</script>
+</body>
+</html>

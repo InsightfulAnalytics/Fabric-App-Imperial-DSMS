@@ -20,6 +20,41 @@ EVALUATE INFO.VIEW.COLUMNS()
 
 The `INFO.VIEW.*` family is the read-only counterpart and returns only a subset of columns (notably no `Expression` — you can't introspect measure DAX without write access).
 
+---
+
+## TMDL Authoring
+
+### A `///` description comment must attach directly to an object — no blank line after it
+
+Triple-slash lines in TMDL are **descriptions**, not free comments: the parser binds them to the *next* object (measure/column/table). A standalone `///` banner followed by a blank line is a "dangling description" and PBI Desktop refuses to open the project:
+
+```
+TMDL Format Error: Unexpected line type: Empty!
+Document - './tables/Measure Table'  Line Number - 635
+```
+
+```tmdl
+    // ❌ breaks file-open — blank line orphans the description
+    /// ============ NARRATIVE & RISK PACK ============
+
+    /// Countdown to the Battle of Yavin.
+    measure 'Days to Battle of Yavin' = ...
+
+    // ✅ every /// line sits immediately above the measure it describes
+    /// NARRATIVE & RISK pack (lineage d3000000-*).
+    /// Countdown to the Battle of Yavin.
+    measure 'Days to Battle of Yavin' = ...
+```
+
+Blank lines *between* finished objects (after a `lineageTag`, before the next `///`) are fine — it's only a blank line **after a `///` and before its object** that's illegal. Note `////` (4+ slashes) inside a ```` ``` ```` expression block is just a DAX comment and is unaffected.
+
+**Validate without Power BI Desktop:** load the model headlessly in Tabular Editor 2 (same TMDL deserializer) — if it reaches script execution, the TMDL parsed:
+```bash
+"C:\Program Files (x86)\Tabular Editor\TabularEditor.exe" \
+  "PBI/<model>.SemanticModel/definition/model.tmdl" -S validate.csx
+# "Loading model..." -> "Executing script" == deserialized OK
+```
+
 ### LY / period-shift comparisons — inline `CALCULATE` beats stored measures
 
 If your date table is properly marked and you only need vs-LY for one query, **don't ask the user to add stored `[X LY]` measures**. Inline the calculation:

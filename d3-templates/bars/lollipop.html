@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lollipop chart · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Lollipop chart</h1>
+  <p class="sub">Combat readiness by division · stem + dot (a leaner bar)</p>
+  <svg id="chart" viewBox="0 0 820 420"></svg>
+</div>
+<script>
+const data=[
+  {name:"Garrison",   value:88},
+  {name:"Turbolasers",value:74},
+  {name:"TIE Ops",    value:69},
+  {name:"Ion Cannon", value:61},
+  {name:"Superlaser", value:95},
+  {name:"Detention",  value:52},
+].sort((a,b)=>b.value-a.value);
+
+const W=820,H=420,margin={top:16,right:30,bottom:36,left:110};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const x=d3.scaleLinear().domain([0,100]).range([0,innerW]);
+const y=d3.scaleBand().domain(data.map(d=>d.name)).range([0,innerH]).padding(0.4);
+
+g.append("g").call(d3.axisLeft(y));
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x).ticks(5).tickFormat(d=>d+"%"));
+
+g.selectAll("line.stem").data(data).join("line").attr("class","stem")
+  .attr("x1",0).attr("x2",d=>x(d.value))
+  .attr("y1",d=>y(d.name)+y.bandwidth()/2).attr("y2",d=>y(d.name)+y.bandwidth()/2)
+  .attr("stroke","var(--c2)").attr("stroke-width",2);
+
+g.selectAll("circle").data(data).join("circle")
+  .attr("cx",d=>x(d.value)).attr("cy",d=>y(d.name)+y.bandwidth()/2)
+  .attr("r",7).attr("fill",d=>d.value>=80?"var(--c5)":"var(--c1)");
+</script>
+</body>
+</html>

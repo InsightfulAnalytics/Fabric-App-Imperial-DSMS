@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "txtcashcap00a000b",
+  "position": {
+    "x": 30,
+    "y": 780,
+    "z": 10,
+    "height": 38,
+    "width": 1860
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Cash position dips negative after attacks — repair spend hits now, the Empire's funding catch-up lands ~2 months later. 10 months underwater, worst ≈ −$137 Bn.",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "16pt",
+                      "color": "#C62F2F"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -463,6 +463,91 @@ def growth(d):
 
 
 # --------------------------------------------------------------------------- #
+# ATTACK SCHEDULE + CAUSAL CHAIN  (single source of truth for station attacks)
+# --------------------------------------------------------------------------- #
+# Attacks are generated HERE, *before* the finance / personnel / maintenance
+# tables, so those tables can react to them. One attack drives:
+#   combat losses  ->  emergency repair work orders (downtime + repair cost)
+#   ->  a battle-damage spend spike in the ledger.
+# The Empire's funding increase to cover that spike only flows through
+# FUNDING_LAG_MONTHS later (the funding-application delay Command complains about),
+# so spending spikes immediately while the subsidy lags - and cash can go negative
+# in between. Every link below is tunable; set a factor to 0 to sever that link.
+war = random.Random(SEED + 66)
+
+
+def war_growth(d):
+    """War tempo ramp: low during construction, surges hard as Yavin nears."""
+    t = (d - START).days / max(1, (END - START).days)
+    base = 0.3 + 0.8 * t
+    if t > 0.85:
+        base += 1.6 * (t - 0.85) / 0.15
+    return base
+
+
+def add_months(dt, n):
+    mo = dt.month - 1 + n
+    return date(dt.year + mo // 12, mo % 12 + 1, min(dt.day, 28))
+
+
+# ---- tunable knobs: attack -> losses -> repair -> downtime -> spend, + funding lag
+FUNDING_LAG_MONTHS          = 2               # Empire funding-increase delay after an attack
+COMBAT_LOSS_PER_CASUALTY    = 0.45            # personnel combat losses per attack casualty (month M)
+REPLEN_HIRE_FRACTION        = 0.90            # share of those losses backfilled, LAG months later
+REPAIR_CREDITS_PER_SEVERITY = 26_000_000_000  # battle-damage repair spend per unit monthly severity
+REPLEN_CREDITS_PER_CASUALTY = 7_500_000       # recruit + re-equip spend per casualty
+REPAIR_SPILL_NEXT_MONTH     = 0.40            # share of shock spend that lands in M+1
+EMERGENCY_WO_PER_SEVERITY   = 3               # extra emergency work orders per unit monthly severity
+SUBSIDY_BASELINE_VAR        = (0.99, 1.03)    # baseline subsidy vs baseline expense (tight; shock lags)
+
+ATTACK_TYPES = ["Fighter Probe", "Sabotage Attempt", "Commando Raid",
+                "Boarding Attempt", "Smuggler Incursion", "Capital Ship Skirmish"]
+ATTACK_FACTIONS = ["Rebel Alliance", "Saw's Partisans", "Pirate Syndicates",
+                   "Smuggling Networks", "Local Insurgents", "Separatist Holdouts"]
+SEV_RANK     = {"Low": 1, "Medium": 2, "High": 3, "Critical": 4}
+SEV_CASUALTY = {"Low": 3, "Medium": 25, "High": 180, "Critical": 900}
+SEV_DUR      = {"Low": 0.5, "Medium": 1.0, "High": 2.0, "Critical": 3.0}
+
+attack_schedule = []   # each entry: full attack attributes + a 'terminal' flag
+for d in all_dates:
+    t = (d - START).days / max(1, (END - START).days)
+    if war.random() >= (0.01 + 0.06 * war_growth(d)):
+        continue
+    faction = war.choices(ATTACK_FACTIONS,
+        weights=[5 + 25 * t, 3 + 6 * t, 14, 8, 9, max(1, 8 - 6 * t)])[0]
+    sev_roll = war.random() + 0.3 * t
+    severity = ("Low" if sev_roll < 0.5 else "Medium" if sev_roll < 0.8
+                else "High" if sev_roll < 0.97 else "Critical")
+    shield_held = "No" if (severity in ("High", "Critical") and war.random() < 0.25) else "Yes"
+    hull_breach = "Yes" if (shield_held == "No" and war.random() < 0.6) else "No"
+    casualties = int(lognorm(SEV_CASUALTY[severity], 1.1) * (0.6 + war_growth(d)))
+    attack_schedule.append(dict(
+        date=d, dk=datekey(d), faction=faction, sector=war.choice(SECTORS),
+        atype=war.choice(ATTACK_TYPES), severity=severity, sev_rank=SEV_RANK[severity],
+        shield_held=shield_held, hull_breach=hull_breach, casualties=casualties,
+        repelled="Yes", dur=round(war.uniform(0.2, 6) * SEV_DUR[severity], 1),
+        name="", terminal=False))
+
+# The Battle of Yavin: the one attack the station does not repel. It is TERMINAL -
+# the station is destroyed, so no repair / replenishment / funding follows. It is
+# therefore excluded from the monthly shock aggregates that drive the cost chain.
+attack_schedule.append(dict(
+    date=END, dk=datekey(END), faction="Rebel Alliance", sector="Meridian Trench",
+    atype="Starfighter Assault (Trench Run)", severity="Critical", sev_rank=4,
+    shield_held="No", hull_breach="Yes", casualties=1_700_000, repelled="No",
+    dur=0.5, name="Battle of Yavin", terminal=True))
+
+monthly_attack_sev = {}   # (year, month) -> summed severity rank (drives repairs/spend)
+monthly_attack_cas = {}   # (year, month) -> summed casualties (drives losses/replenishment)
+for a in attack_schedule:
+    if a["terminal"]:
+        continue
+    ym = (a["date"].year, a["date"].month)
+    monthly_attack_sev[ym] = monthly_attack_sev.get(ym, 0) + a["sev_rank"]
+    monthly_attack_cas[ym] = monthly_attack_cas.get(ym, 0) + a["casualties"]
+
+
+# --------------------------------------------------------------------------- #
 # FACT LEDGER  (income + expenses)
 # --------------------------------------------------------------------------- #
 expense_rows = []     # (date, dept_key, acct_key, vendor_key, amount, qty, status)
@@ -553,18 +638,59 @@ for qe in quarter_ends:
             qty = random.randint(50, 4000)
             add_expense(qe, name, amt, qty)
 
+# ---- ATTACK-DRIVEN SHOCK SPEND (battle damage repair + emergency replenishment) ----
+# Tracked in monthly_shock_expense (separate from the baseline monthly_expense) so
+# the subsidy below can fund it on a lag. Spend lands in the attack month and spills
+# into M+1; the matching funding only arrives FUNDING_LAG_MONTHS later.
+monthly_shock_expense = {}   # (year, month) -> attack-driven credits
+
+
+def add_shock_expense(d, acct_name, amount):
+    m = acct_meta[acct_name]
+    amt = int(round(amount))
+    if amt <= 0:
+        return
+    dept_name = random.choice(m["prefs"]) if m["prefs"] else \
+        random.choice([x[0] for x in DEPARTMENTS[:-1]])
+    vendor_k = pick_vendor(m["vtype"]) if m["vtype"] != "Internal" else NA_VENDOR
+    expense_rows.append([datekey(d), dept_keys[dept_name], m["key"], vendor_k, amt, "",
+                         random.choice(STATUSES)])
+    ym = (d.year, d.month)
+    monthly_shock_expense[ym] = monthly_shock_expense.get(ym, 0) + amt
+
+
+REPAIR_ACCTS = ["Hull Plating & Durasteel", "Structural Construction Materials",
+                "Systems Installation & Upgrades"]
+REPLEN_ACCTS = ["Recruitment & Training", "Equipment & Weapons Procurement",
+                "Turbolaser Munitions"]
+for ym, sev in monthly_attack_sev.items():
+    repair_total = sev * REPAIR_CREDITS_PER_SEVERITY
+    replen_total = monthly_attack_cas.get(ym, 0) * REPLEN_CREDITS_PER_CASUALTY
+    first = date(ym[0], ym[1], 1)
+    for frac, off in ((1 - REPAIR_SPILL_NEXT_MONTH, 0), (REPAIR_SPILL_NEXT_MONTH, 1)):
+        pm = add_months(first, off)
+        if pm > END:
+            continue
+        pd_date = min(date(pm.year, pm.month, 15), END)
+        for acct_name in REPAIR_ACCTS:
+            add_shock_expense(pd_date, acct_name, repair_total * frac / len(REPAIR_ACCTS))
+        for acct_name in REPLEN_ACCTS:
+            add_shock_expense(pd_date, acct_name, replen_total * frac / len(REPLEN_ACCTS))
+
 # ---- INCOME ----
-# Sole income source: the monthly Imperial Treasury subsidy. Sized to roughly
-# fund expenses, with month-to-month variance so the Subsidy Coverage % KPI
-# moves around. The Empire underfunds slightly in lean months and overshoots
-# slightly in others; on average DSMS runs close to break-even.
+# Sole income source: the monthly Imperial Treasury subsidy. The BASELINE (routine
+# ops) is funded ~in-month; the attack-driven SHOCK is only funded
+# FUNDING_LAG_MONTHS later - the funding-application delay. So in an attack month
+# expenses spike but the subsidy doesn't, and the catch-up arrives 2 months on.
 income_rows = []
 for ms in month_starts:
     ym = (ms.year, ms.month)
-    exp = monthly_expense.get(ym, 0)
-    if exp == 0:
+    baseline = monthly_expense.get(ym, 0)
+    if baseline == 0 and monthly_shock_expense.get(ym, 0) == 0:
         continue
-    subsidy = int(exp * random.uniform(0.92, 1.08))
+    lag = add_months(date(ms.year, ms.month, 1), -FUNDING_LAG_MONTHS)
+    catchup = monthly_shock_expense.get((lag.year, lag.month), 0)
+    subsidy = int(baseline * random.uniform(*SUBSIDY_BASELINE_VAR) + catchup)
     income_rows.append([datekey(ms), UNALLOC, acct["Imperial Treasury Subsidy"],
                         NA_VENDOR, subsidy, "", "Posted"])
 
@@ -796,6 +922,35 @@ for idx, me in enumerate(month_ends):
                 datekey(me), dept_keys[dname], rm["key"], hc, hires,
                 separations, combat, avg_pay, payroll,
             ])
+
+# ---- attack-driven combat losses (month M) + lagged replenishment hires (M+LAG) ----
+# An attack's casualties become personnel combat losses that month, spread across
+# combat roles by headcount. Backfill hires only arrive FUNDING_LAG_MONTHS later -
+# the same funding delay that holds up the repair money.
+combat_role_keys = {rm["key"] for _n, rm in role_meta.items() if rm["combat"]}
+me_key_by_ym = {(me.year, me.month): datekey(me) for me in month_ends}
+hc_rows_by_key = {}
+for r in fact_hc_rows:
+    hc_rows_by_key.setdefault(r[0], []).append(r)
+for ym, cas in monthly_attack_cas.items():
+    pool = int(cas * COMBAT_LOSS_PER_CASUALTY)
+    mk = me_key_by_ym.get(ym)
+    if not mk or pool <= 0:
+        continue
+    crows = [r for r in hc_rows_by_key.get(mk, []) if r[2] in combat_role_keys]
+    tot = sum(r[3] for r in crows) or 1
+    for r in crows:
+        add = int(pool * r[3] / tot)
+        r[6] += add     # CombatLosses
+        r[5] += add     # Separations (combat losses are separations)
+    rep = add_months(date(ym[0], ym[1], 1), FUNDING_LAG_MONTHS)
+    rrows = [r for r in hc_rows_by_key.get(me_key_by_ym.get((rep.year, rep.month)), [])
+             if r[2] in combat_role_keys]
+    rtot = sum(r[3] for r in rrows) or 1
+    backfill = int(pool * REPLEN_HIRE_FRACTION)
+    for r in rrows:
+        r[4] += int(backfill * r[3] / rtot)   # Hires
+
 FACT_HC_HEADER = ["MonthDateKey", "DepartmentKey", "RoleKey", "Headcount",
                   "Hires", "Separations", "CombatLosses",
                   "AverageMonthlyPayCredits", "PayrollCostCredits"]
@@ -847,10 +1002,395 @@ for d in all_dates:
             f"WO{wo_id:07d}", datekey(d), closed_key, dept_k, loc_k, item_k,
             priority, category, status, downtime, labor, repair_cost,
         ])
+
+# ---- attack-driven EMERGENCY work orders (battle damage: high downtime + cost) ----
+# Spikes in the attack month and spills into M+1, concentrated on the systems an
+# attacker actually damages. This is what makes downtime and repair cost rise with
+# attacks rather than merely drifting up over time.
+battle_depts = ["Structural Integrity & Hull", "Shield Generator Control",
+                "Turbolaser Batteries", "Hangar & TIE Flight Ops",
+                "Power Distribution", "Main Reactor Core"]
+for ym, sev in monthly_attack_sev.items():
+    n_wo = int(sev * EMERGENCY_WO_PER_SEVERITY)
+    if n_wo <= 0:
+        continue
+    first = date(ym[0], ym[1], 1)
+    for off, share in ((0, 1 - REPAIR_SPILL_NEXT_MONTH), (1, REPAIR_SPILL_NEXT_MONTH)):
+        pm = add_months(first, off)
+        if pm > END:
+            continue
+        for _ in range(int(round(n_wo * share))):
+            wo_id += 1
+            wd = min(date(pm.year, pm.month, 1 + random.randint(0, 25)), END)
+            dname = random.choice(battle_depts)
+            dur = random.randint(0, 5)
+            closed = wd + timedelta(days=dur)
+            if closed > END:
+                status, closed_key = random.choice(["Open", "In Progress", "Deferred"]), ""
+            else:
+                status, closed_key = "Closed", datekey(closed)
+            downtime = round(random.uniform(18, 80), 1)
+            labor = round(random.uniform(20, 120), 1)
+            repair_cost = int(lognorm(900_000_000, 1.0) * (0.8 + war_growth(wd)))
+            fact_maint_rows.append([
+                f"WO{wo_id:07d}", datekey(wd), closed_key, dept_keys[dname],
+                random.randint(1, len(LOCATIONS)), item_keys[random.choice(part_items)],
+                "Critical", "Emergency", status, downtime, labor, repair_cost,
+            ])
+
 FACT_MAINT_HEADER = ["WorkOrderID", "OpenedDateKey", "ClosedDateKey",
                      "DepartmentKey", "LocationKey", "ItemKey", "Priority",
                      "Category", "Status", "DowntimeHours", "LaborHours",
                      "RepairCostCredits"]
+
+# =========================================================================== #
+# OPERATIONS COMMAND - WAR-FIGHTING DOMAIN
+# =========================================================================== #
+# The Death Star is a battle station; its "operations" are acts of war. The
+# tables below model engagements (battles fought, underway & planned), attacks
+# on the station itself, and a daily readiness / threat board. They share
+# DimDate and DimDepartment with the finance/facilities star schema and add
+# four new dimensions. The whole arc ramps with the station's build-out and
+# climaxes at the Battle of Yavin (END / 0 BBY) - which the station loses.
+#
+# NOTE: `war` (RNG), `war_growth` and the full `attack_schedule` are now defined
+# up top, alongside the causal-chain knobs, because the finance / personnel /
+# maintenance tables above react to the attacks. The engagement helpers below
+# still use the same `war` RNG.
+# --------------------------------------------------------------------------- #
+
+
+# --------------------------------------------------------------------------- #
+# DIM ENEMY FACTION
+# --------------------------------------------------------------------------- #
+FACTIONS = [
+    # (Faction, FactionType, ThreatLevel, HomeRegion)          key 0 = none
+    ("No Hostiles",         "None",           "None",     "-"),
+    ("Rebel Alliance",      "Insurgency",     "Severe",   "Outer Rim"),
+    ("Saw's Partisans",     "Extremist Cell", "High",     "Mid Rim"),
+    ("Separatist Holdouts", "Remnant",        "Low",      "Outer Rim"),
+    ("Pirate Syndicates",   "Piracy",         "Moderate", "Outer Rim"),
+    ("Local Insurgents",    "Insurgency",     "Moderate", "Various"),
+    ("Smuggling Networks",  "Criminal",       "Low",      "Outer Rim"),
+    ("Hutt Cartel Raiders", "Criminal",       "Low",      "Hutt Space"),
+]
+dim_faction_rows = []
+faction_keys = {}
+for i, (name, ftype, threat, region) in enumerate(FACTIONS):   # key 0 = No Hostiles
+    faction_keys[name] = i
+    dim_faction_rows.append([i, name, ftype, threat, region])
+DIM_FACTION_HEADER = ["FactionKey", "Faction", "FactionType",
+                      "ThreatLevel", "HomeRegion"]
+faction_threat_rank = {
+    "No Hostiles": 0, "Smuggling Networks": 1, "Hutt Cartel Raiders": 1,
+    "Pirate Syndicates": 2, "Separatist Holdouts": 2, "Local Insurgents": 2,
+    "Saw's Partisans": 3, "Rebel Alliance": 4,
+}
+
+# --------------------------------------------------------------------------- #
+# DIM PLANET  (targets & patrol zones)
+# --------------------------------------------------------------------------- #
+PLANETS = [
+    # (Planet, System, Region, Allegiance, StrategicValue, PopulationMillions)
+    ("Deep Space / Patrol Zone", "-",           "-",           "-",                "-",        0),
+    ("Despayre",                 "Horuz",        "Outer Rim",   "Imperial",         "Critical", 2),
+    ("Jedha",                    "NaJedha",      "Mid Rim",     "Contested",        "High",     90),
+    ("Scarif",                   "Abrion",       "Outer Rim",   "Imperial",         "Critical", 5),
+    ("Alderaan",                 "Alderaan",     "Core Worlds", "Rebel-Aligned",    "Critical", 2000),
+    ("Yavin IV",                 "Yavin",        "Outer Rim",   "Rebel Stronghold", "Critical", 1),
+    ("Dantooine",                "Raioballo",    "Outer Rim",   "Rebel-Aligned",    "Medium",   1),
+    ("Lothal",                   "Lothal",       "Outer Rim",   "Contested",        "Medium",   40),
+    ("Ryloth",                   "Ryloth",       "Outer Rim",   "Contested",        "Medium",   1500),
+    ("Mon Cala",                 "Mon Cala",     "Outer Rim",   "Rebel-Aligned",    "High",     27000),
+    ("Corellia",                 "Corellian",    "Core Worlds", "Contested",        "High",     3000),
+    ("Kessel",                   "Kessel",       "Outer Rim",   "Neutral",          "Medium",   500),
+    ("Ord Mantell",              "Bright Jewel", "Mid Rim",     "Neutral",          "Low",      1200),
+    ("Tatooine",                 "Tatoo",        "Outer Rim",   "Neutral",          "Low",      200),
+    ("Geonosis",                 "Geonosis",     "Outer Rim",   "Imperial",         "High",     100),
+    ("Mustafar",                 "Mustafar",     "Outer Rim",   "Imperial",         "Medium",   20),
+]
+dim_planet_rows = []
+planet_keys = {}
+for i, (name, system, region, alleg, sv, pop) in enumerate(PLANETS):  # key 0 = Deep Space
+    planet_keys[name] = i
+    dim_planet_rows.append([i, name, system, region, alleg, sv, pop])
+DIM_PLANET_HEADER = ["PlanetKey", "Planet", "System", "Region",
+                     "Allegiance", "StrategicValue", "PopulationMillions"]
+
+# --------------------------------------------------------------------------- #
+# DIM ENGAGEMENT TYPE
+# --------------------------------------------------------------------------- #
+ENGAGEMENT_TYPES = [
+    # (EngagementType, Domain, IntensityWeight, IsSuperlaser)
+    ("Patrol / Picket",      "Patrol",    1, "No"),
+    ("Reconnaissance",       "Patrol",    1, "No"),
+    ("Fighter Sweep",        "Offensive", 2, "No"),
+    ("Interdiction",         "Offensive", 2, "No"),
+    ("Blockade",             "Defensive", 2, "No"),
+    ("Boarding Action",      "Offensive", 3, "No"),
+    ("Orbital Bombardment",  "Offensive", 4, "No"),
+    ("Planetary Assault",    "Offensive", 4, "No"),
+    ("Superlaser Test Fire", "Test",      5, "Yes"),
+    ("Superlaser Strike",    "Offensive", 5, "Yes"),
+]
+dim_etype_rows = []
+etype_keys = {}
+etype_meta = {}
+for i, (name, domain, intensity, issl) in enumerate(ENGAGEMENT_TYPES, start=1):
+    etype_keys[name] = i
+    etype_meta[name] = dict(key=i, intensity=intensity, issl=issl)
+    dim_etype_rows.append([i, name, domain, intensity, issl])
+DIM_ETYPE_HEADER = ["EngagementTypeKey", "EngagementType", "Domain",
+                    "IntensityWeight", "IsSuperlaser"]
+
+# owning department per engagement type
+TYPE_DEPT = {
+    "Superlaser Test Fire": "Superlaser Operations",
+    "Superlaser Strike":    "Superlaser Operations",
+    "Orbital Bombardment":  "Turbolaser Batteries",
+    "Planetary Assault":    "Stormtrooper Garrison",
+    "Boarding Action":      "Stormtrooper Garrison",
+    "Blockade":             "Tractor Beam Operations",
+    "Interdiction":         "Tractor Beam Operations",
+    "Fighter Sweep":        "Hangar & TIE Flight Ops",
+    "Patrol / Picket":      "Hangar & TIE Flight Ops",
+    "Reconnaissance":       "Hangar & TIE Flight Ops",
+}
+
+# --------------------------------------------------------------------------- #
+# DIM READINESS CONDITION  (the Imperial alert ladder)
+# --------------------------------------------------------------------------- #
+CONDITIONS = [
+    # (ConditionKey, Condition, Posture, AlertColor, SeverityRank, Description)
+    (1, "Condition Green",  "Standby",            "Green",  1, "Routine operations; no credible threat"),
+    (2, "Condition Blue",   "Elevated",           "Blue",   2, "Increased patrol tempo; minor activity"),
+    (3, "Condition Yellow", "High Alert",         "Yellow", 3, "Confirmed hostile activity in sector"),
+    (4, "Condition Red",    "Battle Stations",    "Red",    4, "Engagement imminent or underway"),
+    (5, "Condition Black",  "Under Direct Attack", "Black",  5, "Station under direct attack"),
+]
+dim_condition_rows = [list(c) for c in CONDITIONS]
+DIM_CONDITION_HEADER = ["ConditionKey", "Condition", "Posture", "AlertColor",
+                        "SeverityRank", "Description"]
+
+# --------------------------------------------------------------------------- #
+# FACT ENGAGEMENT  (grain = one operation: fought, underway or planned)
+# --------------------------------------------------------------------------- #
+GENERIC_TYPES = [
+    ("Patrol / Picket", 30), ("Reconnaissance", 18), ("Fighter Sweep", 14),
+    ("Interdiction", 12), ("Blockade", 8), ("Boarding Action", 9),
+    ("Orbital Bombardment", 5), ("Planetary Assault", 4),
+]
+PATROL_PLANETS = ["Deep Space / Patrol Zone", "Tatooine", "Ord Mantell",
+                  "Kessel", "Lothal", "Ryloth"]
+TARGET_PLANETS = ["Lothal", "Ryloth", "Dantooine", "Corellia", "Mon Cala",
+                  "Kessel", "Ord Mantell", "Tatooine", "Geonosis"]
+
+
+def pick_faction(t):
+    weights = {
+        "Rebel Alliance":       5 + 30 * t,
+        "Saw's Partisans":      3 + 8 * t,
+        "Separatist Holdouts":  max(1, 10 - 8 * t),
+        "Pirate Syndicates":    14,
+        "Local Insurgents":     10,
+        "Smuggling Networks":   8,
+        "Hutt Cartel Raiders":  6,
+    }
+    names = list(weights)
+    return war.choices(names, weights=[weights[n] for n in names])[0]
+
+
+eng_raw = []   # rows without the EngagementID (assigned after date-sort)
+
+
+def add_engagement(d, t, etype, faction, planet, status_override=None,
+                   planned_only=False, superlaser=None, planet_destroyed="No",
+                   friendly=None, enemy=None, fcl=None, ecl=None):
+    m = etype_meta[etype]
+    intensity = m["intensity"]
+    sl = m["issl"] if superlaser is None else superlaser
+    dept_k = dept_keys[TYPE_DEPT[etype]]
+    threat = faction_threat_rank.get(faction, 1)
+
+    if planned_only:
+        start_key, end_key = "", ""
+        planned_key = datekey(d)
+        event_key = planned_key
+        status = status_override or "Planned"
+        fl = el = fc = ec = ordx = 0
+        dur = 0.0
+    else:
+        start_key = datekey(d)
+        event_key = start_key
+        planned_d = max(START, d - timedelta(days=war.randint(1, 20)))
+        planned_key = datekey(planned_d)
+        end_d = d + timedelta(days=war.randint(0, intensity + 1))
+        if friendly is None:
+            fl = int(lognorm(18 * intensity * (0.5 + 0.4 * threat), 1.0) * (0.6 + war_growth(d)))
+            el = int(fl * war.uniform(1.2, 4.0)) if faction != "No Hostiles" else 0
+            fc = int(lognorm(1 + intensity, 1.2) * (0.5 + t))
+            ec = int(fc * war.uniform(1.0, 3.0)) if faction != "No Hostiles" else 0
+        else:
+            fl, el, fc, ec = friendly, enemy, fcl, ecl
+        ordx = int(lognorm(35 * intensity, 1.1) * (0.5 + war_growth(d)))
+        dur = round(war.uniform(1, 8) * intensity, 1)
+        if status_override:
+            status = status_override
+            end_key = datekey(end_d) if end_d <= END else ""
+        elif end_d > END:
+            status, end_key = "Active", ""
+        else:
+            r = war.random()
+            if faction in ("Rebel Alliance", "Saw's Partisans") and t > 0.8:
+                status = "Won" if r < 0.78 else ("Lost" if r < 0.92 else "Aborted")
+            else:
+                status = "Won" if r < 0.90 else ("Lost" if r < 0.97 else "Aborted")
+            end_key = datekey(end_d)
+
+    eng_raw.append([event_key, planned_key, start_key, end_key, dept_k,
+                    planet_keys[planet], faction_keys[faction], etype_keys[etype],
+                    status, fl, el, fc, ec, ordx, dur, sl, planet_destroyed])
+
+
+# --- generic engagements across the timeline -------------------------------
+for d in all_dates:
+    t = (d - START).days / max(1, (END - START).days)
+    rate = 0.2 + 1.0 * war_growth(d)
+    n = max(0, int(war.gauss(rate, rate * 0.5)))
+    for _ in range(n):
+        etype = war.choices([x[0] for x in GENERIC_TYPES],
+                            weights=[x[1] for x in GENERIC_TYPES])[0]
+        if etype in ("Patrol / Picket", "Reconnaissance"):
+            planet = war.choice(PATROL_PLANETS)
+            faction = war.choice(["Pirate Syndicates", "Smuggling Networks",
+                                  "No Hostiles", "Local Insurgents"]) \
+                if war.random() < 0.5 else pick_faction(t)
+        else:
+            planet = war.choice(TARGET_PLANETS)
+            faction = pick_faction(t)
+        add_engagement(d, t, etype, faction, planet)
+
+# --- canon set-pieces (all 0 BBY / late 2024), climaxing at Yavin ----------
+CANON = [
+    # (date, type, planet, faction, status, superlaser, destroyed, fl, el, fcl, ecl)
+    (date(2024, 9, 15),  "Superlaser Test Fire", "Despayre", "No Hostiles",     "Won",  "Yes", "Partial", 0,       0,          0,  0),
+    (date(2024, 11, 10), "Superlaser Test Fire", "Jedha",    "Saw's Partisans", "Won",  "Yes", "No",      120,     80000,      0,  0),
+    (date(2024, 11, 28), "Planetary Assault",    "Scarif",   "Rebel Alliance",  "Won",  "Yes", "No",      4200,    9500,       60, 110),
+    (date(2024, 12, 23), "Superlaser Strike",    "Alderaan", "Rebel Alliance",  "Won",  "Yes", "Yes",     0,       2000000000, 0,  0),
+    (date(2024, 12, 30), "Planetary Assault",    "Yavin IV", "Rebel Alliance",  "Lost", "No",  "No",      1700000, 60,         32, 38),
+]
+for cdate, etype, planet, faction, status, sl, pd, fr, en, fc_, ec_ in CANON:
+    ct = (cdate - START).days / max(1, (END - START).days)
+    add_engagement(cdate, ct, etype, faction, planet, status_override=status,
+                   superlaser=sl, planet_destroyed=pd,
+                   friendly=fr, enemy=en, fcl=fc_, ecl=ec_)
+
+# --- the planned pipeline as of the reporting date (0 BBY) -----------------
+PLANNED = [
+    ("Superlaser Strike",   "Dantooine", "Rebel Alliance"),
+    ("Planetary Assault",   "Mon Cala",  "Rebel Alliance"),
+    ("Orbital Bombardment", "Corellia",  "Rebel Alliance"),
+    ("Blockade",            "Ryloth",    "Local Insurgents"),
+    ("Planetary Assault",   "Lothal",    "Rebel Alliance"),
+    ("Interdiction",        "Kessel",    "Smuggling Networks"),
+    ("Boarding Action",     "Ord Mantell", "Pirate Syndicates"),
+    ("Fighter Sweep",       "Tatooine",  "Local Insurgents"),
+    ("Superlaser Strike",   "Mon Cala",  "Rebel Alliance"),
+    ("Blockade",            "Corellia",  "Rebel Alliance"),
+]
+for etype, planet, faction in PLANNED:
+    pdate = END - timedelta(days=war.randint(0, 20))
+    add_engagement(pdate, 1.0, etype, faction, planet, planned_only=True)
+
+eng_raw.sort(key=lambda r: r[0])
+fact_engagement_rows = [[f"ENG{i:07d}"] + r for i, r in enumerate(eng_raw, start=1)]
+FACT_ENG_HEADER = ["EngagementID", "EventDateKey", "PlannedDateKey",
+                   "StartDateKey", "EndDateKey", "DepartmentKey", "PlanetKey",
+                   "FactionKey", "EngagementTypeKey", "Status", "FriendlyLosses",
+                   "EnemyLosses", "FriendlyCraftLost", "EnemyCraftLost",
+                   "OrdnanceExpended", "DurationHours", "SuperlaserStrike",
+                   "PlanetDestroyed"]
+
+# --------------------------------------------------------------------------- #
+# FACT STATION ATTACK  (grain = one attack on the station)
+# --------------------------------------------------------------------------- #
+# Built from the pre-computed attack_schedule (the same shocks that drove the cost
+# chain above), so every attack here lines up with its repair / loss / spend spike.
+attack_schedule.sort(key=lambda a: a["dk"])
+attack_raw = [[a["dk"], faction_keys[a["faction"]], a["sector"], a["atype"],
+               a["severity"], a["shield_held"], a["hull_breach"], a["casualties"],
+               a["repelled"], a["dur"], a["name"]] for a in attack_schedule]
+fact_attack_rows = [[f"ATK{i:06d}"] + r for i, r in enumerate(attack_raw, start=1)]
+FACT_ATK_HEADER = ["AttackID", "DateKey", "FactionKey", "AttackSector",
+                   "AttackType", "Severity", "ShieldHeld", "HullBreach",
+                   "Casualties", "Repelled", "ThreatDurationHours", "AttackName"]
+
+# --------------------------------------------------------------------------- #
+# FACT READINESS  (daily readiness / threat board snapshot)
+# --------------------------------------------------------------------------- #
+attack_by_day = {}
+for a in attack_schedule:
+    attack_by_day[a["dk"]] = max(attack_by_day.get(a["dk"], 0), a["sev_rank"])
+superlaser_strike_days = {datekey(c[0]) for c in CANON if c[5] == "Yes"}
+
+TIE_SQ_START, TIE_SQ_END = 84, 178   # TIE squadrons crewed (12 fighters each)
+TL_TOTAL = 5000                      # turbolaser batteries (canon scale)
+END_KEY = datekey(END)
+
+fact_readiness_rows = []
+charge = 0.0
+for d in all_dates:
+    t = (d - START).days / max(1, (END - START).days)
+    dk = datekey(d)
+    atk = attack_by_day.get(dk, 0)
+
+    threat = 12 + 55 * t + (40 * (t - 0.85) / 0.15 if t > 0.85 else 0)
+    threat = max(0, min(100, threat + atk * 12 + war.uniform(-6, 6)))
+
+    if dk == END_KEY:
+        cond = 5
+    elif atk >= 4:
+        cond = 5
+    elif atk >= 3 or threat >= 80:
+        cond = 4
+    elif threat >= 55:
+        cond = 3
+    elif threat >= 30:
+        cond = 2
+    else:
+        cond = 1
+
+    tie_total = int(TIE_SQ_START + (TIE_SQ_END - TIE_SQ_START) * t)
+    avail = war.uniform(0.80, 0.96) - 0.10 * (atk / 4)
+    tie_op = max(0, int(tie_total * avail))
+
+    if t < 0.82:
+        sl_charge = 0.0
+    else:
+        charge = min(100.0, charge + war.uniform(2.5, 5.0))
+        if dk in superlaser_strike_days:
+            sl_charge, charge = 100.0, 0.0
+        else:
+            sl_charge = round(charge, 1)
+
+    shield = 100.0
+    if atk >= 2:
+        shield = max(0.0, round(war.uniform(60, 95) - atk * 8, 1))
+    if dk == END_KEY:
+        shield = 0.0
+
+    tl_online = int(TL_TOTAL * war.uniform(0.90, 0.99))
+    sorties = max(0, int(war.gauss(40 * (0.5 + war_growth(d)), 12)) + atk * 30)
+
+    fact_readiness_rows.append([
+        dk, cond, round(threat, 1), tie_op, tie_total, sl_charge,
+        shield, tl_online, TL_TOTAL, sorties,
+    ])
+FACT_READY_HEADER = ["SnapshotDateKey", "ConditionKey", "ThreatIndex",
+                     "TIESquadronsOperational", "TIESquadronsTotal",
+                     "SuperlaserChargePct", "ShieldIntegrityPct",
+                     "TurbolaserBatteriesOnline", "TurbolaserBatteriesTotal",
+                     "SortiesFlown"]
 
 # --------------------------------------------------------------------------- #
 # WRITE
@@ -868,6 +1408,14 @@ counts["FactInventory.csv"] = write_csv("FactInventory.csv", FACT_INV_HEADER, fa
 counts["FactHeadcount.csv"] = write_csv("FactHeadcount.csv", FACT_HC_HEADER, fact_hc_rows)
 counts["FactMaintenance.csv"] = write_csv("FactMaintenance.csv", FACT_MAINT_HEADER, fact_maint_rows)
 counts["FactBudget.csv"] = write_csv("FactBudget.csv", FACT_BUDGET_HEADER, fact_budget_rows)
+# --- Operations Command (war-fighting domain) ---
+counts["DimEnemyFaction.csv"] = write_csv("DimEnemyFaction.csv", DIM_FACTION_HEADER, dim_faction_rows)
+counts["DimPlanet.csv"] = write_csv("DimPlanet.csv", DIM_PLANET_HEADER, dim_planet_rows)
+counts["DimEngagementType.csv"] = write_csv("DimEngagementType.csv", DIM_ETYPE_HEADER, dim_etype_rows)
+counts["DimReadinessCondition.csv"] = write_csv("DimReadinessCondition.csv", DIM_CONDITION_HEADER, dim_condition_rows)
+counts["FactEngagement.csv"] = write_csv("FactEngagement.csv", FACT_ENG_HEADER, fact_engagement_rows)
+counts["FactStationAttack.csv"] = write_csv("FactStationAttack.csv", FACT_ATK_HEADER, fact_attack_rows)
+counts["FactReadiness.csv"] = write_csv("FactReadiness.csv", FACT_READY_HEADER, fact_readiness_rows)
 
 # --------------------------------------------------------------------------- #
 # SUMMARY
@@ -896,5 +1444,33 @@ print(f"  Total Expenses        {total_expense:>20,} credits")
 print(f"  Net Surplus/(Deficit) {total_income - total_expense:>20,} credits")
 print(f"  Income Budget (sum)   {total_income_budget:>20,} credits")
 print(f"  Expense Budget (sum)  {total_expense_budget:>20,} credits")
+print("-" * 64)
+# Cash-position walk: monthly income - expense, accumulated. The funding lag means
+# attack months run a deficit until the subsidy catches up FUNDING_LAG_MONTHS later.
+_m_inc, _m_exp = {}, {}
+for r in fact_ledger_rows:
+    ym = (r[1] // 10000, (r[1] // 100) % 100)
+    if r[3] == SUBSIDY_KEY:
+        _m_inc[ym] = _m_inc.get(ym, 0) + r[5]
+    else:
+        _m_exp[ym] = _m_exp.get(ym, 0) + r[5]
+_cash, _min_cash, _neg = 0, 0, 0
+for ym in sorted(set(_m_inc) | set(_m_exp)):
+    _cash += _m_inc.get(ym, 0) - _m_exp.get(ym, 0)
+    _min_cash = min(_min_cash, _cash)
+    _neg += 1 if _cash < 0 else 0
+print(f"  Funding lag           {FUNDING_LAG_MONTHS} months")
+print(f"  Months cash negative  {_neg:>20,}  (of {len(set(_m_inc) | set(_m_exp))})")
+print(f"  Worst cash position   {_min_cash:>20,} credits")
+print("-" * 64)
+eng_by_status = {}
+for r in fact_engagement_rows:
+    eng_by_status[r[9]] = eng_by_status.get(r[9], 0) + 1
+print("  OPERATIONS COMMAND (war-fighting domain)")
+print(f"    Engagements           {len(fact_engagement_rows):>18,}  "
+      + " ".join(f"{k}:{v}" for k, v in sorted(eng_by_status.items())))
+print(f"    Station attacks       {len(fact_attack_rows):>18,}  "
+      f"(repelled: {sum(1 for r in fact_attack_rows if r[9] == 'Yes')})")
+print(f"    Readiness snapshots   {len(fact_readiness_rows):>18,}")
 print(f"  Output folder         {OUT}")
 print("=" * 64)

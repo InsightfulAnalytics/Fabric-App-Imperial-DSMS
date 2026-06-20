@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grouped bar · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+.legend text{fill:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Grouped bar chart</h1>
+  <p class="sub">Actual vs Budget by division · grouped (clustered) bars</p>
+  <svg id="chart" viewBox="0 0 820 440"></svg>
+</div>
+<script>
+const keys = ["actual","budget"];
+const colors = {actual:"var(--c1)",budget:"var(--c5)"};
+const data = [
+  {group:"Garrison",   actual:1240, budget:1100},
+  {group:"Turbolasers",actual:560,  budget:600},
+  {group:"TIE Ops",    actual:480,  budget:420},
+  {group:"Ion Cannon", actual:300,  budget:340},
+  {group:"Superlaser", actual:260,  budget:250},
+];
+
+const W=820,H=440,margin={top:20,right:20,bottom:46,left:56};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const x0=d3.scaleBand().domain(data.map(d=>d.group)).range([0,innerW]).padding(0.2);
+const x1=d3.scaleBand().domain(keys).range([0,x0.bandwidth()]).padding(0.08);
+const y=d3.scaleLinear().domain([0,d3.max(data,d=>Math.max(d.actual,d.budget))]).nice().range([innerH,0]);
+
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x0));
+g.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+"M"));
+
+g.selectAll("g.grp").data(data).join("g").attr("class","grp")
+  .attr("transform",d=>`translate(${x0(d.group)},0)`)
+  .selectAll("rect")
+  .data(d=>keys.map(k=>({key:k,value:d[k]}))).join("rect")
+  .attr("x",d=>x1(d.key)).attr("y",d=>y(d.value))
+  .attr("width",x1.bandwidth()).attr("height",d=>innerH-y(d.value))
+  .attr("fill",d=>colors[d.key]).attr("rx",2);
+
+const legend=svg.append("g").attr("class","legend").attr("transform",`translate(${margin.left},6)`);
+keys.forEach((k,i)=>{
+  const lx=i*90;
+  legend.append("rect").attr("x",lx).attr("y",0).attr("width",11).attr("height",11).attr("rx",2).attr("fill",colors[k]);
+  legend.append("text").attr("x",lx+16).attr("y",9).text(k);
+});
+</script>
+</body>
+</html>

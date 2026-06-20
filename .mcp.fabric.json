@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "fabric-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@microsoft/fabric-mcp@latest",
+        "server",
+        "start",
+        "--mode",
+        "all"
+      ],
+      "env": {
+        "NODE_OPTIONS": "--use-system-ca"
+      }
+    }
+  }
+}

@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "cardsubsidy0000000a06",
   "position": {
-    "x": 1040,
-    "y": 60,
+    "x": 1560,
+    "y": 90,
     "z": 5,
-    "height": 100,
-    "width": 220
+    "height": 150,
+    "width": 330
   },
   "visual": {
     "visualType": "card",

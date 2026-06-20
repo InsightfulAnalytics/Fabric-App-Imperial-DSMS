@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "barexpdivision0000a08",
   "position": {
-    "x": 820,
-    "y": 180,
+    "x": 1230,
+    "y": 270,
     "z": 7,
-    "height": 260,
-    "width": 440
+    "height": 390,
+    "width": 660
   },
   "visual": {
     "visualType": "clusteredBarChart",

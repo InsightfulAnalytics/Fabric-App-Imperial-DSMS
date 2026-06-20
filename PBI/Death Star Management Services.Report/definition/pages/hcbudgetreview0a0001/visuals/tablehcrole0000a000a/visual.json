@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "tablehcrole0000a000a",
   "position": {
-    "x": 19.701492537313431,
-    "y": 437.910447761194,
+    "x": 29.55,
+    "y": 656.87,
     "z": 9,
-    "height": 274.92537313432837,
-    "width": 1240.2985074626865
+    "height": 412.39,
+    "width": 1860.45
   },
   "visual": {
     "visualType": "tableEx",

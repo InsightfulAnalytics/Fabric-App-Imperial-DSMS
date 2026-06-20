@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radar chart · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(640px,96vw)}
+svg{width:100%;height:auto;display:block}
+.axis-line{stroke:var(--line)}
+.ring{fill:none;stroke:var(--line);stroke-opacity:.6}
+.axis-label{fill:var(--muted);font-size:11px}
+.legend text{fill:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Radar / spider chart</h1>
+  <p class="sub">Readiness profile across dimensions · two series compared</p>
+  <svg id="chart" viewBox="0 0 600 600"></svg>
+</div>
+<script>
+const axes=["Firepower","Shields","Speed","Crew","Sensors","Supply"];
+const series=[
+  {name:"Devastator",color:"var(--c1)",values:[90,80,40,70,85,60]},
+  {name:"Avenger",   color:"var(--c5)",values:[70,60,75,55,65,80]},
+];
+const maxV=100;
+
+const W=600,H=600,R=Math.min(W,H)/2-70;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${W/2},${H/2})`);
+const n=axes.length;
+const angle=i=>(Math.PI*2*i/n)-Math.PI/2;
+const r=d3.scaleLinear().domain([0,maxV]).range([0,R]);
+
+// rings
+[0.25,0.5,0.75,1].forEach(t=>g.append("circle").attr("class","ring").attr("r",R*t));
+// axes + labels
+axes.forEach((a,i)=>{
+  const x=Math.cos(angle(i))*R,y=Math.sin(angle(i))*R;
+  g.append("line").attr("class","axis-line").attr("x1",0).attr("y1",0).attr("x2",x).attr("y2",y);
+  g.append("text").attr("class","axis-label").attr("x",Math.cos(angle(i))*(R+16)).attr("y",Math.sin(angle(i))*(R+16))
+    .attr("text-anchor","middle").attr("dy","0.35em").text(a);
+});
+
+const line=d3.lineRadial().angle((d,i)=>angle(i)+Math.PI/2).radius(d=>r(d)).curve(d3.curveLinearClosed);
+series.forEach(s=>{
+  g.append("path").datum(s.values).attr("d",line).attr("fill",s.color).attr("fill-opacity",0.18)
+    .attr("stroke",s.color).attr("stroke-width",2);
+  s.values.forEach((v,i)=>g.append("circle").attr("cx",Math.cos(angle(i))*r(v)).attr("cy",Math.sin(angle(i))*r(v)).attr("r",3).attr("fill",s.color));
+});
+
+const legend=svg.append("g").attr("class","legend").attr("transform","translate(20,20)");
+series.forEach((s,i)=>{legend.append("rect").attr("x",0).attr("y",i*18).attr("width",11).attr("height",11).attr("rx",2).attr("fill",s.color);
+  legend.append("text").attr("x",16).attr("y",i*18+9).text(s.name);});
+</script>
+</body>
+</html>

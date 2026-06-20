@@ -470,6 +470,332 @@ table 'Measure Table'
 		displayFolder: Headcount\Budget vs Actual
 		lineageTag: d1000000-0000-0000-0000-000000000036
 
+	measure Engagements = COUNTROWS ( FactEngagement )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000001
+
+	measure 'Active Engagements' = CALCULATE ( COUNTROWS ( FactEngagement ), FactEngagement[Status] = "Active" )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000002
+
+	measure 'Planned Engagements' = CALCULATE ( COUNTROWS ( FactEngagement ), FactEngagement[Status] = "Planned" )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000003
+
+	measure 'Engagements Won' = CALCULATE ( COUNTROWS ( FactEngagement ), FactEngagement[Status] = "Won" )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000004
+
+	measure 'Engagements Lost' = CALCULATE ( COUNTROWS ( FactEngagement ), FactEngagement[Status] = "Lost" )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000005
+
+	/// Win rate over decided engagements only (Won / (Won + Lost)).
+	measure 'Win Rate %' = DIVIDE ( [Engagements Won], [Engagements Won] + [Engagements Lost] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000006
+
+	measure 'Friendly Losses' = SUM ( FactEngagement[FriendlyLosses] )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000007
+
+	measure 'Enemy Losses' = SUM ( FactEngagement[EnemyLosses] )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000008
+
+	/// Enemy losses inflicted per friendly loss sustained. Higher is better.
+	measure 'Combat Exchange Ratio' = DIVIDE ( [Enemy Losses], [Friendly Losses] )
+		formatString: #,0.0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-000000000009
+
+	measure 'Friendly Craft Lost' = SUM ( FactEngagement[FriendlyCraftLost] )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-00000000000a
+
+	measure 'Enemy Craft Destroyed' = SUM ( FactEngagement[EnemyCraftLost] )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-00000000000b
+
+	measure 'Ordnance Expended' = SUM ( FactEngagement[OrdnanceExpended] )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-00000000000c
+
+	measure 'Superlaser Strikes' = CALCULATE ( COUNTROWS ( FactEngagement ), FactEngagement[SuperlaserStrike] = "Yes" )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-00000000000d
+
+	measure 'Planets Destroyed' = CALCULATE ( COUNTROWS ( FactEngagement ), FactEngagement[PlanetDestroyed] = "Yes" )
+		formatString: #,0
+		displayFolder: Operations Command\Engagements
+		lineageTag: d2000000-0000-0000-0000-00000000000e
+
+	measure 'Station Attacks' = COUNTROWS ( FactStationAttack )
+		formatString: #,0
+		displayFolder: Operations Command\Station Defense
+		lineageTag: d2000000-0000-0000-0000-00000000000f
+
+	measure 'Attacks Repelled' = CALCULATE ( COUNTROWS ( FactStationAttack ), FactStationAttack[Repelled] = "Yes" )
+		formatString: #,0
+		displayFolder: Operations Command\Station Defense
+		lineageTag: d2000000-0000-0000-0000-000000000010
+
+	measure 'Attacks Repelled %' = DIVIDE ( [Attacks Repelled], [Station Attacks] )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Operations Command\Station Defense
+		lineageTag: d2000000-0000-0000-0000-000000000011
+
+	measure 'Hull Breaches' = CALCULATE ( COUNTROWS ( FactStationAttack ), FactStationAttack[HullBreach] = "Yes" )
+		formatString: #,0
+		displayFolder: Operations Command\Station Defense
+		lineageTag: d2000000-0000-0000-0000-000000000012
+
+	measure 'Attack Casualties' = SUM ( FactStationAttack[Casualties] )
+		formatString: #,0
+		displayFolder: Operations Command\Station Defense
+		lineageTag: d2000000-0000-0000-0000-000000000013
+
+	/// Days between the most recent attack and the end of the current period.
+	measure 'Days Since Last Attack' =
+			VAR MaxDate = MAX ( DimDate[Date] )
+			VAR LastAttackDate = CALCULATE ( MAX ( DimDate[Date] ), FactStationAttack )
+			RETURN DATEDIFF ( LastAttackDate, MaxDate, DAY )
+		formatString: #,0
+		displayFolder: Operations Command\Station Defense
+		lineageTag: d2000000-0000-0000-0000-000000000014
+
+	/// Readiness condition as at the latest snapshot in the current context.
+	measure 'Current Readiness Condition' =
+			VAR LastSnap = CALCULATE ( MAX ( FactReadiness[SnapshotDateKey] ), ALLSELECTED ( DimDate ) )
+			VAR Cond = CALCULATE ( MAX ( FactReadiness[ConditionKey] ), FactReadiness[SnapshotDateKey] = LastSnap )
+			RETURN LOOKUPVALUE ( DimReadinessCondition[Condition], DimReadinessCondition[ConditionKey], Cond )
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-000000000015
+
+	measure 'Current Threat Index' =
+			VAR LastSnap = CALCULATE ( MAX ( FactReadiness[SnapshotDateKey] ), ALLSELECTED ( DimDate ) )
+			RETURN CALCULATE ( MAX ( FactReadiness[ThreatIndex] ), FactReadiness[SnapshotDateKey] = LastSnap )
+		formatString: 0.0
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-000000000016
+
+	measure 'Superlaser Charge %' =
+			VAR LastSnap = CALCULATE ( MAX ( FactReadiness[SnapshotDateKey] ), ALLSELECTED ( DimDate ) )
+			VAR Charge = CALCULATE ( MAX ( FactReadiness[SuperlaserChargePct] ), FactReadiness[SnapshotDateKey] = LastSnap )
+			RETURN DIVIDE ( Charge, 100 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-000000000017
+
+	measure 'Shield Integrity %' =
+			VAR LastSnap = CALCULATE ( MAX ( FactReadiness[SnapshotDateKey] ), ALLSELECTED ( DimDate ) )
+			VAR Shield = CALCULATE ( MAX ( FactReadiness[ShieldIntegrityPct] ), FactReadiness[SnapshotDateKey] = LastSnap )
+			RETURN DIVIDE ( Shield, 100 )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-000000000018
+
+	/// Operational TIE squadrons as a share of total, at the latest snapshot.
+	measure 'TIE Squadron Readiness %' =
+			VAR LastSnap = CALCULATE ( MAX ( FactReadiness[SnapshotDateKey] ), ALLSELECTED ( DimDate ) )
+			VAR Op = CALCULATE ( MAX ( FactReadiness[TIESquadronsOperational] ), FactReadiness[SnapshotDateKey] = LastSnap )
+			VAR Tot = CALCULATE ( MAX ( FactReadiness[TIESquadronsTotal] ), FactReadiness[SnapshotDateKey] = LastSnap )
+			RETURN DIVIDE ( Op, Tot )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-000000000019
+
+	measure 'Sorties Flown' = SUM ( FactReadiness[SortiesFlown] )
+		formatString: #,0
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-00000000001a
+
+	measure 'Avg Threat Index' = AVERAGE ( FactReadiness[ThreatIndex] )
+		formatString: 0.0
+		displayFolder: Operations Command\Readiness
+		lineageTag: d2000000-0000-0000-0000-00000000001b
+
+	/// NARRATIVE & RISK pack (lineage d3000000-*) — surfaces the rise-and-fall arc
+	/// climaxing at the Battle of Yavin (last day in the model, 31 Dec 2024).
+	/// Countdown (in days) from the as-of date to the Battle of Yavin.
+	/// Use as a narrative KPI or a reference line on time charts.
+	measure 'Days to Battle of Yavin' =
+			VAR YavinDate = DATE ( 2024, 12, 31 )
+			VAR AsOf = MAX ( 'DimDate'[Date] )
+			RETURN DATEDIFF ( AsOf, YavinDate, DAY )
+		formatString: #,0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000001
+
+	/// Spend on the Engineering & Power division (reactor core, hypermatter
+	/// fuel, power, structural). This is the system that holds the fatal flaw.
+	measure 'Reactor Complex Spend' = CALCULATE ( [Total Expenses], DimDepartment[DivisionGroup] = "Engineering & Power" )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000002
+
+	/// Reactor-complex spend as a share of ALL department spend.
+	/// ~50% over the six years — half the budget on the thing that explodes.
+	measure 'Reactor Complex Spend %' = DIVIDE ( [Reactor Complex Spend], CALCULATE ( [Total Expenses], ALL ( DimDepartment ) ) )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000003
+
+	/// Maintenance downtime concentrated on the critical Engineering & Power systems.
+	measure 'Reactor Complex Downtime Hrs' = CALCULATE ( [Total Downtime Hrs], DimDepartment[DivisionGroup] = "Engineering & Power" )
+		formatString: #,0.0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000004
+
+	/// Average monthly headcount (heads, not head-months). Use as the denominator
+	/// for per-capita measures so a year doesn't sum 12 monthly snapshots.
+	measure 'Avg Monthly Headcount' = AVERAGEX ( VALUES ( 'DimDate'[Start Of Month] ), [Total Headcount] )
+		formatString: #,0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000005
+
+	/// Total expenses per active trooper. Roughly doubled 5 BBY -> 0 BBY
+	/// (~$0.8Bn -> ~$1.6Bn) as the station became capital-, not labour-, intensive.
+	measure 'Cost per Trooper' = DIVIDE ( [Total Expenses], [Avg Monthly Headcount] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000006
+
+	/// "Enemy losses" inflicted by superlaser strikes — i.e. the civilian toll
+	/// (Alderaan ~2.0bn). Isolates the propaganda figure from tactical combat,
+	/// so the standard [Combat Exchange Ratio] can be read honestly.
+	measure 'Superlaser Civilian Toll' = CALCULATE ( [Enemy Losses], FactEngagement[SuperlaserStrike] = "Yes" )
+		formatString: #,0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000007
+
+	/// Repel rate on CRITICAL-severity attacks only. The cracks hide here:
+	/// every non-repelled attack in the record was Critical severity.
+	measure 'Critical Attacks Repelled %' =
+			DIVIDE (
+			    CALCULATE ( [Attacks Repelled], FactStationAttack[Severity] = "Critical" ),
+			    CALCULATE ( [Station Attacks], FactStationAttack[Severity] = "Critical" )
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000008
+
+	/// Attacks that were NOT repelled. 126/127 were stopped; the one that
+	/// wasn't is the only one that mattered (Battle of Yavin).
+	measure 'Attacks Breached' = [Station Attacks] - [Attacks Repelled]
+		formatString: #,0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-000000000009
+
+	/// Year-over-year change in the average threat index. Positive = escalating.
+	measure 'Threat Index YoY Change' =
+			VAR Curr = [Avg Threat Index]
+			VAR Prior = CALCULATE ( [Avg Threat Index], DATEADD ( 'DimDate'[Date], -1, YEAR ) )
+			RETURN Curr - Prior
+		formatString: +0.0;-0.0;0.0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-00000000000a
+
+	/// Exchange ratio EXCLUDING superlaser strikes — the honest tactical figure.
+	/// Pair with [Combat Exchange Ratio] (which Alderaan inflates to ~1,126:1) via the
+	/// 'Exchange Ratio View' field parameter. NOTE: still outlier-sensitive in 0 BBY,
+	/// where the station's own destruction (1.7M friendly losses) drags it down — that
+	/// collapse is itself the story; filter to earlier years to see the steady ~2.5:1.
+	measure 'Combat Exchange Ratio (Tactical)' =
+			DIVIDE (
+			    CALCULATE ( [Enemy Losses], FactEngagement[SuperlaserStrike] = "No" ),
+			    CALCULATE ( [Friendly Losses], FactEngagement[SuperlaserStrike] = "No" )
+			)
+		formatString: #,0.0
+		displayFolder: Narrative & Risk
+		lineageTag: d3000000-0000-0000-0000-00000000000b
+
+	/// Pareto cumulative share of expenses, descending by department spend.
+	/// Put on a line over a value-sorted [Total Expenses] bar to make an 80/20 chart.
+	measure 'Cumulative Expense %' =
+			VAR CurrentExpense = [Total Expenses]
+			VAR DeptExpense =
+			    CALCULATETABLE (
+			        ADDCOLUMNS ( VALUES ( DimDepartment[Department] ), "@e", [Total Expenses] ),
+			        ALLSELECTED ( DimDepartment )
+			    )
+			VAR RunningTotal = SUMX ( FILTER ( DeptExpense, [@e] >= CurrentExpense ), [@e] )
+			VAR GrandTotal = SUMX ( DeptExpense, [@e] )
+			RETURN DIVIDE ( RunningTotal, GrandTotal )
+		formatString: 0.0%;-0.0%;0.0%
+		displayFolder: Financials\Actuals
+		lineageTag: d3000000-0000-0000-0000-00000000000c
+
+	/// Hex colour for the current readiness condition (Green/Blue/Yellow/Red/Black)
+	/// at the latest snapshot. Use as a "by field value" conditional-format colour on
+	/// the threat card / line so the posture band is visible at a glance.
+	measure 'Threat Alert Color' =
+			VAR LastSnap = CALCULATE ( MAX ( FactReadiness[SnapshotDateKey] ), ALLSELECTED ( DimDate ) )
+			VAR Cond = CALCULATE ( MAX ( FactReadiness[ConditionKey] ), FactReadiness[SnapshotDateKey] = LastSnap )
+			VAR Color = LOOKUPVALUE ( DimReadinessCondition[AlertColor], DimReadinessCondition[ConditionKey], Cond )
+			RETURN
+			    SWITCH (
+			        Color,
+			        "Green", "#1E7C36",
+			        "Blue", "#1F4E8C",
+			        "Yellow", "#E0A400",
+			        "Red", "#C62F2F",
+			        "Black", "#1A1A1A",
+			        "#999999"
+			    )
+		displayFolder: Operations Command\Readiness
+		lineageTag: d3000000-0000-0000-0000-00000000000d
+
+	/// Monthly net cash: subsidy in minus expenses out. Negative = the station
+	/// spent more than the Empire funded that period.
+	measure 'Net Cash Flow' = [Total Income] - [Total Expenses]
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Financials\Cash
+		lineageTag: d3000000-0000-0000-0000-00000000000e
+
+	/// Running cash position. Goes NEGATIVE after an attack because repair spend
+	/// hits now but the Empire's funding increase only arrives ~2 months later
+	/// (the funding-application delay) — the station borrows to bridge the gap.
+	measure 'Cumulative Cash Position' =
+			VAR MaxDate = MAX ( 'DimDate'[Date] )
+			RETURN
+			    CALCULATE (
+			        [Net Cash Flow],
+			        FILTER ( ALLSELECTED ( 'DimDate' ), 'DimDate'[Date] <= MaxDate )
+			    )
+		formatString: \$#,0;(\$#,0);\$#,0
+		displayFolder: Financials\Cash
+		lineageTag: d3000000-0000-0000-0000-00000000000f
+
+	/// Days the cash position has been underwater in the selected period — the
+	/// metric Command wants to drive down by shortening the funding-application lag.
+	measure 'Months Cash Negative' =
+			SUMX (
+			    VALUES ( 'DimDate'[Start Of Month] ),
+			    VAR EoM = CALCULATE ( MAX ( 'DimDate'[Date] ) )
+			    VAR Cash =
+			        CALCULATE (
+			            [Net Cash Flow],
+			            FILTER ( ALLSELECTED ( 'DimDate' ), 'DimDate'[Date] <= EoM )
+			        )
+			    RETURN IF ( Cash < 0, 1, 0 )
+			)
+		formatString: #,0
+		displayFolder: Financials\Cash
+		lineageTag: d3000000-0000-0000-0000-000000000010
+
 	column Column1
 		dataType: string
 		isHidden

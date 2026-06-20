@@ -5,8 +5,8 @@
     "x": 0,
     "y": 0,
     "z": 0,
-    "height": 50,
-    "width": 1280
+    "height": 75,
+    "width": 1920
   },
   "visual": {
     "visualType": "textbox",
@@ -20,7 +20,7 @@
                   {
                     "value": "Death Star Management Services — Executive Dashboard",
                     "textStyle": {
-                      "fontSize": "20pt",
+                      "fontSize": "30pt",
                       "fontWeight": "bold",
                       "color": "#1F4E79"
                     }

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "titleinsight0a0001",
+  "position": {
+    "x": 30,
+    "y": 18,
+    "z": 0,
+    "height": 60,
+    "width": 1350
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Insight Watch — Cause, Effect & the Tail Risk",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "27pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

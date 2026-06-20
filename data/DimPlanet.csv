@@ -1,0 +1,17 @@
+PlanetKey,Planet,System,Region,Allegiance,StrategicValue,PopulationMillions
+0,Deep Space / Patrol Zone,-,-,-,-,0
+1,Despayre,Horuz,Outer Rim,Imperial,Critical,2
+2,Jedha,NaJedha,Mid Rim,Contested,High,90
+3,Scarif,Abrion,Outer Rim,Imperial,Critical,5
+4,Alderaan,Alderaan,Core Worlds,Rebel-Aligned,Critical,2000
+5,Yavin IV,Yavin,Outer Rim,Rebel Stronghold,Critical,1
+6,Dantooine,Raioballo,Outer Rim,Rebel-Aligned,Medium,1
+7,Lothal,Lothal,Outer Rim,Contested,Medium,40
+8,Ryloth,Ryloth,Outer Rim,Contested,Medium,1500
+9,Mon Cala,Mon Cala,Outer Rim,Rebel-Aligned,High,27000
+10,Corellia,Corellian,Core Worlds,Contested,High,3000
+11,Kessel,Kessel,Outer Rim,Neutral,Medium,500
+12,Ord Mantell,Bright Jewel,Mid Rim,Neutral,Low,1200
+13,Tatooine,Tatoo,Outer Rim,Neutral,Low,200
+14,Geonosis,Geonosis,Outer Rim,Imperial,High,100
+15,Mustafar,Mustafar,Outer Rim,Imperial,Medium,20

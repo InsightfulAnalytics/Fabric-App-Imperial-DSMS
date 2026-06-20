@@ -1,14 +1,12 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/pagesMetadata/1.1.0/schema.json",
   "pageOrder": [
+    "opscommandwar00a0001",
+    "insightwatch0a0001",
     "budgetreview000a0001",
     "hcbudgetreview0a0001",
     "e1c2d3f4a5b6c7d8e9f0",
-    "c0f6533eab82d87a570c",
-    "7ccfdf69590a4d096068",
-    "728e6bbbc0c29a72e422",
-    "50a0d72ee380380562ed",
-    "8bf21ce1217ece3a4d7b"
+    "728e6bbbc0c29a72e422"
   ],
-  "activePageName": "c0f6533eab82d87a570c"
+  "activePageName": "opscommandwar00a0001"
 }

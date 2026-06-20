@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "barwosbypriority00a09",
   "position": {
-    "x": 20,
-    "y": 460,
+    "x": 30,
+    "y": 690,
     "z": 8,
-    "height": 240,
-    "width": 620
+    "height": 360,
+    "width": 930
   },
   "visual": {
     "visualType": "clusteredColumnChart",

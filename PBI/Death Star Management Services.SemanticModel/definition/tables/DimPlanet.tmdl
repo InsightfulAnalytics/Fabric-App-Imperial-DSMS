@@ -1,0 +1,85 @@
+table DimPlanet
+	lineageTag: a2000002-0000-0000-0000-000000000001
+
+	column PlanetKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a2000002-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: PlanetKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Planet
+		dataType: string
+		lineageTag: a2000002-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: Planet
+
+		annotation SummarizationSetBy = Automatic
+
+	column System
+		dataType: string
+		lineageTag: a2000002-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: System
+
+		annotation SummarizationSetBy = Automatic
+
+	column Region
+		dataType: string
+		lineageTag: a2000002-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: Region
+
+		annotation SummarizationSetBy = Automatic
+
+	column Allegiance
+		dataType: string
+		lineageTag: a2000002-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: Allegiance
+
+		annotation SummarizationSetBy = Automatic
+
+	column StrategicValue
+		dataType: string
+		lineageTag: a2000002-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: StrategicValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column PopulationMillions
+		dataType: int64
+		formatString: #,0
+		lineageTag: a2000002-0000-0000-0000-000000000008
+		summarizeBy: sum
+		sourceColumn: PopulationMillions
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimPlanet = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\DimPlanet.csv"), [Delimiter=",", Columns=7, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"PlanetKey", Int64.Type},
+				        {"Planet", type text},
+				        {"System", type text},
+				        {"Region", type text},
+				        {"Allegiance", type text},
+				        {"StrategicValue", type text},
+				        {"PopulationMillions", Int64.Type}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

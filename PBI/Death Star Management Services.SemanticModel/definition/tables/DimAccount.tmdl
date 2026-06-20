@@ -57,7 +57,7 @@ table DimAccount
 		queryGroup: Model
 		source =
 				let
-				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\DimAccount.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\DimAccount.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
 				        {"AccountKey", Int64.Type},

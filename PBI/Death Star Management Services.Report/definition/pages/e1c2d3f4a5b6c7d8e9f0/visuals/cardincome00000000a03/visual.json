@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "cardincome00000000a03",
   "position": {
-    "x": 320,
-    "y": 60,
+    "x": 480,
+    "y": 90,
     "z": 2,
-    "height": 100,
-    "width": 220
+    "height": 150,
+    "width": 330
   },
   "visual": {
     "visualType": "card",

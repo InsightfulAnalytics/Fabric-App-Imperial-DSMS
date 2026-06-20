@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "tablebudget000000a0001",
   "position": {
-    "x": 25.970149253731343,
-    "y": 123.5820895522388,
+    "x": 38.96,
+    "y": 185.37,
     "z": 1,
-    "height": 540,
-    "width": 1240.2985074626865
+    "height": 810,
+    "width": 1860.45
   },
   "visual": {
     "visualType": "tableEx",

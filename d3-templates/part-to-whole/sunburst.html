@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sunburst · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(640px,96vw)}
+svg{width:100%;height:auto;display:block}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Sunburst diagram</h1>
+  <p class="sub">Radial hierarchy · rings = depth, angle = value</p>
+  <svg id="chart" viewBox="0 0 600 600"></svg>
+</div>
+<script>
+const data={name:"DSMS",children:[
+  {name:"Operations",children:[{name:"Garrison",value:1240},{name:"Detention",value:120},{name:"Logistics",value:340}]},
+  {name:"Weapons",children:[{name:"Turbolasers",value:560},{name:"Ion Cannon",value:300},{name:"Superlaser",value:260}]},
+  {name:"Flight",children:[{name:"TIE Ops",value:480},{name:"Hangar",value:210}]},
+]};
+
+const W=600,H=600,radius=Math.min(W,H)/2;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${W/2},${H/2})`);
+
+const root=d3.hierarchy(data).sum(d=>d.value).sort((a,b)=>b.value-a.value);
+d3.partition().size([2*Math.PI,radius])(root);
+
+const color=d3.scaleOrdinal().domain(["Operations","Weapons","Flight"]).range(["var(--c2)","var(--c1)","var(--c5)"]);
+const arc=d3.arc().startAngle(d=>d.x0).endAngle(d=>d.x1).innerRadius(d=>d.y0).outerRadius(d=>d.y1).padAngle(0.005);
+
+g.selectAll("path").data(root.descendants().filter(d=>d.depth)).join("path")
+  .attr("d",arc)
+  .attr("fill",d=>{let n=d;while(n.depth>1)n=n.parent;return color(n.data.name);})
+  .attr("fill-opacity",d=>d.depth===1?0.95:0.6)
+  .attr("stroke","var(--bg)").attr("stroke-width",1)
+  .append("title").text(d=>`${d.data.name}: ${d.value}M`);
+</script>
+</body>
+</html>

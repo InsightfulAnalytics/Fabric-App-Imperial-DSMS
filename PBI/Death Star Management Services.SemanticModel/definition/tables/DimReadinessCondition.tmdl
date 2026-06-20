@@ -1,0 +1,78 @@
+table DimReadinessCondition
+	lineageTag: a2000004-0000-0000-0000-000000000001
+
+	column ConditionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a2000004-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: ConditionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Condition
+		dataType: string
+		lineageTag: a2000004-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: Condition
+		sortByColumn: SeverityRank
+
+		annotation SummarizationSetBy = Automatic
+
+	column Posture
+		dataType: string
+		lineageTag: a2000004-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: Posture
+		sortByColumn: SeverityRank
+
+		annotation SummarizationSetBy = Automatic
+
+	column AlertColor
+		dataType: string
+		lineageTag: a2000004-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: AlertColor
+
+		annotation SummarizationSetBy = Automatic
+
+	column SeverityRank
+		dataType: int64
+		formatString: 0
+		lineageTag: a2000004-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: SeverityRank
+
+		annotation SummarizationSetBy = Automatic
+
+	column Description
+		dataType: string
+		lineageTag: a2000004-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: Description
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DimReadinessCondition = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\DimReadinessCondition.csv"), [Delimiter=",", Columns=6, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"ConditionKey", Int64.Type},
+				        {"Condition", type text},
+				        {"Posture", type text},
+				        {"AlertColor", type text},
+				        {"SeverityRank", Int64.Type},
+				        {"Description", type text}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

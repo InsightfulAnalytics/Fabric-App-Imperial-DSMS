@@ -74,3 +74,39 @@ relationship c1000000-0000-0000-0000-000000000014
 	fromColumn: FactBudgetHeadcount.RoleKey
 	toColumn: DimRole.RoleKey
 
+relationship c2000000-0000-0000-0000-000000000001
+	fromColumn: FactEngagement.EventDateKey
+	toColumn: DimDate.DateInt
+
+relationship c2000000-0000-0000-0000-000000000002
+	fromColumn: FactEngagement.DepartmentKey
+	toColumn: DimDepartment.DepartmentKey
+
+relationship c2000000-0000-0000-0000-000000000003
+	fromColumn: FactEngagement.PlanetKey
+	toColumn: DimPlanet.PlanetKey
+
+relationship c2000000-0000-0000-0000-000000000004
+	fromColumn: FactEngagement.FactionKey
+	toColumn: DimEnemyFaction.FactionKey
+
+relationship c2000000-0000-0000-0000-000000000005
+	fromColumn: FactEngagement.EngagementTypeKey
+	toColumn: DimEngagementType.EngagementTypeKey
+
+relationship c2000000-0000-0000-0000-000000000006
+	fromColumn: FactStationAttack.DateKey
+	toColumn: DimDate.DateInt
+
+relationship c2000000-0000-0000-0000-000000000007
+	fromColumn: FactStationAttack.FactionKey
+	toColumn: DimEnemyFaction.FactionKey
+
+relationship c2000000-0000-0000-0000-000000000008
+	fromColumn: FactReadiness.SnapshotDateKey
+	toColumn: DimDate.DateInt
+
+relationship c2000000-0000-0000-0000-000000000009
+	fromColumn: FactReadiness.ConditionKey
+	toColumn: DimReadinessCondition.ConditionKey
+

@@ -16,7 +16,7 @@ queryGroup Model
 
 annotation __PBI_TimeIntelligenceEnabled = 0
 
-annotation PBI_QueryOrder = ["DimDate","DimAccount","DimDepartment","DimVendor","DimItem","DimLocation","DimRole","FactLedger","FactInventory","FactHeadcount","FactMaintenance","FactBudget","Measure Table","Year_Variable","TodayDate","FunctionDateTable","FactBudgetHeadcount"]
+annotation PBI_QueryOrder = ["DimDate","DimAccount","DimDepartment","DimVendor","DimItem","DimLocation","DimRole","FactLedger","FactInventory","FactHeadcount","FactMaintenance","FactBudget","Measure Table","Year_Variable","TodayDate","FunctionDateTable","FactBudgetHeadcount","DimEnemyFaction","DimPlanet","DimEngagementType","DimReadinessCondition","FactEngagement","FactStationAttack","FactReadiness"]
 
 annotation __TEdtr = 1
 
@@ -36,6 +36,14 @@ ref table FactHeadcount
 ref table FactMaintenance
 ref table FactBudget
 ref table FactBudgetHeadcount
+ref table DimEnemyFaction
+ref table DimPlanet
+ref table DimEngagementType
+ref table DimReadinessCondition
+ref table FactEngagement
+ref table FactStationAttack
+ref table FactReadiness
+ref table 'Exchange Ratio View'
 
 ref cultureInfo en-AU
 

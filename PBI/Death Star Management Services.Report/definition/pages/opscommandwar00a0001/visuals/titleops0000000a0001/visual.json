@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "titleops0000000a0001",
+  "position": {
+    "x": 29.55,
+    "y": 8.06,
+    "z": 0,
+    "height": 69.85,
+    "width": 1140.45
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Operations Command — Battle Watch",
+                    "textStyle": {
+                      "fontWeight": "bold",
+                      "fontSize": "27pt"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

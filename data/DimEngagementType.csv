@@ -1,0 +1,11 @@
+EngagementTypeKey,EngagementType,Domain,IntensityWeight,IsSuperlaser
+1,Patrol / Picket,Patrol,1,No
+2,Reconnaissance,Patrol,1,No
+3,Fighter Sweep,Offensive,2,No
+4,Interdiction,Offensive,2,No
+5,Blockade,Defensive,2,No
+6,Boarding Action,Offensive,3,No
+7,Orbital Bombardment,Offensive,4,No
+8,Planetary Assault,Offensive,4,No
+9,Superlaser Test Fire,Test,5,Yes
+10,Superlaser Strike,Offensive,5,Yes

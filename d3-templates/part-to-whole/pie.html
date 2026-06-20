@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pie chart · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(640px,96vw)}
+svg{width:100%;height:auto;display:block}
+.slice-label{fill:#fff;font-size:11px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Pie chart</h1>
+  <p class="sub">Budget share by division · part-to-whole</p>
+  <svg id="chart" viewBox="0 0 640 420"></svg>
+</div>
+<script>
+const data=[
+  {name:"Garrison",value:1240},{name:"Turbolasers",value:560},{name:"TIE Ops",value:480},
+  {name:"Ion Cannon",value:300},{name:"Superlaser",value:260},{name:"Detention",value:120},
+];
+const palette=["var(--c2)","var(--c1)","var(--c3)","var(--c4)","var(--c5)","var(--c6)"];
+
+const W=640,H=420,radius=Math.min(W,H)/2-20;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${W/2},${H/2})`);
+const color=d3.scaleOrdinal().domain(data.map(d=>d.name)).range(palette);
+const pie=d3.pie().value(d=>d.value).sort(null);
+const arc=d3.arc().innerRadius(0).outerRadius(radius);
+const labelArc=d3.arc().innerRadius(radius*0.6).outerRadius(radius*0.6);
+
+const arcs=g.selectAll("g.slice").data(pie(data)).join("g").attr("class","slice");
+arcs.append("path").attr("d",arc).attr("fill",d=>color(d.data.name)).attr("stroke","var(--bg)").attr("stroke-width",2);
+arcs.append("text").attr("class","slice-label").attr("transform",d=>`translate(${labelArc.centroid(d)})`).attr("text-anchor","middle")
+  .text(d=>d.data.name);
+</script>
+</body>
+</html>

@@ -51,6 +51,8 @@ Star Wars/
 │   ├── HANDOFF-CONTEXT.md
 │   └── spec-templates/        # 7 annotated Vega-Lite templates
 ├── deneb-templates/           # 60 reference Deneb / Vega-Lite chart templates (community)
+├── d3-templates/              # 33 standalone D3 v7 reference charts (open index.html)
+├── .claude/skills/d3-viz/     # D3.js skill (patterns + references) for bespoke visuals
 ├── mockups/                   # Hand-authored .vl.json5 / .jsonc specs (preview before wiring)
 │   ├── .preview/              # Watcher output — compiled .vl.json files
 │   └── data/                  # Inline preview data
@@ -62,6 +64,8 @@ Star Wars/
 ├── AGENTS.md                  # Workflow + project conventions
 ├── CLAUDE.md                  # This file
 ├── LEARNINGS.md               # Hard-won gotchas from previous Fabric Apps
+├── TOOLING.md                 # Which tool for which semantic-model / DAX job
+├── CHARTING.md                # Which tool/skill for which chart (read before building visuals)
 └── README.md
 ```
 
@@ -75,6 +79,27 @@ Star Wars/
 4. **Confirm column names from CLI output.** Run `npx fabric-app-data query starwars --query '...'` and use exact column names as `columnMetadata` keys.
 5. **Always deploy after changes.** Run `npx rayfin up` after every set of changes.
 6. **Read [LEARNINGS.md](./LEARNINGS.md) before fighting Vega-Lite, the Fabric CLI, or DAX discovery** — many of the obvious-looking traps are documented there.
+7. **Read [TOOLING.md](./TOOLING.md) before semantic-model or DAX work** — which tool for which job (Modeling MCP vs `te`/data-goblin skills vs direct TMDL), and the PBIP authoring-mode gotcha. **Defaults when unspecified: target the local PBIP (`./PBI/`), not the live Fabric model; and author via direct TMDL text edit, not an engine round-trip.**
+8. **Read [CHARTING.md](./CHARTING.md) before building any chart/visual** — routes by surface (report vs Fabric App vs analysis) and need to the right skill/technique (Vega-Lite via `@microsoft/fabric-visuals` / hand-rolled SVG / Deneb / D3). **Default to Vega-Lite (app) or Deneb (reports); only use D3 (the `d3-viz` skill + `d3-templates/`) when Vega/Vega-Lite genuinely can't, and only after Tim confirms.**
+8. **Route analytics & visualization *method* questions through the Analytics library** (see below) — it governs *how* to analyse and *which chart*; Power BI tooling governs *how to build it here*.
+
+---
+
+## Analytics Library (method routing)
+
+A portable, tool-agnostic **analysis brain** lives at
+`B:\VS Code Files\Learning Resources\Analytics\`. It governs *how* to turn a table into
+correct, well-quantified insights and *which* visual proves them — independent of Power BI.
+
+**When the task is** profiling a dataset, choosing a statistical test/model, deciding a
+chart type, or synthesising findings into ranked insights → **read
+`B:\VS Code Files\Learning Resources\Analytics\CLAUDE.md` first** and follow its routing
+table. It points to four skills (`exploratory-data-analysis`, `statistical-method-selection`,
+`visualization-design`, `insight-synthesis`) plus `reference/` depth and `templates/`.
+
+The Analytics library stops at "I have a defensible, visualised insight." Wiring that
+insight into this repo (TMDL measures, DAX, Deneb/PBIR visuals, the Fabric App) is governed
+by [TOOLING.md](./TOOLING.md), [LEARNINGS.md](./LEARNINGS.md), and the Key Rules above.
 
 ---
 

@@ -119,7 +119,7 @@ table FactMaintenance
 		queryGroup: Model
 		source =
 				let
-				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Project\Star Wars\data\FactMaintenance.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\FactMaintenance.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    ReplaceBlankClosed = Table.ReplaceValue(PromoteHeaders, "", null, Replacer.ReplaceValue, {"ClosedDateKey"}),
 				    ChangeTypes = Table.TransformColumnTypes(ReplaceBlankClosed, {

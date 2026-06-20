@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Stacked bar · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.tick text{fill:var(--muted);font-size:11px}
+.domain,.tick line{stroke:var(--line)}
+.legend text{fill:var(--muted);font-size:11px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Stacked bar chart</h1>
+  <p class="sub">Expense mix by division · stacked components</p>
+  <svg id="chart" viewBox="0 0 820 440"></svg>
+</div>
+<script>
+const keys=["payroll","materiel","upkeep"];
+const palette=["var(--c2)","var(--c1)","var(--c5)"];
+const data=[
+  {group:"Garrison",   payroll:620,materiel:380,upkeep:240},
+  {group:"Turbolasers",payroll:210,materiel:240,upkeep:110},
+  {group:"TIE Ops",    payroll:180,materiel:220,upkeep:80},
+  {group:"Ion Cannon", payroll:120,materiel:120,upkeep:60},
+  {group:"Superlaser", payroll:110,materiel:100,upkeep:50},
+];
+
+const W=820,H=440,margin={top:20,right:20,bottom:46,left:56};
+const innerW=W-margin.left-margin.right, innerH=H-margin.top-margin.bottom;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${margin.left},${margin.top})`);
+
+const series=d3.stack().keys(keys)(data);
+const x=d3.scaleBand().domain(data.map(d=>d.group)).range([0,innerW]).padding(0.22);
+const y=d3.scaleLinear().domain([0,d3.max(series[series.length-1],d=>d[1])]).nice().range([innerH,0]);
+const color=d3.scaleOrdinal().domain(keys).range(palette);
+
+g.append("g").attr("transform",`translate(0,${innerH})`).call(d3.axisBottom(x));
+g.append("g").call(d3.axisLeft(y).ticks(5).tickFormat(d=>d+"M"));
+
+g.selectAll("g.layer").data(series).join("g").attr("class","layer")
+  .attr("fill",d=>color(d.key))
+  .selectAll("rect").data(d=>d).join("rect")
+  .attr("x",d=>x(d.data.group)).attr("y",d=>y(d[1]))
+  .attr("height",d=>y(d[0])-y(d[1])).attr("width",x.bandwidth());
+
+const legend=svg.append("g").attr("class","legend").attr("transform",`translate(${margin.left},6)`);
+keys.forEach((k,i)=>{
+  const lx=i*100;
+  legend.append("rect").attr("x",lx).attr("y",0).attr("width",11).attr("height",11).attr("rx",2).attr("fill",palette[i]);
+  legend.append("text").attr("x",lx+16).attr("y",9).text(k);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Calendar heatmap · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(900px,96vw)}
+svg{width:100%;height:auto;display:block}
+.mlabel{fill:var(--muted);font-size:10px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Calendar heatmap</h1>
+  <p class="sub">Daily activity over a year · GitHub-style day cells</p>
+  <svg id="chart" viewBox="0 0 900 160"></svg>
+</div>
+<script>
+const year=2024;
+const start=new Date(year,0,1), end=new Date(year,11,31);
+const days=d3.timeDays(start,d3.timeDay.offset(end,1));
+const data=days.map(d=>({date:d,value:Math.max(0,Math.round((Math.random()+Math.sin(d.getMonth())*0.3)*40))}));
+
+const cell=15, pad=28;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${pad},20)`);
+const color=d3.scaleSequential(d3.interpolateGreens).domain([0,d3.max(data,d=>d.value)]);
+
+const week=d=>d3.timeWeek.count(d3.timeYear(d),d);
+
+g.selectAll("rect").data(data).join("rect")
+  .attr("x",d=>week(d.date)*cell).attr("y",d=>d.date.getDay()*cell)
+  .attr("width",cell-2).attr("height",cell-2).attr("rx",2)
+  .attr("fill",d=>d.value?color(d.value):"var(--line)")
+  .append("title").text(d=>`${d3.timeFormat("%b %d")(d.date)}: ${d.value}`);
+
+// month labels
+d3.timeMonths(start,end).forEach(m=>{
+  g.append("text").attr("class","mlabel").attr("x",week(m)*cell).attr("y",-6).text(d3.timeFormat("%b")(m));
+});
+// day labels
+["Mon","Wed","Fri"].forEach((d,i)=>g.append("text").attr("class","mlabel").attr("x",-22).attr("y",(i*2+1)*cell+10).text(d));
+</script>
+</body>
+</html>

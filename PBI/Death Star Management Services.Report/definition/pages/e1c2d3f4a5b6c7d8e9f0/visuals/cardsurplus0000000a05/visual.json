@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
   "name": "cardsurplus0000000a05",
   "position": {
-    "x": 800,
-    "y": 60,
+    "x": 1200,
+    "y": 90,
     "z": 4,
-    "height": 100,
-    "width": 220
+    "height": 150,
+    "width": 330
   },
   "visual": {
     "visualType": "card",

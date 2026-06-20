@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Radial bar · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(640px,96vw)}
+svg{width:100%;height:auto;display:block}
+.lab{fill:var(--text);font-size:10px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Radial bar chart</h1>
+  <p class="sub">Division spend wrapped to a circle · angle = category, radius = value</p>
+  <svg id="chart" viewBox="0 0 600 600"></svg>
+</div>
+<script>
+const data=[
+  {name:"Garrison",value:1240},{name:"Turbolasers",value:560},{name:"TIE Ops",value:480},
+  {name:"Ion Cannon",value:300},{name:"Superlaser",value:260},{name:"Detention",value:120},
+  {name:"Logistics",value:340},{name:"Hangar",value:210},
+];
+
+const W=600,H=600,inner=70,outer=Math.min(W,H)/2-50;
+const svg=d3.select("#chart");
+const g=svg.append("g").attr("transform",`translate(${W/2},${H/2})`);
+
+const x=d3.scaleBand().domain(data.map(d=>d.name)).range([0,2*Math.PI]).padding(0.08);
+const y=d3.scaleRadial().domain([0,d3.max(data,d=>d.value)]).range([inner,outer]);
+
+const arc=d3.arc().innerRadius(inner).outerRadius(d=>y(d.value))
+  .startAngle(d=>x(d.name)).endAngle(d=>x(d.name)+x.bandwidth()).padAngle(0.02).padRadius(inner);
+
+g.selectAll("path").data(data).join("path").attr("d",arc).attr("fill","var(--c1)").attr("rx",2);
+
+g.selectAll(".lab").data(data).join("text").attr("class","lab")
+  .attr("text-anchor",d=>(x(d.name)+x.bandwidth()/2+Math.PI/2)%(2*Math.PI)<Math.PI?"end":"start")
+  .attr("transform",d=>{
+    const a=(x(d.name)+x.bandwidth()/2)*180/Math.PI-90;const r=y(d.value)+8;
+    return `rotate(${a}) translate(${r},0) ${(x(d.name)+x.bandwidth()/2+Math.PI/2)%(2*Math.PI)<Math.PI?"rotate(180)":""}`;
+  }).attr("dy","0.35em").text(d=>d.name);
+</script>
+</body>
+</html>

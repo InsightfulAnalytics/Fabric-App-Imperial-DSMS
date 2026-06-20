@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Treemap · D3</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--muted:#8b949e;
+--c1:#3b82f6;--c2:#1f4e8c;--c3:#60a5fa;--c4:#93c5fd;--c5:#ffc20e;--c6:#f59e0b;--pos:#1e7c36;--neg:#c62f2f;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto,sans-serif;display:flex;flex-direction:column;align-items:center;padding:24px}
+h1{font-size:15px;font-weight:600;margin:0 0 2px}
+p.sub{color:var(--muted);font-size:12px;margin:0 0 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;width:min(820px,96vw)}
+svg{width:100%;height:auto;display:block}
+.cell-name{fill:#fff;font-size:12px;font-weight:600}
+.cell-val{fill:rgba(255,255,255,.75);font-size:10px}
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>Treemap</h1>
+  <p class="sub">Hierarchical spend · area encodes value</p>
+  <svg id="chart" viewBox="0 0 820 480"></svg>
+</div>
+<script>
+const data={name:"DSMS",children:[
+  {name:"Operations",children:[{name:"Garrison",value:1240},{name:"Detention",value:120},{name:"Logistics",value:340}]},
+  {name:"Weapons",children:[{name:"Turbolasers",value:560},{name:"Ion Cannon",value:300},{name:"Superlaser",value:260}]},
+  {name:"Flight",children:[{name:"TIE Ops",value:480},{name:"Hangar",value:210},{name:"Repair",value:160}]},
+]};
+const palette={Operations:"var(--c2)",Weapons:"var(--c1)",Flight:"var(--c5)"};
+
+const W=820,H=480;
+const svg=d3.select("#chart");
+const root=d3.hierarchy(data).sum(d=>d.value).sort((a,b)=>b.value-a.value);
+d3.treemap().size([W,H]).paddingInner(2).paddingTop(0).round(true)(root);
+
+const cell=svg.selectAll("g").data(root.leaves()).join("g").attr("transform",d=>`translate(${d.x0},${d.y0})`);
+cell.append("rect").attr("width",d=>d.x1-d.x0).attr("height",d=>d.y1-d.y0)
+  .attr("fill",d=>palette[d.parent.data.name]).attr("fill-opacity",0.85).attr("stroke","var(--bg)").attr("stroke-width",1.5).attr("rx",2);
+cell.append("text").attr("class","cell-name").attr("x",6).attr("y",16).text(d=>d.data.name);
+cell.append("text").attr("class","cell-val").attr("x",6).attr("y",30).text(d=>d.value+"M");
+</script>
+</body>
+</html>

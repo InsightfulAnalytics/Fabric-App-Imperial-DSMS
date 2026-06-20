@@ -1,0 +1,135 @@
+table FactStationAttack
+	lineageTag: b2000002-0000-0000-0000-000000000001
+
+	column AttackID
+		dataType: string
+		isHidden
+		lineageTag: b2000002-0000-0000-0000-000000000002
+		summarizeBy: none
+		sourceColumn: AttackID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000002-0000-0000-0000-000000000003
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column FactionKey
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: b2000002-0000-0000-0000-000000000004
+		summarizeBy: none
+		sourceColumn: FactionKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column AttackSector
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-000000000005
+		summarizeBy: none
+		sourceColumn: AttackSector
+
+		annotation SummarizationSetBy = Automatic
+
+	column AttackType
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-000000000006
+		summarizeBy: none
+		sourceColumn: AttackType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Severity
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-000000000007
+		summarizeBy: none
+		sourceColumn: Severity
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShieldHeld
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-000000000008
+		summarizeBy: none
+		sourceColumn: ShieldHeld
+
+		annotation SummarizationSetBy = Automatic
+
+	column HullBreach
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-000000000009
+		summarizeBy: none
+		sourceColumn: HullBreach
+
+		annotation SummarizationSetBy = Automatic
+
+	column Casualties
+		dataType: int64
+		formatString: #,0
+		lineageTag: b2000002-0000-0000-0000-00000000000a
+		summarizeBy: sum
+		sourceColumn: Casualties
+
+		annotation SummarizationSetBy = Automatic
+
+	column Repelled
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-00000000000b
+		summarizeBy: none
+		sourceColumn: Repelled
+
+		annotation SummarizationSetBy = Automatic
+
+	column ThreatDurationHours
+		dataType: double
+		lineageTag: b2000002-0000-0000-0000-00000000000c
+		summarizeBy: sum
+		sourceColumn: ThreatDurationHours
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AttackName
+		dataType: string
+		lineageTag: b2000002-0000-0000-0000-00000000000d
+		summarizeBy: none
+		sourceColumn: AttackName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactStationAttack = m
+		mode: import
+		queryGroup: Model
+		source =
+				let
+				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\FactStationAttack.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
+				        {"AttackID", type text},
+				        {"DateKey", Int64.Type},
+				        {"FactionKey", Int64.Type},
+				        {"AttackSector", type text},
+				        {"AttackType", type text},
+				        {"Severity", type text},
+				        {"ShieldHeld", type text},
+				        {"HullBreach", type text},
+				        {"Casualties", Int64.Type},
+				        {"Repelled", type text},
+				        {"ThreatDurationHours", type number},
+				        {"AttackName", type text}
+				    })
+				in
+				    ChangeTypes
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
