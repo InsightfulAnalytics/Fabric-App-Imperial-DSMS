@@ -37,6 +37,10 @@ interface PageContext {
   filters: BriefingFilters;
   /** Whether the signed-in user may post budget adjustments. */
   canPost: boolean;
+  /** Cross-filter category currently selected within a page visual (shown in the top bar). */
+  crossFilter: string | null;
+  /** Report a cross-filter selection up to the shell (null clears it). */
+  onCrossFilter: (category: string | null) => void;
 }
 
 interface PageDef {
@@ -83,7 +87,9 @@ const PAGES: PageDef[] = [
       inside: ["Net Subsidy Balance", "Headcount Balance", "Variance Scatter", "Combat-Loss Replenishment"],
       metric: { label: "Net Surplus", value: "₡ 1.28B", tone: "positive" },
     },
-    render: ({ year, filters }) => <BriefingPage year={year} filters={filters} />,
+    render: ({ year, filters, crossFilter, onCrossFilter }) => (
+      <BriefingPage year={year} filters={filters} dept={crossFilter} onDeptChange={onCrossFilter} />
+    ),
   },
   {
     id: "ops",
@@ -192,6 +198,14 @@ export function AppShell() {
   const [selection, setSelection] = useState<SlicerSelection>(initialSelection);
   const [basicSel, setBasicSel] = useState<Record<string, string>>(defaultBasicSelection);
   const [year, setYear] = useState<number>(DEFAULT_YEAR);
+  // Cross-filter category reported by the active page's visuals — shown in the top bar and
+  // cleared whenever the user navigates to another page.
+  const [crossFilter, setCrossFilter] = useState<string | null>(null);
+
+  const navigate = (id: string) => {
+    setActive(id);
+    setCrossFilter(null);
+  };
 
   if (visiblePages.length === 0) {
     return <AccessDenied email={email} />;
@@ -206,6 +220,10 @@ export function AppShell() {
 
   const basicFilters = deriveBasicFilters(basicSel);
   const canPost = canPostBudget(email);
+
+  // Context shown after the year in the top bar: a visual cross-filter wins; otherwise the
+  // active Division Group slice — but only where detailed filters apply (not the Budget page).
+  const topBarContext = crossFilter ?? (showDetailedFilters ? basicFilters.division : null);
 
   // Report-library cards — only pages the user can actually open (excludes the Overview index).
   const overviewReports: OverviewReport[] = visiblePages
@@ -233,7 +251,7 @@ export function AppShell() {
       <SidebarRail
         items={railItems}
         active={active}
-        onSelect={setActive}
+        onSelect={navigate}
         collapsed={collapsed}
         infoLabel="Report Information"
         onInfoClick={() => setInfoPinned(true)}
@@ -244,7 +262,11 @@ export function AppShell() {
         <TopBar
           title={page.title}
           breadcrumb={page.crumb}
-          meta={page.showYearInTitle ? `Fiscal Year · ${year}` : undefined}
+          meta={
+            page.showYearInTitle
+              ? `Fiscal Year · ${year}${topBarContext ? ` | ${topBarContext}` : ""}`
+              : undefined
+          }
           onToggleRail={() => setCollapsed((c) => !c)}
         >
           {/* The Overview index has no data of its own — hide the year + filter controls. */}
@@ -295,9 +317,9 @@ export function AppShell() {
         >
           <div style={{ maxWidth: 1280, margin: "0 auto" }}>
             {isOverview ? (
-              <OverviewPage reports={overviewReports} onNavigate={setActive} />
+              <OverviewPage reports={overviewReports} onNavigate={navigate} />
             ) : (
-              page.render?.({ year, filters: basicFilters, canPost })
+              page.render?.({ year, filters: basicFilters, canPost, crossFilter, onCrossFilter: setCrossFilter })
             )}
           </div>
         </main>

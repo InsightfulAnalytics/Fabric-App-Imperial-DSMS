@@ -1,10 +1,8 @@
-import { useState } from "react";
 import {
   Panel,
   BalanceCard,
   VarianceScatter,
   ComboChart,
-  Button,
   type LedgerRow,
   type ProportionSegment,
   type ScatterDept,
@@ -95,11 +93,14 @@ export interface BriefingPageProps {
   year: number;
   /** Basic-slice filters from the slicer pane ("All …" entries are null). */
   filters?: BriefingFilters;
+  /** Cross-filter department selected in a visual — owned by the shell so the top bar can show it. */
+  dept?: string | null;
+  /** Report a cross-filter selection up to the shell (null clears it). */
+  onDeptChange?: (dept: string | null) => void;
 }
 
-export function BriefingPage({ year, filters = {} }: BriefingPageProps) {
-  // Cross-filter: department selected in the scatter or combo chart.
-  const [dept, setDept] = useState<string | null>(null);
+export function BriefingPage({ year, filters = {}, dept = null, onDeptChange }: BriefingPageProps) {
+  // Cross-filter department (scatter / combo) — state lives in the shell so the top bar reflects it.
   const division = filters.division ?? null;
 
   // The scatter and combo are the cross-filter sources — they take the pane
@@ -287,15 +288,6 @@ export function BriefingPage({ year, filters = {} }: BriefingPageProps) {
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-      {/* Cross-filter clear chip — only when a department is selected */}
-      {dept && (
-        <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button size="sm" variant="secondary" icon="x" onClick={() => setDept(null)}>
-            {dept}
-          </Button>
-        </div>
-      )}
-
       {/* Two balance cards — side-by-side at ≥1120, stacks below */}
       <div
         className="briefing-balance-grid"
@@ -307,7 +299,7 @@ export function BriefingPage({ year, filters = {} }: BriefingPageProps) {
         }}
       >
         <BalanceCard
-          eyebrow={`Net Subsidy · ${kpiRow.Year ?? year}${dept || division ? ` · ${dept ?? division}` : ""}`}
+          eyebrow={`Net Subsidy · ${kpiRow.Year ?? year}`}
           value={fmtCreditsValue(kpiRow.NetSurplusCY ?? NaN)}
           sublabel="Operating Surplus"
           vsBudget={fmtCreditsCR(kpiRow.NetSurplusVsBudget ?? NaN)}
@@ -324,7 +316,7 @@ export function BriefingPage({ year, filters = {} }: BriefingPageProps) {
           data-section="briefing-net-subsidy"
         />
         <BalanceCard
-          eyebrow={`Headcount · ${kpiRow.Year ?? year}${dept || division ? ` · ${dept ?? division}` : ""}`}
+          eyebrow={`Headcount · ${kpiRow.Year ?? year}`}
           value={fmtCount(kpiRow.TotalHeadcountCY ?? NaN)}
           sublabel="Station Complement"
           vsBudget={fmtCountSigned(kpiRow.HeadcountVsBudget ?? NaN)}
@@ -369,7 +361,7 @@ export function BriefingPage({ year, filters = {} }: BriefingPageProps) {
               height={340}
               fmtCredits={fmtCreditsValue}
               selected={dept}
-              onSelect={setDept}
+              onSelect={onDeptChange}
             />
           )}
         </Panel>
@@ -387,7 +379,7 @@ export function BriefingPage({ year, filters = {} }: BriefingPageProps) {
               Query error: {combatResult.data.error.message}
             </div>
           ) : (
-            <ComboChart data={combatDepts} height={340} selected={dept} onSelect={setDept} />
+            <ComboChart data={combatDepts} height={340} selected={dept} onSelect={onDeptChange} />
           )}
         </Panel>
       </div>

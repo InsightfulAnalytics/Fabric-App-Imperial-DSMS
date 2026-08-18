@@ -99,7 +99,7 @@ export function VarianceScatter({
   const ticks = [-0.2, -0.1, 0, 0.1, 0.2];
 
   const quadrants = [
-    { lbl: "Got more, spent more", ax: x0 + 8, ay: padT + 14, anchor: "start" as const, fill: null },
+    { lbl: "Got more, spent more", ax: W - padR - 8, ay: padT + 14, anchor: "end" as const, fill: null },
     {
       lbl: "Crisis",
       ax: padL + 8,
