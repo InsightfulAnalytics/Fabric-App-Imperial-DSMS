@@ -46,6 +46,7 @@ lerna-debug.log*
 __pycache__/
 *.py[cod]
 .venv/
+.venv-*/
 venv/
 .ipynb_checkpoints/
 
