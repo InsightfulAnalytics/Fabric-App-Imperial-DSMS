@@ -13,7 +13,7 @@ and [LEARNINGS.md](./LEARNINGS.md).
 |---|---|---|
 | **Power BI report** (PBIR / `.pbip` report under `./PBI/`) | data-goblin `reports:deneb-visuals` (Vega/Vega-Lite **in Deneb**), `reports:svg-visuals` (DAX SVG), `reports:python-visuals`, `reports:r-visuals`, native visuals via `reports:pbir-cli`; theme via `reports:modifying-theme-json` | Deneb is the Vega/Vega-Lite **host** inside reports. `deneb-templates/` specs are reusable here. |
 | **Fabric App** (`imperial-dsms`, React) | See Step 2 | This is where most app work happens. |
-| **Exploration / analysis** (just prove an insight, tool-agnostic) | Analytics library `visualization-design` skill (`B:\VS Code Files\Learning Resources\Analytics\`) + a quick `d3-templates/` or Vega mockup | Decides *which* chart proves the point before any wiring. |
+| **Exploration / analysis** (just prove an insight, tool-agnostic) | Analytics library `visualization-design` skill (`W:\learning_resources\analytics\`) + a quick `d3-templates/` or Vega mockup | Decides *which* chart proves the point before any wiring. |
 
 ---
 

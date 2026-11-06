@@ -12,7 +12,7 @@ You are receiving a Claude Design handoff for a Microsoft Fabric App.
 PROJECT: [Sparklines | Bullet | <name>]
 CONNECTION ALIAS: [sparklines | bullet | <alias from fabric.yaml>]
 SEMANTIC MODEL: [workspace name] / [model name]
-TARGET DIRECTORY: b:\VS Code Files\Fabric Apps\[ProjectName]
+TARGET DIRECTORY: w:\fabric_apps\[ProjectName]
 
 INSTRUCTIONS:
 1. Read the HTML file from the export — find the <script id="data-manifest"> block and parse it
@@ -40,7 +40,7 @@ IMPORT SCRIPT: npm run import-design -- --zip <path-to-zip>
 | `[sparklines \| bullet \| <alias>]` | The alias in `fabric.yaml` under `semanticModels:` |
 | `[workspace name]` | The Bi Nexus workspace (or whatever workspace the model is in) |
 | `[model name]` | The published semantic model name |
-| `b:\VS Code Files\Fabric Apps\[ProjectName]` | The full path to the project |
+| `w:\fabric_apps\[ProjectName]` | The full path to the project |
 
 ---
 

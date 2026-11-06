@@ -10,7 +10,7 @@ Build a React-based Fabric App on top of the **Star Wars** semantic model. The P
 
 ### 1. Scaffold the Rayfin app (one-time)
 
-Run from the `B:\VS Code Files\PBI Project\Star Wars` directory:
+Run from the `W:\PBI Project\Star Wars` directory:
 
 ```powershell
 $env:NODE_OPTIONS='--use-system-ca'
@@ -88,12 +88,12 @@ Star Wars/
 ## Analytics Library (method routing)
 
 A portable, tool-agnostic **analysis brain** lives at
-`B:\VS Code Files\Learning Resources\Analytics\`. It governs *how* to turn a table into
+`W:\learning_resources\analytics\`. It governs *how* to turn a table into
 correct, well-quantified insights and *which* visual proves them — independent of Power BI.
 
 **When the task is** profiling a dataset, choosing a statistical test/model, deciding a
 chart type, or synthesising findings into ranked insights → **read
-`B:\VS Code Files\Learning Resources\Analytics\CLAUDE.md` first** and follow its routing
+`W:\learning_resources\analytics\CLAUDE.md` first** and follow its routing
 table. It points to four skills (`exploratory-data-analysis`, `statistical-method-selection`,
 `visualization-design`, `insight-synthesis`) plus `reference/` depth and `templates/`.
 
@@ -132,7 +132,7 @@ A corporate-blue + yellow design system is carried over from the Sparklines app 
 
 ## Deneb Templates
 
-`deneb-templates/` contains **60 reference templates** copied from `B:\VS Code Files\Deneb-Templates\templates`. Use these as starting points when authoring specs in `mockups/`. They cover everything from simple bars to enhanced waterfalls, comet charts, raincloud plots, hex maps, slope charts, deviation icicle, etc.
+`deneb-templates/` contains **60 reference templates** copied from `W:\deneb-templates\templates`. Use these as starting points when authoring specs in `mockups/`. They cover everything from simple bars to enhanced waterfalls, comet charts, raincloud plots, hex maps, slope charts, deviation icicle, etc.
 
 To use one: copy a file from `deneb-templates/` into `mockups/`, rename to `.vl.json5` or `.jsonc`, adapt to your data shape, and the watcher will compile a preview.
 
