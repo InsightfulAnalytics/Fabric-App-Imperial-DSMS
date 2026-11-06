@@ -1,6 +1,6 @@
 # Deneb / Vega-Lite Templates
 
-60 reference chart templates copied from `B:\VS Code Files\Deneb-Templates\templates` (2026-06-07).
+60 reference chart templates copied from `W:\deneb-templates\templates` (2026-06-07).
 
 These are starting points — pick the one closest to your target chart, copy it into [`../mockups/`](../mockups/), rename to `.vl.json5` or `.jsonc`, adapt the data binding, and the watcher (`npm run mockups:watch`) will compile a live preview.
 

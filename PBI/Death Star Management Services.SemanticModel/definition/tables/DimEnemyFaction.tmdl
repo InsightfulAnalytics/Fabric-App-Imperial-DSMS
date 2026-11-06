@@ -48,7 +48,7 @@ table DimEnemyFaction
 		queryGroup: Model
 		source =
 				let
-				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\DimEnemyFaction.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("w:\pbi_projects\star_wars\data\DimEnemyFaction.csv"), [Delimiter=",", Columns=5, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
 				        {"FactionKey", Int64.Type},

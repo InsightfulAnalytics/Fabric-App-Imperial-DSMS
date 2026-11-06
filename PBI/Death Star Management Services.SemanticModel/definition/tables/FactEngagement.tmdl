@@ -174,7 +174,7 @@ table FactEngagement
 		queryGroup: Model
 		source =
 				let
-				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\FactEngagement.csv"), [Delimiter=",", Columns=18, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("w:\pbi_projects\star_wars\data\FactEngagement.csv"), [Delimiter=",", Columns=18, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    ReplaceBlankDates = Table.ReplaceValue(PromoteHeaders, "", null, Replacer.ReplaceValue, {"PlannedDateKey", "StartDateKey", "EndDateKey"}),
 				    ChangeTypes = Table.TransformColumnTypes(ReplaceBlankDates, {

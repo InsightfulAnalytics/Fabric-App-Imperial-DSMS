@@ -110,7 +110,7 @@ table FactStationAttack
 		queryGroup: Model
 		source =
 				let
-				    Source = Csv.Document(File.Contents("b:\VS Code Files\PBI Projects\Star Wars\data\FactStationAttack.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Source = Csv.Document(File.Contents("w:\pbi_projects\star_wars\data\FactStationAttack.csv"), [Delimiter=",", Columns=12, Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
 				    PromoteHeaders = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
 				    ChangeTypes = Table.TransformColumnTypes(PromoteHeaders, {
 				        {"AttackID", type text},
